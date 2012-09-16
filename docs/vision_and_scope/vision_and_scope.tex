@@ -5,10 +5,11 @@
 \usepackage{graphicx}
 \usepackage{placeins}
 \usepackage{amsmath}
+\usepackage{longtable}
 
 % remove the next section in the final version
-\usepackage[paperwidth=275.9mm, paperheight=279.4mm]{geometry} % regular letter size is 215.9 wide by 279.44 long
-\setlength{\evensidemargin}{95mm}
+%\usepackage[paperwidth=275.9mm, paperheight=279.4mm]{geometry} % regular letter size is 215.9 wide by 279.44 long
+%\setlength{\evensidemargin}{95mm}
 \usepackage[colorinlistoftodos, textwidth=65mm, shadow]{todonotes}
 
 \newcounter{todocounter}
@@ -43,12 +44,36 @@ Case's Theta Upsilon chapter currently has a website located at http://apo.case.
 
 
 \subsection{Business Objectives and Success Criteria}
+\FloatBarrier
+\begin{longtable}{lp{12cm}}
+{\bf BO-1} & Reduce amount of time to sign-up, report, and track a
+service event by at least 25\% by half a semester from release date \\
+{\bf BO-2} & Reduce amount of time chapter officers must spend on the
+paperwork and administration part of their duties by 25\% by half a
+semester from release date \\
+{\bf BO-3} & Reduce amount of support emails to webmaster by 25\% after
+half a semester of use \\
+\end{longtable}
 
-\todo{Fill this in}
+\FloatBarrier
+\begin{longtable}{lp{12cm}}
+{\bf SC-1} & Amount of visits per week to website for each chapter member
+increases to 4 or more times per week. \\
+{\bf SC-2} & Majority of members find website 'satisfactory' when surveyed
+within one semester of release\\
+\end{longtable}
+
+\FloatBarrier
 
 \subsection{Business Risks}
 
-\todo{Fill this in}
+\FloatBarrier
+\begin{longtable}{lp{12cm}}
+{\bf RI-1} & Data might be lost in transition from old website to new
+website \\
+{\bf RI-2} & Enough users may not use the new features to make them useful
+for those who are using them (network effect) \\
+\end{longtable}
 
 \section{Vision of the Solution}
 
@@ -60,63 +85,100 @@ For the members in charge of the chapter's administration, the website will also
 
 For those outside of the chapter the website will serve as a source of information about both Case's chapter and the national fraternity. It will provide specific information about how to join and why one would want to join. This will help in recruiting new members.
 
-
-\subsection{Vision Statement}
-
-\todo{Fill this in}
-
 \subsection{Major Features}
 
-\todo{Fill this in}
+\begin{longtable}{lp{12cm}}
+{\bf FE-1:} & Create, update, track, and report service events and
+hours \\
+{\bf FE-2:} &Create, update, sign, and track progress of member
+contracts \\
+{\bf FE-3: } &Create, update, and view member profiles\\
+{\bf FE-4: } &Update and view chapter calendar\\
+{\bf FE-5: } &Write, comment on chapter blog\\
+{\bf FE-6: } &Photo integration\\
+{\bf FE-7: } &Create and update Alumni database\\
+{\bf FE-8: } &Chapter statistics tracking and reporting\\
+\end{longtable}
+
 
 \subsection{Assumptions and Dependencies}
 
-\todo{Fill this in}
+\begin{longtable}{lp{12cm}}
+{\bf AS-1:} & Members all have access to a computer and an internet
+connection\\
+{\bf AS-2:} & Members all have Case IDs\\
+\end{longtable}
+
+\begin{longtable}{lp{12cm}}
+{\bf DE-1} & The website depends on free hosting
+\end{longtable}
 
 \section{Scope and Limitations}
 
-\todo{Fill this in}
-
 \subsection{Scope of Initial and Subsequent Releases}
 
-\todo{Fill this in}
+\begin{longtable}{|l|p{4cm}|p{4cm}|p{4cm}|}
+\hline
+{\bf Feature} & {\bf Release 1} & {\bf Release 2} & {\bf Release 3} \\
+\hline
+{\bf FE-1} & Fully Implemented & ~ & ~ \\ \hline
+{\bf FE-2} & Fully Implemented & ~ & ~ \\ \hline
+{\bf FE-3} & Login Implemented & Fully Implemented & ~ \\ \hline
+{\bf FE-4} & Fully Implemented & ~ & ~ \\ \hline
+{\bf FE-5} & Not Implemented & Fully Implemented & ~ \\ \hline
+{\bf FE-6} & Not Implemented & Not Implemented & Fully Implemented \\
+\hline
+{\bf FE-7} & Not Implemented & Fully Implemented & ~ \\ \hline
+{\bf FE-8} & Not Implemented & Not Implemented & Fully Implemented \\ \hline
+\end{longtable}
 
 \subsection{Limitations and Exclusions}
 
-\todo{Fill this in}
+\begin{longtable}{lp{12cm}}
+{\bf LI-1:} & Administrative features of the website will only be
+available to officers of the chapter\\
+\end{longtable}
 
 \section{Business Contexts}
 
-\todo{Fill this in}
-
 \subsection{Stakeholder Profiles}
 
-\todo{Fill this in}
-\begin{table}
-    \begin{tabular}{|l|l|l|l|l|}
+\FloatBarrier
+\begin{flushleft}
+    \begin{longtable}{@{}|p{2.2cm}|p{3cm}|p{3cm}|p{3cm}|p{3cm}|}
         \hline
-        Stakeholder        & Major Value                                                                               & Attitude                                                                   & Major Interests                                                           & Constraints                                      \\ \hline
-        Exec               & Improved ease of updating website, better communication with the entire chapter           & Very committed to the fraternity, enthusiastic to help in any way possible & Brother retention, attracting new brothers and pledges, organizing events & Website must be easy to understand how to update \\ \hline
-        Brothers           & Improved communication and access to events, more organized and accessible event sign ups & Most will be willing to help, looking forward to a more modern website     & Doing service events, PR events, fellowship events, signing contracts     & None identified                                  \\ \hline
-        Pledges            & Better representation of the fraternity, better access to events                          & Will enjoy the ease of use.                                                & Doing service events, PR events, fellowship events, signing contracts     & None identified                                  \\ \hline
-        Interested Parties & Better representation of the fraternity                                                   & Possibly the first impression of the fraternity                            & Finding information about the fraternity                                  & None identified                                  \\
+        {\bf Stakeholder}        & {\bf Major Value}
+        & {\bf Attitude}
+        & {\bf Major Interests}
+        & {\bf Constraints}                                      \\ \hline
+        {\bf Exec}               & Improved ease of updating website, better communication with the entire chapter           & Very committed to the fraternity, enthusiastic to help in any way possible & Brother retention, attracting new brothers and pledges, organizing events & Website must be easy to understand how to update \\ \hline
+        {\bf Brothers}           & Improved communication and access to events, more organized and accessible event sign ups & Most will be willing to help, looking forward to a more modern website     & Doing service events, PR events, fellowship events, signing contracts     & None identified                                  \\ \hline
+        {\bf Pledges}            & Better representation of the fraternity, better access to events                          & Will enjoy the ease of use.                                                & Doing service events, PR events, fellowship events, signing contracts     & None identified                                  \\ \hline
+        {\bf Interested Parties} & Better representation of the fraternity                                                   & Possibly the first impression of the fraternity                            & Finding information about the fraternity                                  & None identified                                  \\
         \hline
-    \end{tabular}
-\end{table}
+
+\end{longtable}
+\end{flushleft}
+\FloatBarrier
 
 \subsection{Project Priorities}
 
-\todo{Fill this in}
-\begin{table}
-    \begin{tabular}{|l|l|l|l|}
+\FloatBarrier
+
+\begin{flushleft}
+\begin{longtable}{@{}|p{2.7cm}|p{3.7cm}|p{3.7cm}|p{3.7cm}|}
         \hline
-        Dimension & Driver                   & Constraint                                                                            & Degree of Freedom                    \\ \hline
-        Schedule  & ~                        & ~                                                                                     & Final iteration on December 7th 2012 \\ \hline
-        Features  & ~                        & Any features scheduled must be complete and fully operational for the final iteration & ~                                    \\ \hline
-        Quality   & ~                        & All security tests must pass, all exec members must be able to use without issue      & ~                                    \\ \hline
-        Staff     & Two part time developers & ~                                                                                     & ~                                    \\ \hline
-        Cost      & ~                        & ~                                                                                     & None projected                       \\
+        {\bf Dimension} & {\bf Driver}                   & {\bf
+          Constraint}
+        & {\bf Degree of Freedom}                    \\ \hline
+        {\bf Schedule}  & ~                        & ~                                                                                     & Final iteration on December 7th 2012 \\ \hline
+        {\bf Features}  & ~                        & Any features scheduled must be complete and fully operational for the final iteration & ~                                    \\ \hline
+        {\bf Quality}   & ~                        & All security tests must pass, all exec members must be able to use without issue      & ~                                    \\ \hline
+        {\bf Staff}     & Two part time developers & ~                                                                                     & ~                                    \\ \hline
+        {\bf Cost}      & ~                        & ~                                                                                     & None projected                       \\
         \hline
-    \end{tabular}
-\end{table}
+\end{longtable}
+\end{flushleft}
+\FloatBarrier
+
 \end{document}
