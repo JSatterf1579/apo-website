@@ -18,8 +18,10 @@
 
 \title{Vision and Scope Document \\
 for \\
-APO Theta Upsilon Chapter Website}
-\date{September 19, 2012}
+APO Theta Upsilon Chapter Website\\
+Devin Schwab\\
+Jonathan Chan}
+\date{September 21, 2012}
 
 \begin{document}
 
@@ -27,20 +29,22 @@ APO Theta Upsilon Chapter Website}
 \newpage
 
 \tableofcontents
-\listoffigures
+
 
 \newpage
 
 \section{Business Requirements}
 
-\todo{Fill this in}
-
 \subsection{Background, Business Opportunities, Customer Needs}
 
-\todo{Proofread and spellcheck}
-Alpha Phi Omega is a national service fraternity. The fraternity is co-ed and the major focus is on providing service to the country, the community, the campus and the chapter. APO chapters also include a number of auxilliary activities for members such as get togethers for members known within the chapter as fellowship events. Most chapters keep track of data such as service hours completed by each memeber via paper documents. However, as chapter sizes grow the paper method becomes unwiedly. Case's Theta Upsilon chapter currently has 91 active members and a total of over 145 people with some involvement. There is clearly a need for a robust and easy to use system to manage not only service hour tracking but other aspects of the chapter's administration.
+\indent\indent Alpha Phi Omega is a national service fraternity. The
+fraternity is co-ed and the major focus is on providing service to the
+country, the community, the campus and the chapter. APO chapters also
+include a number of social events known as fellowship events. Most chapters keep track of data such as service hours completed by each member via paper documents. However, as chapter sizes grow the paper method becomes unwiedly. Case's Theta Upsilon chapter currently has 91 active members and a total of over 145 people with some involvement. There is clearly a need for a robust and easy to use system to manage not only service hour tracking but other aspects of the chapter's administration.
 
-Case's Theta Upsilon chapter currently has a website located at http://apo.case.edu. However, this website is currently only good for tracking service hours and the progress of a member towards completion of their requirements, known as a contract. This tracking functionality is very rudimentary. In addition the code running behind the website has been developed using a build-and-fix model leading to a mix of coding styles, no documentation, difficult to track down bugs and a very difficult codebase to add new features too. As the chapter has grown it has become desirable to add more administrative features as well as social features for the brothers to connect with. Adding these features on top of the current code base would be difficult and lead to unstable code. This leads us to believe there is an opportunity to make a new website. One that is documented, provides more administrative tools, is designed with future improvements in mind and is overall easier for all parties involved to use.
+Case's Theta Upsilon chapter currently has a website located at \\
+http://apo.case.edu. However, this website is currently only useful for
+tracking service hours and membership requirements. This tracking functionality is very rudimentary. In addition, the code running behind the website has been developed using a build-and-fix model leading to a mix of coding styles, no documentation, difficult to track down bugs and a very difficult codebase to add new features to. As the chapter has grown it has become desirable to add more administrative features as well as social features for the brothers to connect with. Adding these features on top of the current code base would be difficult and lead to unstable code. This leads us to believe there is an opportunity to make a new website. One that is documented, provides more administrative tools, is designed with future improvements in mind and is overall easier for all parties involved to use.
 
 
 \subsection{Business Objectives and Success Criteria}
@@ -59,7 +63,8 @@ half a semester of use \\
 \begin{longtable}{lp{12cm}}
 {\bf SC-1} & Amount of visits per week to website for each chapter member
 increases to 4 or more times per week. \\
-{\bf SC-2} & Majority of members find website 'satisfactory' when surveyed
+{\bf SC-2} & Majority of members find website 'satisfactory' or better
+when surveyed
 within one semester of release\\
 \end{longtable}
 
@@ -72,14 +77,14 @@ within one semester of release\\
 {\bf RI-1} & Data might be lost in transition from old website to new
 website \\
 {\bf RI-2} & Enough users may not use the new features to make them useful
-for those who are using them (network effect) \\
+for those who are using them (also known as network effect) \\
 \end{longtable}
 
 \section{Vision of the Solution}
 
 \subsection{Vision Statement}
 
-For general members of the chapter the website will be a place to report what type of community service they have done and how many hours they have completed. In addition the members of the chapter will be able to check in on the status of the chapter including upcoming events and important deadlines. The website will also act as a way for brothers to find out more about one another and get in contact with each other for bonding outside of chapter events.
+\indent\indent For general members of the chapter the website will be a place to report what type of community service they have done and how many hours they have completed. In addition, the members of the chapter will be able to check-in on the status of the chapter including upcoming events and important deadlines. The website will also act as a way for brothers to find out more about one another and get in contact with each other for bonding outside of chapter events.
 
 For the members in charge of the chapter's administration, the website will also serve as a tool for accomplishing their jobs. These jobs include things such as budgeting, service hour approval, fellowship planning, and contract review. The tools will be well documented so that members who have not previously held a position will be able to quickly get up to speed.
 
@@ -94,7 +99,7 @@ hours \\
 contracts \\
 {\bf FE-3: } &Create, update, and view member profiles\\
 {\bf FE-4: } &Update and view chapter calendar\\
-{\bf FE-5: } &Write, comment on chapter blog\\
+{\bf FE-5: } &Write and comment on chapter blog\\
 {\bf FE-6: } &Photo integration\\
 {\bf FE-7: } &Create and update Alumni database\\
 {\bf FE-8: } &Chapter statistics tracking and reporting\\
@@ -110,7 +115,8 @@ connection\\
 \end{longtable}
 
 \begin{longtable}{lp{12cm}}
-{\bf DE-1} & The website depends on free hosting
+{\bf DE-1:} & The website depends on free web hosting\\
+{\bf DE-2:} & The website will be provided with a free domain name\\
 \end{longtable}
 
 \section{Scope and Limitations}
@@ -119,7 +125,7 @@ connection\\
 
 \begin{longtable}{|l|p{4cm}|p{4cm}|p{4cm}|}
 \hline
-{\bf Feature} & {\bf Release 1} & {\bf Release 2} & {\bf Release 3} \\
+{\bf Feature} & {\bf Version 0.0} & {\bf Version 0.5} & {\bf Version 1.0} \\
 \hline
 {\bf FE-1} & Fully Implemented & ~ & ~ \\ \hline
 {\bf FE-2} & Fully Implemented & ~ & ~ \\ \hline
@@ -137,7 +143,11 @@ connection\\
 \begin{longtable}{lp{12cm}}
 {\bf LI-1:} & Administrative features of the website will only be
 available to officers of the chapter\\
+{\bf LI-2:} & The full feature set for event tracking and
+administration will only be avilable for events run and operated by
+the chapter\\
 \end{longtable}
+\newpage
 
 \section{Business Contexts}
 
@@ -161,6 +171,7 @@ available to officers of the chapter\\
 \end{flushleft}
 \FloatBarrier
 
+\newpage
 \subsection{Project Priorities}
 
 \FloatBarrier
@@ -171,9 +182,12 @@ available to officers of the chapter\\
         {\bf Dimension} & {\bf Driver}                   & {\bf
           Constraint}
         & {\bf Degree of Freedom}                    \\ \hline
-        {\bf Schedule}  & ~                        & ~                                                                                     & Final iteration on December 7th 2012 \\ \hline
-        {\bf Features}  & ~                        & Any features scheduled must be complete and fully operational for the final iteration & ~                                    \\ \hline
-        {\bf Quality}   & ~                        & All security tests must pass, all exec members must be able to use without issue      & ~                                    \\ \hline
+        {\bf Schedule}  & ~                        & ~
+        & Version 1.0 completed by December 7th 2012 \\ \hline
+        {\bf Features}  & ~                        & Any feature scheduled in this document must be complete and fully operational for version 1.0 & ~                                    \\ \hline
+        {\bf Quality}   & ~                        & All security
+        tests must pass, all exec members must be able to use without
+        issue, must not lose any features of the current website      & ~                                    \\ \hline
         {\bf Staff}     & Two part time developers & ~                                                                                     & ~                                    \\ \hline
         {\bf Cost}      & ~                        & ~                                                                                     & None projected                       \\
         \hline
