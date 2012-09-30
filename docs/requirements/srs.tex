@@ -1,0 +1,75 @@
+\documentclass{article}
+
+\usepackage{graphicx}
+\usepackage{placeins}
+\usepackage{fancyhdr}
+\usepackage{longtable}
+\usepackage{lastpage}
+
+% clear the default headers
+\fancyhead{}
+\fancyfoot{}
+
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+
+\newcommand{\projName}{APO Chapter Organization Website}
+\newcommand{\docName}{Software Requirements Document}
+\newcommand{\docVersion}{Version 1.0}
+\newcommand{\docDate}{October 1, 2012}
+
+\setlength\LTleft{0pt}
+\setlength\LTright{0pt}
+
+
+
+\fancypagestyle{plain}{
+
+\headheight=10mm
+\fancyhead{\begin{longtable}{@{\extracolsep{\fill}}|c|c|}
+\hline
+\projName & \docVersion \\ \hline
+\docName & \docDate \\ \hline
+\end{longtable}}
+
+ \fancyfoot[C]{\footnotesize Page \thepage\ of \pageref{LastPage}}
+}
+
+\pagestyle{plain}
+
+
+
+\title{\projName \\ \vspace{10 mm}
+\docName \\\vspace{10 mm}
+Devin Schwab\\
+Jon Chan}
+
+\date{\docDate}
+
+\begin{document}
+
+\maketitle
+
+\newpage
+
+\tableofcontents
+\listoffigures
+
+\newpage
+
+\section{Introduction}
+\subsection{Purpose}
+
+\subsection{Scope}
+
+\subsection{Definitions}
+
+\section{Overall Description}
+
+\section{System Features}
+
+\section{Specific Requirements}
+
+\section{Additional Requirements}
+
+\end{document}
