@@ -17,6 +17,7 @@
 \newcommand{\docName}{Software Requirements Document}
 \newcommand{\docVersion}{Version 1.0}
 \newcommand{\docDate}{October 1, 2012}
+\newcommand{\req}[1]{REQ-{#1}}
 
 \setlength\LTleft{0pt}
 \setlength\LTright{0pt}
@@ -60,9 +61,68 @@ Jon Chan}
 \section{Introduction}
 \subsection{Purpose}
 
+\indent\indent This document contains the software requirements for the \projName. This website
+will be used by Case's Theta Upsilon chapter of the national service fraternity Alpha Phi Omega (APO).
+The website will be accessible via the internet meaning people who are not members will be able to access
+the website. In this case the website will simply act as a group of static pages providing basic information.
+The actual functionality of the website will be for general members (known as brothers), people currently joining (known as pledges) and members that are elected and appointed to run the chapter (known as exec members).
+
+The requirements in the this document are designed to produce a system that will increase brother interest
+in the chapter as well as to decrease the amount of time spent administering the chapter. Additional benefits will
+potentially include more transparency and accountability between elected members and general members.
+
+The chapter currently has a website located at http://apo.case.edu, however, based on a survey of members within
+the chapter there have been numerous complaints and feature requests. The previous website was built many years ago
+and has been maintained by many different people over the years. The updates and fixes to the code base have varied in
+quality. This has lead to a difficult to maintain code base. For this reason a new website is being designed with the new
+requested features in mind. Many of the requirements in this document have been derived either from the functionality
+of the previous website or from feature requests directly from members of the chapter.
+
 \subsection{Scope}
 
+This requirements document deals only with requirements for the \projName. The \projName \,may interface with
+other outside pieces of software. In this case the requirements attempt to specify the functionality the outside service has
+while remaining general so that outside services can be switched out.
+
+This document is aimed at developers, however, the use cases and project descriptions do provide a high level
+description of the project.
+
+\subsection{Document Conventions}
+
+In this document requirements start are labeled in the following format REQ-\#  where ``\#'' is a number.
+The number in the requirement may be followed by a ``.'' and another number giving the requirement the form
+REQ-\#.\#  This form indicates that the requirement is a subrequirement of the first number in the requirement. Requirements 
+can include any number of numbers and periods.
+
+For example requirement 1 would be labeled \req{1} \,. The first
+requirement derived from this requirement it would be labeled\req{1.1}
+\,. The first requirement derived from \req{1.1} would be labeled \req{1.1.1} \,. The number of numbers reflect how deep the requirement is and the ordering reflects where a requirement was derived from.
+
+
+
 \subsection{Definitions}
+
+% Add definition to the table
+\begin{longtable}{lp{8cm}}
+
+{\bf Brother} & A general member of the chapter that has gone through
+the pledging process. \\ \\
+{\bf Contract} & The requirements that a member must satisfy to remain
+in good standing with the chapter \\ \\
+{\bf Exec Member} & A general member of the chapter (brother) that is
+elected or appointed to run a specific aspect of the chapter. \\ \\
+{\bf Membership Review} & Event at the end of the semester in which
+the completion of each member's contract is reviewed by the chapter\\ \\
+{\bf Pledge} & A member who has completed the initiation ceremony, but
+not the induction ceremony. These members do not have the full
+privilege of a brother\\ \\
+{\bf Rushee} & A person who is interested in joining APO, but is not
+yet a pledge \\ \\
+{\bf Service Report} & Request for approval of community service hours
+\\ \\
+
+\end{longtable}
+
 
 \section{Overall Description}
 
