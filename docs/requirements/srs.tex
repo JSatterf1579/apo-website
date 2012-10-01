@@ -6,6 +6,7 @@
 \usepackage{longtable}
 \usepackage{lastpage}
 \usepackage{rotating}
+\usepackage{pdfpages}
 
 % clear the default headers
 \fancyhead{}
@@ -91,7 +92,7 @@ description of the project.
 
 \subsection{Document Conventions}
 
-In this document requirements start are labeled in the following
+In this document requirements are labeled in the following
 format REQ-\#  where ``\#'' is a number.
 The number in the requirement may be followed by a ``.'' and 
 another number giving the requirement the form
@@ -125,7 +126,10 @@ not the induction ceremony. These members do not have the full
 privilege of a brother\\ \\
 {\bf Rushee} & A person who is interested in joining APO, but is not
 yet a pledge \\ \\
-{\bf Service Report} & Request for approval of community service hours
+{\bf Service Report} & Request for approval of community service
+hours\\ \\
+{\bf Alumni} & A person who was previously a member, but has since
+graduated\\ \\
 \\ \\
 
 \end{longtable}
@@ -136,12 +140,13 @@ yet a pledge \\ \\
 
 \subsection{User Classes and Characteristics}
 
-This project has 3 main classes of users:
+This project has 4 main classes of users:
 
 \begin{enumerate}
   \item Exec Members
   \item Brothers and Pledges
   \item Rushee
+    \item Alumni
 \end{enumerate}
 
 Each of these user classes is described in more detail in the next sections
@@ -150,14 +155,15 @@ Each of these user classes is described in more detail in the next sections
 
 These users have been elected or appointed by the chapter to run some
 part of the chapter. All Exec members must also be a Brother. Exec
-members have access the administrative tools of the \projName \,. One
+members have access to the administrative tools of the \projName \,. One
 of the goals of this project is to decrease the amount of time that
 exec members spend administering the chapter.
 
 \subsubsection{Brothers and Pledges}
 
-This user class can be split into two subclasses. Brothers have been
-inducted into the chapter, whereas pledges have not. In the actual
+This user class can be split into two subclasses. Brothers, people that have been
+inducted into the chapter, and pledges, people who have not inducted
+into the chapter. In the actual
 workings of the chapter brothers have more rights than pledges, such
 as voting. However, from the perspective of this project the only
 difference between brothers and pledges is the information displayed
@@ -167,6 +173,13 @@ by each of the features.
 
 This user class consists of potential members. These users will only
 have access to informational features.
+
+\subsubsection{Alumni}
+
+This user class consists of users who were once members of the
+fraternity but have since graduated. They need access to chapter
+information and member information, but they do not need to do things
+such as track service hours.
 
 \subsection{Operating Environment}
 
@@ -201,15 +214,14 @@ unique\\
 \subsection{FE-1: Create, update, track, and report service events and
   hours}
 
-\subsubsection{Use case Diagram}
-
 \newpage
+\subsubsection{Use case Diagram}
 
 \FloatBarrier
 \begin{sidewaysfigure}[h]
 \centering
 \caption{Exec Use Case Flowchart for FE-1}
-\includegraphics[scale=.75]{img/execUseCaseFE1.png}
+\includegraphics[scale=.7]{img/execUseCaseFE1.png}
 \label{fig:execUseCaseFE1}
 \end{sidewaysfigure}
 \FloatBarrier
@@ -274,6 +286,11 @@ of brothers that can attend the event\\
 information necessary \\
 \req{4.6} & Brothers and pledges shall be able to view their answers
 to the additional information requested\\
+\end{tabular}
+\FloatBarrier
+\newpage
+\FloatBarrier
+\begin{tabular}{lp{8cm}}
 \req{5} & Brothers and pledges shall be able to update their responses
 to the additional information requested\\
 \req{6} & Brothers and pledges shall be able to join existing service
@@ -301,18 +318,14 @@ of each brother who was submitted as participating in the event\\
 
 \subsubsection{Use case Diagram}
 
-\newpage
-
 \FloatBarrier
-\begin{sidewaysfigure}[h]
+\begin{sidewaysfigure}[h!]
 \centering
 \caption{Exec Use Case Flowchart for FE-2}
 \includegraphics[scale=.75]{img/execUseCaseFE2.png}
 \label{fig:execUseCaseFE2}
 \end{sidewaysfigure}
 \FloatBarrier
-
-\newpage
 
 \subsubsection{Requirements}
 
@@ -351,6 +364,11 @@ on membership dues for the contract type they have signed\\
 \req{13.3} & Brothers and pledges shall be able to view progress of completion
 of requirements based
 on attendance at events for the contract type they have signed\\
+\end{tabular}
+\FloatBarrier
+\newpage
+\FloatBarrier
+\begin{tabular}{lp{8cm}}
 \req{14} & Exec members shall be able to view everyone's contract
 progress \\
 \req{14.1} & Exec members shall be able to view progress of completion
@@ -613,5 +631,13 @@ offline format\\
 \req{40} & User login pages shall be encrypted\\
 \req{41} & User passwords shall be encrypted before being stored\\
 \end{tabular}
+
+\appendix
+\section{Website Survey Results}
+The following survey provided additional information that was used to
+derive the requirements. Many members requested a way to easily upload
+and view photos which is why it is one of the features in this document.
+
+\includepdf[pages={-}]{website_survey.pdf}
 
 \end{document}
