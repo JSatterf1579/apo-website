@@ -33,3 +33,7 @@ pip-log.txt
 *.synctex.gz
 *.toc
 *.lof
+
+.DS_Store
+doxygen
+.doxygen_workingdir/*
