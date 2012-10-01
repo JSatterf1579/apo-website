@@ -89,16 +89,21 @@ description of the project.
 
 \subsection{Document Conventions}
 
-In this document requirements start are labeled in the following format REQ-\#  where ``\#'' is a number.
-The number in the requirement may be followed by a ``.'' and another number giving the requirement the form
-REQ-\#.\#  This form indicates that the requirement is a subrequirement of the first number in the requirement. Requirements 
-can include any number of numbers and periods.
+In this document requirements start are labeled in the following
+format REQ-\#  where ``\#'' is a number.
+The number in the requirement may be followed by a ``.'' and 
+another number giving the requirement the form
+REQ-\#.\#  This form indicates that the requirement is a
+subrequirement of the first number in the requirement. 
+Requirements can include any number of numbers and periods.
 
 For example requirement 1 would be labeled \req{1} \,. The first
 requirement derived from this requirement it would be labeled\req{1.1}
-\,. The first requirement derived from \req{1.1} would be labeled \req{1.1.1} \,. The number of numbers reflect how deep the requirement is and the ordering reflects where a requirement was derived from.
+\,. The first requirement derived from \req{1.1} would be labeled
+\req{1.1.1} \,. The number of numbers reflect how deep the requirement
+is and the ordering reflects where a requirement was derived from.
 
-
+Features are referred to as FE-\# where ``\#'' is a number.
 
 \subsection{Definitions}
 
@@ -123,13 +128,73 @@ yet a pledge \\ \\
 
 \end{longtable}
 
-
 \section{Overall Description}
 
-\section{System Features}
+\subsection{Project Features}
 
-\section{Specific Requirements}
+\subsection{User Classes and Characteristics}
+
+This project has 3 main classes of users:
+
+\begin{enumerate}
+  \item Exec Members
+  \item Brothers and Pledges
+  \item Rushee
+\end{enumerate}
+
+Each of these user classes is described in more detail in the next sections
+
+\subsubsection{Exec Members}
+
+These users have been elected or appointed by the chapter to run some
+part of the chapter. All Exec members must also be a Brother. Exec
+members have access the administrative tools of the \projName \,. One
+of the goals of this project is to decrease the amount of time that
+exec members spend administering the chapter.
+
+\subsubsection{Brothers and Pledges}
+
+This user class can be split into two subclasses. Brothers have been
+inducted into the chapter, whereas pledges have not. In the actual
+workings of the chapter brothers have more rights than pledges, such
+as voting. However, from the perspective of this project the only
+difference between brothers and pledges is the information displayed
+by each of the features.
+
+\subsubsection{Rushee}
+
+This user class consists of potential members. These users will only
+have access to informational features.
+
+\subsection{Operating Environment}
+
+\subsubsection{Website Operating Environment}
+
+The website shall be capable of running on any platform which provides
+an HTTP webserver. The webserver must also provide a way for scripting
+responses to web requests in order to make the website respond to user
+input and previously stored information.
+
+\subsubsection{User Operating Environment}
+
+The user shall be capable of accessing the website from any modern
+browser. This includes mobile devices.
+
+\subsection{Assumptions and Dependencies}
+
+The website depends on a working webserver and a working internet
+connection.
+
+\section{System Features and Associated Requirements}
+
+% insert a subsection for each feature
 
 \section{Additional Requirements}
+
+\subsection{Performance}
+
+\subsection{Security}
+
+\subsection{Software Quality Requirements}
 
 \end{document}
