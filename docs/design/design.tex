@@ -1,0 +1,85 @@
+\documentclass{article}
+
+\usepackage{graphicx}
+\usepackage{placeins}
+\usepackage{fancyhdr}
+\usepackage{longtable}
+\usepackage{lastpage}
+\usepackage{rotating}
+\usepackage{pdfpages}
+
+% clear the default headers
+\fancyhead{}
+\fancyfoot{}
+
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+
+\newcommand{\projName}{APO Chapter Organization Website}
+\newcommand{\docName}{Software Design Document}
+\newcommand{\docVersion}{Version 1.0}
+\newcommand{\docDate}{October 10, 2012}
+
+\setlength\LTleft{0pt}
+\setlength\LTright{0pt}
+
+\fancypagestyle{plain}{
+
+\headheight=10mm
+\fancyhead{\begin{longtable}{@{\extracolsep{\fill}}|l|r|}
+\hline
+\projName & \docVersion \\ \hline
+\docName & \docDate \\ \hline
+\end{longtable}}
+
+\fancyfoot[C]{\footnotesize Page \thepage\ of \pageref{LastPage}}}
+
+\pagestyle{plain}
+
+\setcounter{tocdepth}{2}
+
+\title{\projName \\ \vspace{10 mm}
+\docName \\ \vspace{10 mm}
+Devin Schwab\\
+Jon Chan}
+
+\date{\docDate}
+
+\begin{document}
+
+\maketitle
+
+\newpage
+
+\begin{longtable}{|l|l|l|l|}
+\hline
+{\bf Date} & {\bf Version} & {\bf Description} & {\bf Authors} \\ \hline
+10/8/12 & Version 0.5 & Initial Draft & Devin Schwab, Jon Chan \\ \hline
+\end{longtable}
+
+\newpage
+
+\tableofcontents
+\listoffigures
+
+\newpage
+
+\section{Introduction}
+The \projName is designed to keep track of the administrative portions of the chapter. This will
+decrease the amount of time that executive members of the chapter spend on routine administrative
+tasks. It is also designed to improve communication between brothers and to improve brother
+involvement in the chapter.
+
+\section{Design Overview}
+
+\subsection{Architecture}
+
+\subsection{Webserver - Google App Engine}
+
+\subsection{Application Language - Flask and Python}
+
+\subsection{Photo Storage - Photobucket}
+
+\section{Component Specification}
+
+\end{document}
