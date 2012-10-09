@@ -197,8 +197,13 @@ on GAE. If users want to upload high resolution photographs the free storage wil
 the website will communicate with one of the many photo sites on the web. For this design Photobucket has been chosen. \cite{_photobucket_2012}
 
 Photobucket is the photo site currently used by the chapter. However, in the user survey included in appendix A of 
-the software requirements document many responses included complaints about how difficult it was to use.\cite{schwab_apo_srs_2012}  Rather than moving all of the photos to a new service by choosing Photobucket all of the
-existing photos will already be accessible to the website.
+the software requirements document many responses included complaints about how difficult it was to use.\cite{schwab_apo_srs_2012}  Choosing Photobucket as the outside photo service the website will have access to the existing photos on Photobucket.
+
+Photobucket's API does have limits on the amount of operations an application can perform before being charged. \cite{photobucket_method_2010} However, the limits are well beyond the expected traffic for this website.
+
+Photobucket's API is authenticated using OAuth meaning that a developer account will need to be created and a key for the
+website will need to be generated. \cite{photobucket_faq_2010}
+
 
 \section{Component Specification}
 
