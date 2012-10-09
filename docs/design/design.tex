@@ -140,14 +140,17 @@ There are a multitude of free hosting services on the web, but the services vary
 come with a free domain name. The free services are often limited in the amount of bandwidth and storage they can use.
 Out of the surveyed hosting services with free packages Amazon EC2 offered the most amount of free bandwidth and storage. \cite{amazon_amazon_2012} \cite{heroku_heroku_2012} \cite{google_quotas_2012} However, using Amazon EC2 would require setup and configuration of a webserver and database server. In addition Amazon EC2's free tier is only free for the first year. After which the user must pay for all services.
 
-On the other hand Google App Engine (GAE) has a free tier that does not expire. The amount of resources provided for free are not as high as Amazon's free tier, but the service will remain free for the foreseeable future.  \cite{google_quotas_2012} In addition GAE provides a free hostname by giving the application a subdomain of the appspot.com domain.
+On the other hand Google App Engine (GAE) has a free tier that does not expire. The amount of resources provided for free are not as high as Amazon's free tier, but the service will remain free for the foreseeable future.  \cite{google_quotas_2012} 
+
+In addition GAE provides a free hostname by giving the application a subdomain of the appspot.com domain. This means
+that a domain name will not need to be purchased and no DNS server will need to be purchased and configured.
 An additional benefit of GAE is that the free domain also comes with a free Secure Socket Layer (SSL) Certificate. An SSL 
 certificate will be needed to provide secure login pages and to encrypt and authenticate sensitive information.
 
 \subsection{Database - Google's Bigtable Datastore}
 
 Another part of the architecture shown in figure \ref{fig:generalWebArchitecture} is the database. Traditional web
-applications use a SQL based database such as MySQL. However, by choosing GAE as the hosting service the website
+applications use a Structured Query Language (SQL) based database such as MySQL. However, by choosing GAE as the hosting service the website
 is restricted to using Google's Bigtable Datastore.
 
 The advantage of this constraint is that the website's data is very unlikely to be lost due to Google's large number
@@ -164,9 +167,38 @@ Instead any JOIN-like operation must be implemented by the developers.
 
 \subsection{Application Language - Python}
 
+Another constraint imposed by the choice of GAE is the language the website can be written in. GAE applications can
+be written in Python, Java, or any other JVM compatible language. \cite{google_google_2012}
+
+Out of the possible languages Python will be used. Python is cross platform meaning that all developers can
+work on the code regardless of what their operating environment is. Additionally the Python language has been supported
+longer by GAE meaning that the documentation and support is more mature. This will allow developers to worry less about
+unsupported features of the language on the hosting platform and more about the actual functionality of the code.
+
 \subsection{Application Framework - Flask}
 
+GAE does not require that a web framework is used. However, if a Python based web framework is not used then a lot of
+the development time will be spent implementing the underlying components of a Python Web Server Gateway Interface (WSGI) server application. \cite{wsgi.org_what_2012} Dozens of WSGI server frameworks have been written, such as Flask and Django. \cite{_flask_2010} \cite{_django_2012} It makes no sense to waste development time working on code that already exists. For this reason a Python based web development framework has been chosen.
+
+Of the two mentioned frameworks, Django and Flask, Flask has been chosen as the framework the website will use. Of
+the two Flask makes less design decisions for you. For instance Django assumes that the projects built on top of it will
+use Django's database interface. However, that interface will not work with GAE's Bigtable datastore. It is possible to configure Django to use a different database, but it is difficult. Flask on the other hand is considered a ``microframework''.
+According to Flask's website this means that while Flask gives the projects built on it the basic code such as the WSGI 
+interface, Flask tries not to make higher level design decisions. Additionally Flask has many plugins available on
+their website. \cite{extensions_flask_2012}
+
 \subsection{Photo Storage - Photobucket}
+
+Something that is not part of the general web architecture depicted in figure \ref{fig:generalWebArchitecture} are outside
+web services that this website would be communicating with. This website will need to communicate with an outside site to satisfy requirements REQ-32 through REQ-36 and their respective subrequirements. \cite{schwab_apo_srs_2012}
+
+Those requirements could be satisfied by storing the photos on the GAE service. However, the free storage space is limited
+on GAE. If users want to upload high resolution photographs the free storage will quickly run out. To mitigate this problem
+the website will communicate with one of the many photo sites on the web. For this design Photobucket has been chosen. \cite{_photobucket_2012}
+
+Photobucket is the photo site currently used by the chapter. However, in the user survey included in appendix A of 
+the software requirements document many responses included complaints about how difficult it was to use.\cite{schwab_apo_srs_2012}  Rather than moving all of the photos to a new service by choosing Photobucket all of the
+existing photos will already be accessible to the website.
 
 \section{Component Specification}
 
