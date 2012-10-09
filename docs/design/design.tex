@@ -8,6 +8,7 @@
 \usepackage{rotating}
 \usepackage{pdfpages}
 \usepackage[hidelinks]{hyperref}
+\usepackage{todonotes}
 
 % clear the default headers
 \fancyhead{}
@@ -114,7 +115,13 @@ SSL & Secure Socket Layer \\ \hline
 
 The basic architecture follows a design pattern for the website.
 
-{\bf INSERT GENERAL ARCHITECTURE DIAGRAM}
+\FloatBarrier
+\begin{figure}[h!]
+\missingfigure{General Web Architecture}
+\caption{General Web Architecture}
+\label{fig:generalWebArchitecture}
+\end{figure}
+\FloatBarrier
 
 Multiple users connect to a webserver running our software and database via the Internet.
 Setting up a webserver also requires setting up a Domain Name System (DNS) server and registering a domain
@@ -122,24 +129,9 @@ name.
 
 The following subsections detail design decisions for each aspect of this general architecture.
 
-In order to simplify the setup, maintenance and cost of operations for the website Google App Engine (GAE) shall be used.
-The choice of GAE restricts the database to Google's Big Table datastore.
-
-One of the features of the website requires 
-the storage of user submitted photos. While the photos could be stored on the server provided by GAE, GAE provides a
-limited amount of storage space. If users want to upload high resolution photos the server will quickly run out of the 
-free storage. To mitigate this the website will use an outside photo site as a place to store and organize the photo.
-The website will simply act as a user interface to the storage sight. The chapter currently uses Photobucket for the photos
-meaning many photos are already uploaded there. In addition Photobucket has very large storage limits {\bf FILL IN STORAGE LIMIT AND GIVE A CITATION TO THE WEBSITE}. For this reason Photobucket will be used for storing the photos.
-
-Based on these design decisions the website architecture is as follows
-
-{\bf INSERT WEBSITE ARCHITECTURE DIAGRAM}
-
-
 \subsection{Webserver - Google App Engine}
 
-One necessary part of the architecture is the webserver which will run the actual application. There are two main options
+As shown in figure \ref{fig:generalWebArchitecture} part of the architecture is the webserver which will run the actual application. There are two main options
 for the webserver: buy a computer and configure it to be a webserver or use a hosting service. In the vision and scope document for this project
 one of the assumptions was that the website will be hosted for free and that the website will be provided with a free
 domain name. \cite{schwab_apo_2012} This rules out the buy and configure a webserver option. So it is necessary to select a free hosting service.
@@ -154,7 +146,25 @@ certificate will be needed to provide secure login pages and to encrypt and auth
 
 \subsection{Database - Google's Bigtable Datastore}
 
-\subsection{Application Language - Flask and Python}
+Another part of the architecture shown in figure \ref{fig:generalWebArchitecture} is the database. Traditional web
+applications use a SQL based database such as MySQL. However, by choosing GAE as the hosting service the website
+is restricted to using Google's Bigtable Datastore.
+
+The advantage of this constraint is that the website's data is very unlikely to be lost due to Google's large number
+of resources. In addition defining the schema for the Bigtable datastore is much easier than in a traditional SQL database.
+This is because Bigtable is what is known as a ``NoSQL'' database. \cite{google_how_2012} ``NoSQL'' essentially means that the database does not have a traditional SQL schema. This means that instead of using tables like a traditional
+SQL database Bigtable uses one ``big table'' that store what are known as ``Entities''. Entities are instances of a ``Model''. Models define the datatypes stored in an Entity as well as the requirements for each field. Models are defined in the code meaning that
+the schema can easily be modified. Additionally the schema is automatically version controlled because it is defined in the
+code that is already under version control. Models are also object oriented meaning that a base model can be defined and
+generalized to more specific models. All of these properties make the Google's Bigtable more flexible than a traditional
+database.
+
+The one big disadvantage of Bigtable is that being a datastore type database there is no such thing as a JOIN operation. 
+Instead any JOIN-like operation must be implemented by the developers.
+
+\subsection{Application Language - Python}
+
+\subsection{Application Framework - Flask}
 
 \subsection{Photo Storage - Photobucket}
 
