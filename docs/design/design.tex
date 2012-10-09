@@ -7,6 +7,7 @@
 \usepackage{lastpage}
 \usepackage{rotating}
 \usepackage{pdfpages}
+\usepackage[hidelinks]{hyperref}
 
 % clear the default headers
 \fancyhead{}
@@ -19,6 +20,8 @@
 \newcommand{\docName}{Software Design Document}
 \newcommand{\docVersion}{Version 1.0}
 \newcommand{\docDate}{October 10, 2012}
+
+\newcommand{\specialcell}[2][c]{\begin{tabular}[#1]{@{}c@{}}#2\end{tabular}}
 
 \setlength\LTleft{0pt}
 \setlength\LTright{0pt}
@@ -46,6 +49,7 @@ Jon Chan}
 \date{\docDate}
 
 \begin{document}
+\bibliographystyle{IEEE}
 
 \maketitle
 
@@ -65,21 +69,99 @@ Jon Chan}
 \newpage
 
 \section{Introduction}
-The \projName is designed to keep track of the administrative portions of the chapter. This will
-decrease the amount of time that executive members of the chapter spend on routine administrative
-tasks. It is also designed to improve communication between brothers and to improve brother
-involvement in the chapter.
+
+\subsection{Document Overview}
+The \projName is a new website designed to replace the existing website.
+The current website provides basic administrative features for some of the executive positions.
+It also provides some basic features that allow brothers to keep in touch. However, each semester
+more features are requested and the current website was not designed with future maintainability
+in mind. For this reason this project seeks to make a new website that will provide better
+administrative tools and better social tools. The goal is for the website to decrease the amount of effort
+needed for administration and to get chapter members more involved in the organization. This document lays out
+the design for the new website including the overall architecture, rationale for selected components and
+services and the specifications of new components and services which must be created.
+
+\subsection{Document Conventions}
+This document references previous documents created for this project as well as documentation
+for outside systems this system will interact with. References for the system can be found at the end of the document.
+In text citations are listed as numbers in square brackets. For example ``[ 1 ]''. 
+
+\subsection{Definitions and Acronyms}
+
+% Add definition to the table
+\begin{tabular}{p{.20\textwidth}p{.80\textwidth}}
+
+\multicolumn{2}{c}{ {\bf Definitions} } \\ \hline
+{\bf Brother} & A general member of the chapter that has gone through the pledging process. \\ \hline
+{\bf Contract} & The requirements that a member must satisfy to remain in good standing with the chapter \\ \hline
+{\bf Exec Member} & A general member of the chapter (brother) that is elected or appointed to run a specific aspect of the chapter. \\ \hline
+{\bf Membership Review} & Event at the end of the semester in which the completion of each member's contract is reviewed by the chapter\\ \hline
+{\bf Pledge} & A member who has completed the initiation ceremony, but not the induction ceremony. These members do not have the full privilege of a brother\\ \hline
+{\bf Rushee} & A person who is interested in joining APO, but is not yet a pledge \\ \hline
+{\bf Service Report} & Request for approval of community service hours\\ \hline
+{\bf Alumni} & A person who was previously a member, but has since graduated\\ \hline
+\end{tabular}
+
+\begin{tabular}{p{.20\textwidth}p{.80\textwidth}}
+\multicolumn{2}{c}{ {\bf Acronyms} } \\ \hline
+GAE & Google App Engine \\ \hline
+SSL & Secure Socket Layer \\ \hline
+\end{tabular}
 
 \section{Design Overview}
 
 \subsection{Architecture}
 
+The basic architecture follows a design pattern for the website.
+
+{\bf INSERT GENERAL ARCHITECTURE DIAGRAM}
+
+Multiple users connect to a webserver running our software and database via the Internet.
+Setting up a webserver also requires setting up a Domain Name System (DNS) server and registering a domain
+name.
+
+The following subsections detail design decisions for each aspect of this general architecture.
+
+In order to simplify the setup, maintenance and cost of operations for the website Google App Engine (GAE) shall be used.
+The choice of GAE restricts the database to Google's Big Table datastore.
+
+One of the features of the website requires 
+the storage of user submitted photos. While the photos could be stored on the server provided by GAE, GAE provides a
+limited amount of storage space. If users want to upload high resolution photos the server will quickly run out of the 
+free storage. To mitigate this the website will use an outside photo site as a place to store and organize the photo.
+The website will simply act as a user interface to the storage sight. The chapter currently uses Photobucket for the photos
+meaning many photos are already uploaded there. In addition Photobucket has very large storage limits {\bf FILL IN STORAGE LIMIT AND GIVE A CITATION TO THE WEBSITE}. For this reason Photobucket will be used for storing the photos.
+
+Based on these design decisions the website architecture is as follows
+
+{\bf INSERT WEBSITE ARCHITECTURE DIAGRAM}
+
+
 \subsection{Webserver - Google App Engine}
+
+One necessary part of the architecture is the webserver which will run the actual application. There are two main options
+for the webserver: buy a computer and configure it to be a webserver or use a hosting service. In the vision and scope document for this project
+one of the assumptions was that the website will be hosted for free and that the website will be provided with a free
+domain name. \cite{schwab_apo_2012} This rules out the buy and configure a webserver option. So it is necessary to select a free hosting service.
+
+There are a multitude of free hosting services on the web, but the services vary in quality and not all packages
+come with a free domain name. The free services are often limited in the amount of bandwidth and storage they can use.
+Out of the surveyed hosting services with free packages Amazon EC2 offered the most amount of free bandwidth and storage. \cite{amazon_amazon_2012} \cite{heroku_heroku_2012} \cite{google_quotas_2012} However, using Amazon EC2 would require setup and configuration of a webserver and database server. In addition Amazon EC2's free tier is only free for the first year. After which the user must pay for all services.
+
+On the other hand Google App Engine (GAE) has a free tier that does not expire. The amount of resources provided for free are not as high as Amazon's free tier, but the service will remain free for the foreseeable future.  \cite{google_quotas_2012} In addition GAE provides a free hostname by giving the application a subdomain of the appspot.com domain.
+An additional benefit of GAE is that the free domain also comes with a free Secure Socket Layer (SSL) Certificate. An SSL 
+certificate will be needed to provide secure login pages and to encrypt and authenticate sensitive information.
+
+\subsection{Database - Google's Bigtable Datastore}
 
 \subsection{Application Language - Flask and Python}
 
 \subsection{Photo Storage - Photobucket}
 
 \section{Component Specification}
+
+\newpage
+
+\bibliography{designBib}
 
 \end{document}
