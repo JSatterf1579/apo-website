@@ -74,7 +74,7 @@ Jon Chan}
 \section{Introduction}
 
 \subsection{Document Overview}
-The \projName is a new website designed to replace the existing website.
+The \projName \, is a new website designed to replace the existing website.
 The current website provides basic administrative features for some of the executive positions.
 It also provides some basic features that allow brothers to keep in touch. However, each semester
 more features are requested and the current website was not designed with future maintainability
@@ -82,7 +82,7 @@ in mind. For this reason this project seeks to make a new website that will prov
 administrative tools and better social tools. The goal is for the website to decrease the amount of effort
 needed for administration and to get chapter members more involved in the organization. This document lays out
 the design for the new website including the overall architecture, rationale for selected components and
-services and the specifications of new components and services which must be created.
+services, and the specifications of new components and services which must be created.
 
 \subsection{Document Conventions}
 This document references previous documents created for this project as well as documentation
@@ -95,20 +95,26 @@ In text citations are listed as numbers in square brackets. For example ``[ 1 ]'
 \begin{tabular}{p{.20\textwidth}p{.80\textwidth}}
 
 \multicolumn{2}{c}{ {\bf Definitions} } \\ \hline
+{\bf Alumni} & A person who was previously a member, but has since graduated\\ \hline
+{\bf Big} & A member in the chapter who has guided another member during their pledging process \\ \hline
 {\bf Brother} & A general member of the chapter that has gone through the pledging process. \\ \hline
 {\bf Contract} & The requirements that a member must satisfy to remain in good standing with the chapter \\ \hline
 {\bf Exec Member} & A general member of the chapter (brother) that is elected or appointed to run a specific aspect of the chapter. \\ \hline
+{\bf Little} & Every member is a little. A little is the person that a big has guided through the pledging process \\ \hline
 {\bf Membership Review} & Event at the end of the semester in which the completion of each member's contract is reviewed by the chapter\\ \hline
 {\bf Pledge} & A member who has completed the initiation ceremony, but not the induction ceremony. These members do not have the full privilege of a brother\\ \hline
 {\bf Rushee} & A person who is interested in joining APO, but is not yet a pledge \\ \hline
 {\bf Service Report} & Request for approval of community service hours\\ \hline
-{\bf Alumni} & A person who was previously a member, but has since graduated\\ \hline
 \end{tabular}
 
 \begin{tabular}{p{.20\textwidth}p{.80\textwidth}}
 \multicolumn{2}{c}{ {\bf Acronyms} } \\ \hline
+DNS & Domain Name System \\ \hline
 GAE & Google App Engine \\ \hline
+SQL & Structured Query Language \\ \hline
 SSL & Secure Socket Layer \\ \hline
+WSGI & Web Server Gateway Interface \\ \hline
+
 \end{tabular}
 
 \section{Website Architecture}
@@ -134,7 +140,7 @@ The following subsections detail design decisions for each aspect of this genera
 
 \subsection{Webserver - Google App Engine}
 
-As shown in figure \ref{fig:generalWebArchitecture} part of the architecture is the webserver which will run the actual application. There are two main options
+As shown in figure \ref{fig:generalWebArchitecture}, part of the architecture is the webserver which will run the actual application. There are two main options
 for the webserver: buy a computer and configure it to be a webserver or use a hosting service. In the vision and scope document for this project
 one of the assumptions was that the website will be hosted for free and that the website will be provided with a free
 domain name. \cite{schwab_apo_2012} This rules out the buy and configure a webserver option. So it is necessary to select a free hosting service.
@@ -159,7 +165,7 @@ is restricted to using Google's Bigtable Datastore.
 The advantage of this constraint is that the website's data is very unlikely to be lost due to Google's large number
 of resources. In addition defining the schema for the Bigtable datastore is much easier than in a traditional SQL database.
 This is because Bigtable is what is known as a ``NoSQL'' database. \cite{google_how_2012} ``NoSQL'' essentially means that the database does not have a traditional SQL schema. This means that instead of using tables like a traditional
-SQL database Bigtable uses one ``big table'' that store what are known as ``Entities''. Entities are instances of a ``Model''. Models define the datatypes stored in an Entity as well as the requirements for each field. Models are defined in the code meaning that
+SQL database, Bigtable uses one ``big table'' that stores what are known as ``Entities''. Entities are instances of a ``Model''. Models define the datatypes stored in an Entity as well as the requirements for each field. Models are defined in the code meaning that
 the schema can easily be modified. Additionally the schema is automatically version controlled because it is defined in the
 code that is already under version control. Models are also object oriented meaning that a base model can be defined and
 generalized to more specific models. All of these properties make the Google's Bigtable more flexible than a traditional
@@ -181,14 +187,13 @@ unsupported features of the language on the hosting platform and more about the 
 \subsection{Application Framework - Flask}
 
 GAE does not require that a web framework is used. However, if a Python based web framework is not used then a lot of
-the development time will be spent implementing the underlying components of a Python Web Server Gateway Interface (WSGI) server application. \cite{wsgi.org_what_2012} Dozens of WSGI server frameworks have been written, such as Flask and Django. \cite{_flask_2010} \cite{_django_2012} It makes no sense to waste development time working on code that already exists. For this reason a Python based web development framework has been chosen.
+the development time will be spent implementing the underlying components of a Python Web Server Gateway Interface (WSGI) application. \cite{wsgi.org_what_2012} Dozens of WSGI server frameworks have been written, such as Flask and Django. \cite{_flask_2010} \cite{_django_2012} It makes no sense to waste development time working on code that already exists. For this reason a Python based web development framework has been chosen.
 
 Of the two mentioned frameworks, Django and Flask, Flask has been chosen as the framework the website will use. Of
 the two Flask makes less design decisions for you. For instance Django assumes that the projects built on top of it will
 use Django's database interface. However, that interface will not work with GAE's Bigtable datastore. It is possible to configure Django to use a different database, but it is difficult. Flask on the other hand is considered a ``microframework''.
 According to Flask's website this means that while Flask gives the projects built on it the basic code such as the WSGI 
-interface, Flask tries not to make higher level design decisions. Additionally Flask has many plugins available on
-their website. \cite{extensions_flask_2012}
+interface, Flask tries not to make higher level design decisions. However, everything does not need to be implemented from scratch with Flask. Flask has many extensions available on their website for common design problems. \cite{extensions_flask_2012}
 
 \subsection{Photo Storage - Photobucket}
 
@@ -200,7 +205,7 @@ on GAE. If users want to upload high resolution photographs the free storage wil
 the website will communicate with one of the many photo sites on the web. For this design Photobucket has been chosen. \cite{_photobucket_2012}
 
 Photobucket is the photo site currently used by the chapter. However, in the user survey included in appendix A of 
-the software requirements document many responses included complaints about how difficult it was to use.\cite{schwab_apo_srs_2012}  Choosing Photobucket as the outside photo service the website will have access to the existing photos on Photobucket.
+the software requirements document many responses included complaints about how difficult it was to use.\cite{schwab_apo_srs_2012}  Choosing Photobucket as the outside photo service the website will have access to the existing photos on Photobucket. Yet using Photobucket's API this project can improve on photobucket's UI to improve ease of use.
 
 Photobucket's API does have limits on the amount of operations an application can perform before being charged. \cite{photobucket_method_2010} However, the limits are well beyond the expected traffic for this website.
 
@@ -286,11 +291,11 @@ and to validate that the received form data meets the criteria specified in the 
 
 Google's Bigtable requires the definition of Models instead of a traditional schema. Models are inheritable. The website models are subclasses of one of the three following classes: PolyModel, Model, Expando. PolyModel derived classes support inheritance. Model derived classes are the standard model type. Expando derived classes support having additional fields stored with an entity of the model even when that additional data was not specified in the original model.
 
-In this document's diagrams Models are shown as classes (because they are implemented as classes). References are shown by denoting a member variable's type as the type of a model defined in this document.
+In this document's diagrams, Models are shown as classes (because they are implemented as classes). References are shown by denoting a member variable's type as the type of a model defined in this document.
 
 \subsection{Packages}
 
-There are four main packages. Each package contains the definitions of one of the component types specified in section \ref{sec:Views} through section \ref{sec:Models}. So for instance the template package contains all of the templates used in the system. The package structure is show in figure \ref{fig:PackageStructure}.
+There are four main packages. Each package contains the definitions of one of the component types specified in section \ref{sec:Views} through section \ref{sec:Models}. So for instance the template package contains all of the templates used in the system. The package structure is shown in figure \ref{fig:PackageStructure}.
 
 \FloatBarrier
 \begin{figure}[h1]
@@ -304,7 +309,7 @@ There are four main packages. Each package contains the definitions of one of th
 \subsection{User Login - Flask-Login}
 
 In general Flask does not provide anything but the WSGI interface for an application. However, Flask's website links to many
-extensions to Flask. User Login is such a common task that an extension to Flask known as Flask-Login exists. \cite{_flask-login} Flask-Login provides a set of functions and classes to restrict views based on user login. The only thing this website has to handle is the password checking code.
+extensions for Flask. User Login is such a common task that an extension to Flask known as Flask-Login exists. \cite{_flask-login} Flask-Login provides a set of functions and classes to restrict views based on user login. The only thing this website has to handle is the password checking code.
 
 \subsubsection{Login View, Form, and Template Structure}
 \FloatBarrier
@@ -346,7 +351,7 @@ The general process for checking the password is:
 \end{figure}
 \FloatBarrier
 
-Event is a generic event type. Other models such as ServiceEvent and Chapter are derived from it. It is assumed event has 1 and only 1 location. Location is just info about the physical location of an event. Location was separated because it was not known if the assumption of 1 and only 1 location would hold. In the event that the association does not hold. Nothing will need to be changed.
+Event is a generic event type. Other models such as ServiceEvent and ChapterEvent are derived from it. It is assumed event has 1 and only 1 location. Location is just info about the physical location of an event. Location was separated because it was not known if the assumption of 1 and only 1 location would hold. In the event that the association does not hold. Nothing will need to be changed.
 
 \subsection{Service Event Tracking}
 
@@ -400,7 +405,7 @@ ServiceEvents and Users have a many-to-many relationship. ServiceSignup was crea
 \end{figure}
 \FloatBarrier
 
-There are 2 main types of Service Reports InsideServiceReports and OutsideServiceReports. InsideServiceReports deal with events that the chapter has condoned as a service event and announced at chapter. For this reason a ServiceEvent should already exist that the report can be associated with. OutsideServiceReports on the other hand are events done by a brother on his/her own. Therefore there is no reason to assume that there is a ServiceEvent already created. That is way the fields in the two need to be different.
+There are 2 main types of Service Reports: InsideServiceReports and OutsideServiceReports. InsideServiceReports deal with events that the chapter has condoned as a service event and announced at chapter. For this reason a ServiceEvent should already exist that the report can be associated with. OutsideServiceReports on the other hand are events done by a brother on his/her own. Therefore there is no reason to assume that there is a ServiceEvent already created. That is why the fields in the two need to be different.
 
 \FloatBarrier
 \begin{figure}[h!]
