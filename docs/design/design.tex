@@ -314,6 +314,23 @@ extensions to Flask. User Login is such a common task that an extension to Flask
 \end{figure}
 \FloatBarrier
 
+The LoginView is responsible for taking in the loginTemplate and using the info in the loginForm to do the password hashing algorithm described in section \ref{sec:passwordSecurity}. If the hashed password matches the stored hashed password then the user is successfully logged in and the view updates the applications state
+
+\subsubsection{Password Security}
+\label{sec:passwordSecurity}
+
+In order to provide the most security possible logins will only be done over an SSL encrypted connection. In addition passwords shall be salted and hashed before being stored. No plain text form of the password shall ever be stored anywhere by the webserver.
+
+The general process for checking the password is:
+
+\begin{enumerate}
+\item Retrieve user from datastore based on provided username
+\item Retrieve salt from user entity
+\item Take salt and concatenate it with the received password
+\item Perform a SHA-256 Hash on the salted password
+\item Check if the hash matches the hash stored in the user entity
+\end{enumerate}
+
 \subsection{General Models}
 
 \subsubsection{Event Model}
@@ -326,6 +343,8 @@ extensions to Flask. User Login is such a common task that an extension to Flask
 \label{fig:eventModelDiagram}
 \end{figure}
 \FloatBarrier
+
+Event is a generic event type. Other models such as ServiceEvent and Chapter are derived from it. It is assumed event has 1 and only 1 location. Location is just info about the physical location of an event. Location was separated because it was not known if the assumption of 1 and only 1 location would hold. In the event that the association does not hold. Nothing will need to be changed.
 
 \subsection{Service Event Tracking}
 
@@ -366,6 +385,10 @@ The service event related models are and their associations are shown in figure 
 \end{figure}
 \FloatBarrier
 
+ServiceEvent inherits from event and adds the extra fields shown in the diagram.
+
+ServiceEvents and Users have a many-to-many relationship. ServiceSignup was created to resolve that relationship. Each ServiceSignup can have 1 ServiceEvent and 1 User. However, each User and each ServiceEvent can have many ServiceSignUps.
+
 \FloatBarrier
 \begin{figure}[h!]
 \centering
@@ -374,6 +397,8 @@ The service event related models are and their associations are shown in figure 
 \label{fig:serviceReportModelDiagram}
 \end{figure}
 \FloatBarrier
+
+There are 2 main types of Service Reports InsideServiceReports and OutsideServiceReports. InsideServiceReports deal with events that the chapter has condoned as a service event and announced at chapter. For this reason a ServiceEvent should already exist that the report can be associated with. OutsideServiceReports on the other hand are events done by a brother on his/her own. Therefore there is no reason to assume that there is a ServiceEvent already created. That is way the fields in the two need to be different.
 
 \FloatBarrier
 \begin{figure}[h!]
@@ -384,9 +409,15 @@ The service event related models are and their associations are shown in figure 
 \end{figure}
 \FloatBarrier
 
+ServiceHour resolves the many-to-many relationship between Users and ServiceReports. ServiceReports can have many ServiceHours and Users can have many ServiceHours, but ServiceHours can have only one User and one ServiceReport. InsideServiceReport and OutsideServiceReport derive from the same base model despite sharing no common fields. This was done to allow a single ServiceHour Model that can reference both InsideServiceReports and OutsideServiceReports. Without the inheritance two types of ServiceHour would need to be created.
+
+
 \subsubsection{Create Service Event View, Form, and Template Structure}
 
 The general structure of the Create Service Event Views, Forms and Template components is shown in figure \ref{fig:createServiceEventViewFormTemplateDiagram}.
+
+The service event view will display a list of current service events.
+For exec, there will be an option to create/update service events. This option will lead to the create/update service events view. This includes the create/update service events form which meets the requirements specification. The view allows the exec member to accept or reject changes they have made, or accept or reject an event they have created.
 
 \FloatBarrier
 \begin{figure}[h!]
@@ -401,6 +432,9 @@ The general structure of the Create Service Event Views, Forms and Template comp
 
 The general structure of the Event Signup Views, Forms, and Template components is shown in figure \ref{fig:eventSignupViewFormTemplateDiagram}.
 
+
+For brothers and pledges, there will be an option to sign up for a service event from the list. Selecting this option takes the brother to the create/update service events view, and displays the event details and the event sign up form. The event sign up form allows the brother to sign up for an event. This leads to the additional information view, containing the additional information form, which the brother or pledge can fill out if necessary.
+
 \FloatBarrier
 \begin{figure}[h!]
 \centering
@@ -412,6 +446,7 @@ The general structure of the Event Signup Views, Forms, and Template components 
 
 \subsubsection{Requirements Traceability Matrix}
 
+\FloatBarrier
 \begin{table}
     \begin{tabular}{|l|l|}
         \hline
@@ -426,6 +461,7 @@ The general structure of the Event Signup Views, Forms, and Template components 
         \hline
     \end{tabular}
 \end{table}
+\FloatBarrier
 
 \subsection{Member Contracts}
 
@@ -465,9 +501,17 @@ The member contract related models and their associations are shown in figure \r
 \end{figure}
 \FloatBarrier
 
+Each contract can have multiple requirements which is modeled by Req. There are three specific types of requirements hour requirements, dues requirements and attendance requirements. These are modeled by the subtypes of Req, hourReq, duesReq, and attendanceReq. hourReq specifies a type field to differentiate between inside and outside hours. The type field also provides future expandability. Same goes for the type field in the attendanceReq model.
+
+chapterEvent is a child of Event. This was added so that attendanceReq could specify either a chapter event or a service event as required.
+
+By allowing the specific requirements to derive from a base requirements class the modeling of the contract requirements is very flexible and easily expandable. If a new type of requirement is needed it simply needs to be added to the model class hierarchy.
+
 \subsubsection{Forms, Views, and Templates}
 
 The general structure of the member contract Views, Forms, and Template components is shown in figure \ref{fig:memberContractViewFormTemplateDiagram}.
+
+For exec members, the contract view will display the option for creating or updating an existing contract. This will lead to the create/update contract view. The create/update contract view will display the create/update contract form and accept the data as detailed in the requirements specification.
 
 \FloatBarrier
 \begin{figure}[h!]
@@ -478,8 +522,11 @@ The general structure of the member contract Views, Forms, and Template componen
 \end{figure}
 \FloatBarrier
 
+For brothers and pledges, the contract view will display a list of contract types. Selecting a contract type will allow the brother to see the information as detailed in the requirements specification. The select contract view will then have a button allowing the brother to sign their contract, and a button to allow the brother or pledge to go back to the list of contracts.
+
 \subsubsection{Requirements Traceability Matrix}
 
+\FloatBarrier
 \begin{table}
     \begin{tabular}{|l|l|}
         \hline
@@ -494,6 +541,7 @@ The general structure of the member contract Views, Forms, and Template componen
         \hline
     \end{tabular}
 \end{table}
+\FloatBarrier
 
 
 \subsection{Member Profiles}
@@ -534,9 +582,23 @@ The member profile related models and their associations are shown in figure \re
 \end{figure}
 \FloatBarrier
 
+The User model contains the basic information about each user. Because this website is for a Case student organization it is assumed that all users had a caseID. This id will most likely be used as the username. A unique part of the organization is that each member has what is known as a Family. The family of a member is determined by who that member's Big is. A big is someone that is already a member of the chapter. A big is supposed to help orient the new member into the chapter. The new member is referred to as a little. Each user can have one and only one big. However, users can have multiple littles.
+
+The User model also is a child class of login.User\_mixin. login.User\_mixin is an interface defined in the Flask-Login package that will allow the user entity to be stored in the users session variables.
+
+Each user can have multiple addresses, multiple email address, and multiple phoneNumbers. This is why the address, email, and phoneNumber information are broken into separate models.
+
+userRole resolves a many-to-many relationship between role and user. Each user can have multiple roles and each role can have multiple users. The role will be used to differentiate between the different user classes. For example Exec members will have the Exec role and Brother role but Brothers will have only Brother role.
+
 \subsubsection{Forms, View, and Templates}
 
 The general structure of the member profile Views, Forms, and Template components is show in figure \ref{fig:memberProfileViewFormTemplateDiagram}.
+
+The member list view shows a list of all member profiles. Brothers and pledges will be able to search for a specific brother by name or select the brother from the list. This will take them to the member profile view, which displays the information detailed in the requirements specification.
+
+The exec will be able to create member profiles from an option in the member list view. This will take them to the create/update member profile view,which has the create/update member profile form. This allows exec to enter information as specified by the requirements specification.
+
+Brothers and pledges will be able to update their profiles from the create/update profile view as well, but only for their own profile.
 
 \FloatBarrier
 \begin{figure}[h!]
@@ -549,6 +611,7 @@ The general structure of the member profile Views, Forms, and Template component
 
 \subsubsection{Requirements Traceability Matrix}
 
+\FloatBarrier
 \begin{table}
     \begin{tabular}{|l|l|}
         \hline
@@ -562,7 +625,7 @@ The general structure of the member profile Views, Forms, and Template component
         \hline
     \end{tabular}
 \end{table}
-
+\FloatBarrier
 
 \subsection{Chapter Calendar}
 
@@ -608,9 +671,15 @@ The chapter blog related models and their associations are show in figure \ref{f
 \end{figure}
 \FloatBarrier
 
+The blog model is very simple. Essentially there are only two things that need to be stored the posts and the comments associated with the post.
+
 \subsubsection{Forms, Views, and Templates}
 
 The general structure of the chapter blog Views, Forms, and Template components is shown in figure \ref{fig:chapterBlogViewFormTemplateDiagram}.
+
+The blog view will display the most recent blog post and its comments, as well as the submit comment form for brothers and pledges. In this view there will be an option to view archives of the blog along with their comments.
+
+Exec will have access to the moderate comments view, which will allow them to remove any comments on the blog. Exec will also be able to submit blog posts using the submit blog form on the blog view.
 
 \FloatBarrier
 \begin{figure}[h!]
@@ -623,6 +692,7 @@ The general structure of the chapter blog Views, Forms, and Template components 
 
 \subsubsection{Requirements Traceability Matrix}
 
+\FloatBarrier
 \begin{table}
     \begin{tabular}{|l|l|}
         \hline
@@ -635,7 +705,7 @@ The general structure of the chapter blog Views, Forms, and Template components 
         \hline
     \end{tabular}
 \end{table}
-
+\FloatBarrier
 
 \subsection{Photos}
 
@@ -680,10 +750,16 @@ to parts of their account without giving away the account password. Oauth's prot
 
 The general structure of the member contract Views, Forms, and Template components is shown in figure \ref{fig:photoViewFormTemplateDiagram}.
 
+Members and pledges will be able to view photo albums and their descriptions from the photo album view, and will be able to submit photos to albums using the submit photo form.
+
+Exec members will be able to review and authorize the submitted photos and place them into albums in the photo album view as specified in the requirements specification.
+
+Each of the views will make calls to the photobucket API in order to retrieve the necessary information about each photo and album.
+
 \FloatBarrier
 \begin{figure}[h!]
 \centering
-\includegraphics[scale=.65]{img/viewFormTemplateDiagrams/submitPhoto}
+\includegraphics[scale=.65]{img/viewFormTemplateDiagrams/photo}
 \caption{Photo Submission Views, Forms and Template Structure}
 \label{fig:photoViewFormTemplateDiagram}
 \end{figure}
@@ -703,6 +779,18 @@ The activity diagram for the Chapter Statistics feature of the website was inclu
 \caption{Chapter Statistics Activity Diagram}
 \label{fig:chapterStatisticsActivityDiagram}
 \end{sidewaysfigure}
+\FloatBarrier
+
+\subsubsection{Forms, Views, and Templates}
+Exec members will be able to access the statistics view, which will display the information as specified in the requirements specification. There will also be an option to export the statistics into and offline format.
+
+\FloatBarrier
+\begin{figure}[h!]
+\centering
+\includegraphics[scale=.65]{img/viewFormTemplateDiagrams/chapterStats}
+\caption{Chapter Statistics View, Form, and Template Structure}
+\label{fig:statsViewFormTemplateDiagram}
+\end{figure}
 \FloatBarrier
 
 \newpage
