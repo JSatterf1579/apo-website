@@ -288,7 +288,7 @@ In this document's diagrams Models are shown as classes (because they are implem
 
 \subsection{Packages}
 
-There are four main packages. Each package contains the definitions of one of the component types specified in section \ref{sec:Views} through section \ref{sec:Models}. The package structure is show in figure \ref{fig:PackageStructure}.
+There are four main packages. Each package contains the definitions of one of the component types specified in section \ref{sec:Views} through section \ref{sec:Models}. So for instance the template package contains all of the templates used in the system. The package structure is show in figure \ref{fig:PackageStructure}.
 
 \FloatBarrier
 \begin{figure}[h1]
@@ -304,73 +304,162 @@ There are four main packages. Each package contains the definitions of one of th
 In general Flask does not provide anything but the WSGI interface for an application. However, Flask's website links to many
 extensions to Flask. User Login is such a common task that an extension to Flask known as Flask-Login exists. \cite{_flask-login} Flask-Login provides a set of functions and classes to restrict views based on user login. The only thing this website has to handle is the password checking code.
 
+\subsubsection{Login View, Form, and Template Structure}
+\FloatBarrier
+\begin{figure}[h!]
+\centering
+\includegraphics[scale=.65]{img/viewFormTemplateDiagrams/logIn}
+\caption{Login View, Form, and Template Structure}
+\label{fig:loginViewFormTemplateStructureDiagram}
+\end{figure}
+\FloatBarrier
+
+\subsection{General Models}
+
+\subsubsection{Event Model}
+
+\FloatBarrier
+\begin{figure}[h!]
+\centering
+\includegraphics[scale=.65]{img/modelDiagrams/eventModel}
+\caption{Event Model Class and Association Diagram}
+\label{fig:eventModelDiagram}
+\end{figure}
+\FloatBarrier
+
 \subsection{Service Event Tracking}
 
 As stated in the Vision and Scope document and the Software Requirements document one of the main features of the website is the ability to create and track Service events.
 
 \subsubsection{Activity Diagram}
 
-The activity diagram for the Service Event feature of the website was included in the requirements document, however, it is also reproduced here for convenience.
+The activity diagrams for the Service Event features of the website was included in the requirements document, however, they are also reproduced here for convenience.
 
 \FloatBarrier
-\begin{figure}[h!]
+\begin{sidewaysfigure}[h!]
 \centering
-\missingfigure{Service Event Tracking Activity Diagram}
-\caption{Service Event Tracking Activity Diagram}
-\label{fig:serviceEventTrackingActivityDiagram}
-\end{figure}
+\includegraphics[scale=.65]{img/activityDiagrams/serviceEventActivity1}
+\caption{Service Event Exec Activity Diagram}
+\label{fig:serviceEventExecActivityDiagram}
+\end{sidewaysfigure}
+\FloatBarrier
+
+\FloatBarrier
+\begin{sidewaysfigure}[h!]
+\centering
+\includegraphics[scale=.65]{img/activityDiagrams/serviceEventActivity2}
+\caption{Service Event Brother/Pledge Activity Diagram}
+\label{fig:serviceEventBrotherActivityDiagram}
+\end{sidewaysfigure}
 \FloatBarrier
 
 \subsubsection{Models}
 
-The service event related models are and their associations are shown in figure \ref{fig:serviceEventModelDiagram}
+The service event related models are and their associations are shown in figure \ref{fig:serviceEventModelDiagram}, figure \ref{fig:serviceReportModelDiagram} and figure \ref{fig:serviceHourModelDiagram}
 
 \FloatBarrier
 \begin{figure}[h!]
 \centering
-\missingfigure{Service Event Model Diagram}
+\includegraphics[scale=.65]{img/modelDiagrams/serviceEventModel}
 \caption{Service Event Model and Association Diagram}
 \label{fig:serviceEventModelDiagram}
 \end{figure}
 \FloatBarrier
 
-\subsubsection{Forms, Views and Templates}
-
-The general structure of the Service event Views, Forms and Template components is shown in figure \ref{fig:serviceEventViewFormTemplateDiagram}.
+\FloatBarrier
+\begin{figure}[h!]
+\centering
+\includegraphics[scale=.65]{img/modelDiagrams/serviceReportModel}
+\caption{Service Report Model Diagram}
+\label{fig:serviceReportModelDiagram}
+\end{figure}
+\FloatBarrier
 
 \FloatBarrier
 \begin{figure}[h!]
 \centering
-\missingfigure{Service Event Views, Forms and Template Structure}
-\caption{Service Event Views, Forms, and Template Structure}
-\label{fig:serviceEventViewFormTemplateDiagram}
+\includegraphics[scale=.65]{img/modelDiagrams/serviceHourModel}
+\caption{Service Hour Model Diagram}
+\label{fig:serviceHourModelDiagram}
 \end{figure}
 \FloatBarrier
+
+\subsubsection{Create Service Event View, Form, and Template Structure}
+
+The general structure of the Create Service Event Views, Forms and Template components is shown in figure \ref{fig:createServiceEventViewFormTemplateDiagram}.
+
+\FloatBarrier
+\begin{figure}[h!]
+\centering
+\includegraphics[scale=.65]{img/viewFormTemplateDiagrams/createServiceEvent}
+\caption{Create Service Event Views, Forms, and Template Structure}
+\label{fig:createServiceEventViewFormTemplateDiagram}
+\end{figure}
+\FloatBarrier
+
+\subsubsection{Event Signup View, Form, and Template Structure}
+
+The general structure of the Event Signup Views, Forms, and Template components is shown in figure \ref{fig:eventSignupViewFormTemplateDiagram}.
+
+\FloatBarrier
+\begin{figure}[h!]
+\centering
+\includegraphics[scale=.65]{img/viewFormTemplateDiagrams/eventSignUp}
+\caption{Event Signup Views, Forms, and Template Structure}
+\label{fig:eventSignupViewFormTemplateDiagram}
+\end{figure}
+\FloatBarrier
+
+\subsubsection{Requirements Traceability Matrix}
+
+\begin{table}
+    \begin{tabular}{|l|l|}
+        \hline
+        Functionality & Designed in                                      \\ \hline
+        REQ-1         & Log in form, service event model                 \\ 
+        REQ-2         & Create service event form, service event model   \\ 
+        REQ-3         & Edit service event form, service event model     \\ 
+        REQ-4         & Implemented in views, service event model        \\ 
+        REQ-5         & Additional information form, service event model \\ 
+        REQ-6         & Brother sign up form, service event model        \\ 
+        REQ-7         & Enter hours form, service event model            \\
+        \hline
+    \end{tabular}
+\end{table}
 
 \subsection{Member Contracts}
 
 As stated in the Vision and Scope document and the Software Requirements document one of the main features of the website is the ability to create and track member contracts.
 
 \subsubsection{Activity Diagram}
-The activity diagram for the Member Contracts feature of the website was included in the requirements document, however, it is also reproduced here for convenience in figure \ref{fig:memberContractActivityDiagram}.
+The activity diagram for the Member Contracts feature of the website was included in the requirements document, however, it is also reproduced here for convenience in figure \ref{fig:memberContractExecActivityDiagram} and figure \ref{fig:memberContractBrotherActivityDiagram}.
 
 \FloatBarrier
-\begin{figure}[h!]
+\begin{sidewaysfigure}[h!]
 \centering
-\missingfigure{Member Contract Tracking Activity Diagram}
-\caption{Member Contract Feature Activity Diagram}
-\label{fig:memberContractActivityDiagram}
-\end{figure}
+\includegraphics[scale=.65]{img/activityDiagrams/memberContractActivity1}
+\caption{Member Contract Feature Exec Activity Diagram}
+\label{fig:memberContractExecActivityDiagram}
+\end{sidewaysfigure}
+\FloatBarrier
+
+\FloatBarrier
+\begin{sidewaysfigure}[h!]
+\centering
+\includegraphics[scale=.65]{img/activityDiagrams/memberContractActivity2}
+\caption{Member Contract Feature Brother Activity Diagram}
+\label{fig:memberContractBrotherActivityDiagram}
+\end{sidewaysfigure}
 \FloatBarrier
 
 \subsubsection{Models}
 
-The member contract related models and their associations are shown in figure \ref{fig:serviceEventModelDiagram}
+The member contract related models and their associations are shown in figure \ref{fig:memberContractModelDiagram}
 
 \FloatBarrier
 \begin{figure}[h!]
 \centering
-\missingfigure{Member Contract Model Diagram}
+\includegraphics[scale=.65]{img/modelDiagrams/contractModel}
 \caption{Member Contract Model and Association Diagram}
 \label{fig:memberContractModelDiagram}
 \end{figure}
@@ -383,26 +472,53 @@ The general structure of the member contract Views, Forms, and Template componen
 \FloatBarrier
 \begin{figure}[h!]
 \centering
-\missingfigure{Member Contract Views, Forms and Template Structure}
+\includegraphics[scale=.65]{img/viewFormTemplateDiagrams/createUpdateContract}
 \caption{Member Contract Views, Forms, and Template Structure}
 \label{fig:memberContractViewFormTemplateDiagram}
 \end{figure}
 \FloatBarrier
+
+\subsubsection{Requirements Traceability Matrix}
+
+\begin{table}
+    \begin{tabular}{|l|l|}
+        \hline
+        Functionality & Designed in                                      \\ \hline
+        REQ-8         & Create/Update contract type form, contract model \\ 
+        REQ-9         & Implemented in views, contract model             \\ 
+        REQ-10        & Create/Update contract type form, contract model \\ 
+        REQ-11        & Implemented in views, contract model             \\ 
+        REQ-12        & Implemented in views, contract model             \\ 
+        REQ-13        & Implemented in views, contract model             \\ 
+        REQ-14        & Implemented in views, contract model             \\
+        \hline
+    \end{tabular}
+\end{table}
+
 
 \subsection{Member Profiles}
 
 As stated in the Vision and Scope document and the Software Requirements document one of the main features of the website is the ability to create and track member profiles.
 
 \subsubsection{Activity Diagram}
-The activity diagram for the Member Profiles feature of the website was included in the requirements document, however, it is also reproduced here for convenience in figure \ref{fig:memberProfileActivityDiagram}.
+The activity diagram for the Member Profiles feature of the website was included in the requirements document, however, it is also reproduced here for convenience in figure \ref{fig:memberProfileExecActivityDiagram} and  figure \ref{fig:memberProfileBrotherActivityDiagram}.
 
 \FloatBarrier
-\begin{figure}[h!]
+\begin{sidewaysfigure}[h!]
 \centering
-\missingfigure{Member Profile Activity Diagram}
-\caption{Member Profile Activity Diagram}
-\label{fig:memberProfileActivityDiagram}
-\end{figure}
+\includegraphics[scale=.65]{img/activityDiagrams/memberProfileActivity1}
+\caption{Member Profile Exec Activity Diagram}
+\label{fig:memberProfileExecActivityDiagram}
+\end{sidewaysfigure}
+\FloatBarrier
+
+\FloatBarrier
+\begin{sidewaysfigure}[h!]
+\centering
+\includegraphics[scale=.65]{img/activityDiagrams/memberProfileActivity2}
+\caption{Member Profile Brother Activity Diagram}
+\label{fig:memberProfileBrotherActivityDiagram}
+\end{sidewaysfigure}
 \FloatBarrier
 
 \subsubsection{Models}
@@ -412,7 +528,7 @@ The member profile related models and their associations are shown in figure \re
 \FloatBarrier
 \begin{figure}[h!]
 \centering
-\missingfigure{Member Profile Model Diagram}
+\includegraphics[scale=.65]{img/modelDiagrams/userModel}
 \caption{Member Profile Model Diagram}
 \label{fig:memberProfileModelDiagram}
 \end{figure}
@@ -425,11 +541,28 @@ The general structure of the member profile Views, Forms, and Template component
 \FloatBarrier
 \begin{figure}[h!]
 \centering
-\missingfigure{Member Profile Views, Forms, and Template Structure}
+\includegraphics[scale=.65]{img/viewFormTemplateDiagrams/createUpdateProfile}
 \caption{Member Profile Views, Forms, and Template Structure}
 \label{fig:memberProfileViewFormTemplateDiagram}
 \end{figure}
 \FloatBarrier
+
+\subsubsection{Requirements Traceability Matrix}
+
+\begin{table}
+    \begin{tabular}{|l|l|}
+        \hline
+        Functionality & Designed in                               \\ \hline
+        REQ-15        & Implemented in views, profile model       \\ 
+        REQ-16        & Create/Update profile form, profile model \\ 
+        REQ-17        & Implemented in views, profile model       \\ 
+        REQ-18        & Implemented in views, profile model       \\ 
+        REQ-19        & Create/Update profile form, profile model \\ 
+        REQ-20        & Create/Update profile form, profile model \\
+        \hline
+    \end{tabular}
+\end{table}
+
 
 \subsection{Chapter Calendar}
 
@@ -442,15 +575,24 @@ The website will already be running on GAE so a Google account will already exis
 As stated in the Vision and Scope document and the Software Requirements document one of the main features of the website is the ability to create blog postings.
 
 \subsubsection{Activity Diagram}
-The activity diagram for the Chapter Blog feature of the website was included in the Software Requirements document, however, it is also reproduced here for convenience in figure \ref{fig:blogActivityDiagram}.
+The activity diagram for the Chapter Blog feature of the website was included in the Software Requirements document, however, it is also reproduced here for convenience in figure \ref{fig:blogExecActivityDiagram} and figure \ref{fig:blogBrotherActivityDiagram}.
 
 \FloatBarrier
-\begin{figure}[h!]
+\begin{sidewaysfigure}[h!]
 \centering
-\missingfigure{Chapter Blog Activity Diagram}
-\caption{Chapter Blog Activity Diagram}
-\label{fig:blogActivityDiagram}
-\end{figure}
+\includegraphics[scale=.65]{img/activityDiagrams/blogActivity1}
+\caption{Chapter Blog Exec Activity Diagram}
+\label{fig:blogExecActivityDiagram}
+\end{sidewaysfigure}
+\FloatBarrier
+
+\FloatBarrier
+\begin{sidewaysfigure}[h!]
+\centering
+\includegraphics[scale=.65]{img/activityDiagrams/blogActivity2}
+\caption{Chapter Blog Brother Activity Diagram}
+\label{fig:blogBrotherActivityDiagram}
+\end{sidewaysfigure}
 \FloatBarrier
 
 \subsubsection{Models}
@@ -460,7 +602,7 @@ The chapter blog related models and their associations are show in figure \ref{f
 \FloatBarrier
 \begin{figure}[h!]
 \centering
-\missingfigure{Chapter Blog Model Diagram}
+\includegraphics[scale=.65]{img/modelDiagrams/blogModel}
 \caption{Chapter Blog Model Diagram}
 \label{fig:blogModelDiagram}
 \end{figure}
@@ -473,26 +615,60 @@ The general structure of the chapter blog Views, Forms, and Template components 
 \FloatBarrier
 \begin{figure}[h!]
 \centering
-\missingfigure{Chapter Blog Views, Forms, and Template Structure}
+\includegraphics[scale=.65]{img/viewFormTemplateDiagrams/blog}
 \caption{Chapter Blog Views, Forms, and Template Structure}
 \label{fig:chapterBlogViewFormTemplateDiagram}
 \end{figure}
 \FloatBarrier
+
+\subsubsection{Requirements Traceability Matrix}
+
+\begin{table}
+    \begin{tabular}{|l|l|}
+        \hline
+        Functionality & Designed in                      \\ \hline
+        REQ-26        & Write blog post form, blog model \\ 
+        REQ-27        & Write blog post form, blog model \\ 
+        REQ-28        & Implemented in views, blog model \\ 
+        REQ-29        & Implemented in views, blog model \\ 
+        REQ-30        & Comment form, blog model         \\
+        \hline
+    \end{tabular}
+\end{table}
+
 
 \subsection{Photos}
 
 As stated in the Vision and Scope document and the Software Requirements document one of the main features of the website is the ability to create, view and organize user submitted photos.
 
 \subsubsection{Activity Diagram}
-The activity diagram for the Photo features of the website was included in the requirements document, however, it is also reproduced here for convenience in figure \ref{fig:photoActivityDiagram}.
+The activity diagram for the Photo features of the website was included in the requirements document, however, it is also reproduced here for convenience in figure \ref{fig:photoExec1ActivityDiagram}, figure figure \ref{fig:photoExec2ActivityDiagram}, and figure figure \ref{fig:photoBrotherActivityDiagram}.
 
 \FloatBarrier
-\begin{figure}[h!]
+\begin{sidewaysfigure}[h!]
 \centering
-\missingfigure{Photo Activity Diagram}
-\caption{Photo Activity Diagram}
-\label{fig:photoActivityDiagram}
-\end{figure}
+\includegraphics[scale=.65]{img/activityDiagrams/photoActivity1_1}
+\caption{Photo Exec Features Activity Diagram 1}
+\label{fig:photoExec1ActivityDiagram}
+\end{sidewaysfigure}
+\FloatBarrier
+
+\FloatBarrier
+\begin{sidewaysfigure}[h!]
+\centering
+\includegraphics[scale=.65]{img/activityDiagrams/photoActivity1_2}
+\caption{Photo Exec Features Activity Diagram 2}
+\label{fig:photoExec2ActivityDiagram}
+\end{sidewaysfigure}
+\FloatBarrier
+
+\FloatBarrier
+\begin{sidewaysfigure}[h!]
+\centering
+\includegraphics[scale=.65]{img/activityDiagrams/photoActivity2}
+\caption{Photo Brother Features Activity Diagram}
+\label{fig:photoBrotherActivityDiagram}
+\end{sidewaysfigure}
 \FloatBarrier
 
 \subsubsection{Oauth}
@@ -507,8 +683,8 @@ The general structure of the member contract Views, Forms, and Template componen
 \FloatBarrier
 \begin{figure}[h!]
 \centering
-\missingfigure{Photo Views, Forms and Template Structure}
-\caption{Photo Views, Forms and Template Structure}
+\includegraphics[scale=.65]{img/viewFormTemplateDiagrams/submitPhoto}
+\caption{Photo Submission Views, Forms and Template Structure}
 \label{fig:photoViewFormTemplateDiagram}
 \end{figure}
 \FloatBarrier
@@ -521,12 +697,12 @@ As stated in the Vision and Scope document and the Software Requirements documen
 The activity diagram for the Chapter Statistics feature of the website was included in the requirements document, however, it is also reproduced here for convenience in figure \ref{fig:chapterStatisticsActivityDiagram}.
 
 \FloatBarrier
-\begin{figure}[h!]
+\begin{sidewaysfigure}[h!]
 \centering
-\missingfigure{Chapter Statistics Activity Diagram}
+\includegraphics[scale=.65]{img/activityDiagrams/chapterStatisticsActivity1}
 \caption{Chapter Statistics Activity Diagram}
 \label{fig:chapterStatisticsActivityDiagram}
-\end{figure}
+\end{sidewaysfigure}
 \FloatBarrier
 
 \newpage
