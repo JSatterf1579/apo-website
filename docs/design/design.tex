@@ -299,25 +299,235 @@ There are four main packages. Each package contains the definitions of one of th
 \end{figure}
 \FloatBarrier
 
-\subsection{User Login}
-
-\subsubsection{Flask Login Overview}
+\subsection{User Login - Flask-Login}
 
 In general Flask does not provide anything but the WSGI interface for an application. However, Flask's website links to many
-extensions to Flask. User Login is such a common task that an extension to Flask known as Flask-Login exists.
+extensions to Flask. User Login is such a common task that an extension to Flask known as Flask-Login exists. \cite{_flask-login} Flask-Login provides a set of functions and classes to restrict views based on user login. The only thing this website has to handle is the password checking code.
 
-\subsection{User Roles}
+\subsection{Service Event Tracking}
 
-\subsection{Photo Classes}
+As stated in the Vision and Scope document and the Software Requirements document one of the main features of the website is the ability to create and track Service events.
 
-\subsubsection{Photo Class}
+\subsubsection{Activity Diagram}
 
-\subsubsection{Album Class}
+The activity diagram for the Service Event feature of the website was included in the requirements document, however, it is also reproduced here for convenience.
 
-\subsection{Oauth}
+\FloatBarrier
+\begin{figure}[h!]
+\centering
+\missingfigure{Service Event Tracking Activity Diagram}
+\caption{Service Event Tracking Activity Diagram}
+\label{fig:serviceEventTrackingActivityDiagram}
+\end{figure}
+\FloatBarrier
+
+\subsubsection{Models}
+
+The service event related models are and their associations are shown in figure \ref{fig:serviceEventModelDiagram}
+
+\FloatBarrier
+\begin{figure}[h!]
+\centering
+\missingfigure{Service Event Model Diagram}
+\caption{Service Event Model and Association Diagram}
+\label{fig:serviceEventModelDiagram}
+\end{figure}
+\FloatBarrier
+
+\subsubsection{Forms, Views and Templates}
+
+The general structure of the Service event Views, Forms and Template components is shown in figure \ref{fig:serviceEventViewFormTemplateDiagram}.
+
+\FloatBarrier
+\begin{figure}[h!]
+\centering
+\missingfigure{Service Event Views, Forms and Template Structure}
+\caption{Service Event Views, Forms, and Template Structure}
+\label{fig:serviceEventViewFormTemplateDiagram}
+\end{figure}
+\FloatBarrier
+
+\subsection{Member Contracts}
+
+As stated in the Vision and Scope document and the Software Requirements document one of the main features of the website is the ability to create and track member contracts.
+
+\subsubsection{Activity Diagram}
+The activity diagram for the Member Contracts feature of the website was included in the requirements document, however, it is also reproduced here for convenience in figure \ref{fig:memberContractActivityDiagram}.
+
+\FloatBarrier
+\begin{figure}[h!]
+\centering
+\missingfigure{Member Contract Tracking Activity Diagram}
+\caption{Member Contract Feature Activity Diagram}
+\label{fig:memberContractActivityDiagram}
+\end{figure}
+\FloatBarrier
+
+\subsubsection{Models}
+
+The member contract related models and their associations are shown in figure \ref{fig:serviceEventModelDiagram}
+
+\FloatBarrier
+\begin{figure}[h!]
+\centering
+\missingfigure{Member Contract Model Diagram}
+\caption{Member Contract Model and Association Diagram}
+\label{fig:memberContractModelDiagram}
+\end{figure}
+\FloatBarrier
+
+\subsubsection{Forms, Views, and Templates}
+
+The general structure of the member contract Views, Forms, and Template components is shown in figure \ref{fig:memberContractViewFormTemplateDiagram}.
+
+\FloatBarrier
+\begin{figure}[h!]
+\centering
+\missingfigure{Member Contract Views, Forms and Template Structure}
+\caption{Member Contract Views, Forms, and Template Structure}
+\label{fig:memberContractViewFormTemplateDiagram}
+\end{figure}
+\FloatBarrier
+
+\subsection{Member Profiles}
+
+As stated in the Vision and Scope document and the Software Requirements document one of the main features of the website is the ability to create and track member profiles.
+
+\subsubsection{Activity Diagram}
+The activity diagram for the Member Profiles feature of the website was included in the requirements document, however, it is also reproduced here for convenience in figure \ref{fig:memberProfileActivityDiagram}.
+
+\FloatBarrier
+\begin{figure}[h!]
+\centering
+\missingfigure{Member Profile Activity Diagram}
+\caption{Member Profile Activity Diagram}
+\label{fig:memberProfileActivityDiagram}
+\end{figure}
+\FloatBarrier
+
+\subsubsection{Models}
+
+The member profile related models and their associations are shown in figure \ref{fig:memberProfileModelDiagram}
+
+\FloatBarrier
+\begin{figure}[h!]
+\centering
+\missingfigure{Member Profile Model Diagram}
+\caption{Member Profile Model Diagram}
+\label{fig:memberProfileModelDiagram}
+\end{figure}
+\FloatBarrier
+
+\subsubsection{Forms, View, and Templates}
+
+The general structure of the member profile Views, Forms, and Template components is show in figure \ref{fig:memberProfileViewFormTemplateDiagram}.
+
+\FloatBarrier
+\begin{figure}[h!]
+\centering
+\missingfigure{Member Profile Views, Forms, and Template Structure}
+\caption{Member Profile Views, Forms, and Template Structure}
+\label{fig:memberProfileViewFormTemplateDiagram}
+\end{figure}
+\FloatBarrier
+
+\subsection{Chapter Calendar}
+
+As stated in the Vision and Scope document and the Software Requirements document one of the main features of the website is the ability to create, update, and view calendar events.
+
+The website will already be running on GAE so a Google account will already exist for the website. Google Calendar will provide all of the features needed for the calendar. In addition Google Calendar provides easily embeddable calendars so the events could be displayed on the website automatically. Google Calendar also provides an API that would allow future extensions to the calendar functionality if desired.
+
+\subsection{Chapter Blog}
+
+As stated in the Vision and Scope document and the Software Requirements document one of the main features of the website is the ability to create blog postings.
+
+\subsubsection{Activity Diagram}
+The activity diagram for the Chapter Blog feature of the website was included in the Software Requirements document, however, it is also reproduced here for convenience in figure \ref{fig:blogActivityDiagram}.
+
+\FloatBarrier
+\begin{figure}[h!]
+\centering
+\missingfigure{Chapter Blog Activity Diagram}
+\caption{Chapter Blog Activity Diagram}
+\label{fig:blogActivityDiagram}
+\end{figure}
+\FloatBarrier
+
+\subsubsection{Models}
+
+The chapter blog related models and their associations are show in figure \ref{fig:blogModelDiagram}.
+
+\FloatBarrier
+\begin{figure}[h!]
+\centering
+\missingfigure{Chapter Blog Model Diagram}
+\caption{Chapter Blog Model Diagram}
+\label{fig:blogModelDiagram}
+\end{figure}
+\FloatBarrier
+
+\subsubsection{Forms, Views, and Templates}
+
+The general structure of the chapter blog Views, Forms, and Template components is shown in figure \ref{fig:chapterBlogViewFormTemplateDiagram}.
+
+\FloatBarrier
+\begin{figure}[h!]
+\centering
+\missingfigure{Chapter Blog Views, Forms, and Template Structure}
+\caption{Chapter Blog Views, Forms, and Template Structure}
+\label{fig:chapterBlogViewFormTemplateDiagram}
+\end{figure}
+\FloatBarrier
+
+\subsection{Photos}
+
+As stated in the Vision and Scope document and the Software Requirements document one of the main features of the website is the ability to create, view and organize user submitted photos.
+
+\subsubsection{Activity Diagram}
+The activity diagram for the Photo features of the website was included in the requirements document, however, it is also reproduced here for convenience in figure \ref{fig:photoActivityDiagram}.
+
+\FloatBarrier
+\begin{figure}[h!]
+\centering
+\missingfigure{Photo Activity Diagram}
+\caption{Photo Activity Diagram}
+\label{fig:photoActivityDiagram}
+\end{figure}
+\FloatBarrier
+
+\subsubsection{Oauth}
 
 Photobucket's API requires the use of Oauth. Oauth is a protocol that allows users of different websites to delegate access
 to parts of their account without giving away the account password. Oauth's protocol is specified in RFC 5849, however, because Oauth is so popular multiple libraries implementing the protocol are available for Python. \cite{eranhueniverse_oauth} The library recommended by the maintainers of the Oauth protocol is ``python-oauth2 library'' which can be found on Github. \cite{oauth_code} \cite{simplego_python-oauth2_2011}
+
+\subsubsection{Forms, Views, and Templates}
+
+The general structure of the member contract Views, Forms, and Template components is shown in figure \ref{fig:photoViewFormTemplateDiagram}.
+
+\FloatBarrier
+\begin{figure}[h!]
+\centering
+\missingfigure{Photo Views, Forms and Template Structure}
+\caption{Photo Views, Forms and Template Structure}
+\label{fig:photoViewFormTemplateDiagram}
+\end{figure}
+\FloatBarrier
+
+\subsection{Chapter Statistics}
+
+As stated in the Vision and Scope document and the Software Requirements document one of the main features of the website is the ability to view chapter statistics.
+
+\subsubsection{Activity Diagram}
+The activity diagram for the Chapter Statistics feature of the website was included in the requirements document, however, it is also reproduced here for convenience in figure \ref{fig:chapterStatisticsActivityDiagram}.
+
+\FloatBarrier
+\begin{figure}[h!]
+\centering
+\missingfigure{Chapter Statistics Activity Diagram}
+\caption{Chapter Statistics Activity Diagram}
+\label{fig:chapterStatisticsActivityDiagram}
+\end{figure}
+\FloatBarrier
 
 \newpage
 
