@@ -109,9 +109,9 @@ GAE & Google App Engine \\ \hline
 SSL & Secure Socket Layer \\ \hline
 \end{tabular}
 
-\section{Design Overview}
+\section{Website Architecture}
 
-\subsection{Architecture}
+\subsection{General Web Architecture}
 
 The basic architecture follows a design pattern for the website.
 
@@ -204,7 +204,15 @@ Photobucket's API does have limits on the amount of operations an application ca
 Photobucket's API is authenticated using OAuth meaning that a developer account will need to be created and a key for the
 website will need to be generated. \cite{photobucket_faq_2010}
 
-\subsection{Final Website Architecture}
+\subsection{Member Avatars - Gravatar}
+
+Another outside service this website will be using is Gravatar. \cite{_gravatar} Gravatar allows users to upload a photo which can be used across multiple websites as an avatar. To use the avatar a user has on their account the only thing that is needed
+is the email address associated with the email on the user's Gravatar account. 
+
+To use the Gravatar account the website only needs to store the email associated with the Gravatar account. The website
+can then use the algorithm documented on the Gravatar website to generate the URL for the avatar.
+
+\subsection{APO Chapter Website Architecture}
 
 Taking into account all of the previous design decisions the architecture in figure \ref{fig:generalWebArchitecture}
 becomes the architecture depicted in figure \ref{fig:finalWebArchitecture}.
@@ -218,11 +226,83 @@ becomes the architecture depicted in figure \ref{fig:finalWebArchitecture}.
 \end{figure}
 \FloatBarrier
 
-\section{Component Specification}
+\section{Application Architecture}
+
+\subsection{Main Components}
+
+There are four main types of components that the application is made from
+
+\begin{enumerate}
+\item Views
+\item Templates
+\item Forms
+\item Models
+\end{enumerate}
+
+Each of these components is described in section \ref{sec:Views} through section \ref{sec:Models}.
+
+\subsubsection{Views}
+\label{sec:Views}
+
+A view in Flask is a function or class that handles a web request. The view has one or more URL's routed to it through Flask's URL system. The general program flow for a View is shown in figure \ref{fig:ViewProgramFlow}.
+
+\FloatBarrier
+\begin{figure}[h!]
+\missingfigure{General View Procedure Flow}
+\caption{General View Procedure}
+\label{fig:ViewProgramFlow}
+\end{figure}
+\FloatBarrier
+
+The View starts off by taking in the user request object provided by Flask. The request object contains all of the information
+about the web request including the type (e.g. POST or GET). The View takes the information in the request and runs 
+any internal procedures needed to process the data. These internal procedures may include things like querying the datastore. Finally the View renders the associated template. While rendering the template the View will pass in any parameters that change from render to render. Finally the View returns the rendered template to Flask which passes it back
+as an HTML/javascript page to the user who initiated the request.
+
+\subsubsection{Templates}
+\label{sec:Templates}
+
+There are many HTML templating languages for Python. Flask defaults to using Jinja2. \cite{_jinja2_2008} Jinja2 allows basic logic
+in the templates and can accept Python objects to be displayed in the rendered page.
+
+Jinja2 also supports inheritance. \cite{ronacher_jinja2_2008} A template can contain what are known as ``blocks''. Blocks can be overridden by 
+templates that inherit from the main template where the block was defined. This allows a site to have a hierarchical template
+definition. For instance a website can have a main template which includes the static parts of a page that never change
+and each individual page can extend the page and add their own content.
+
+\subsubsection{Forms}
+\label{sec:Forms}
+
+To support server side form validation the WTForms package is being used with the Flask-WTF extension. \cite{wtforms_team_wtforms_2010} \cite{_flaskWTF} Forms are defined via subclasses of the main form class. The subclassed forms specify the specific fields
+as well as their validation criteria. A View can use an instance of the form to render the HTML form elements on a page
+and to validate that the received form data meets the criteria specified in the class.
+
+\subsubsection{Models}
+\label{sec:Models}
+
+Google's Bigtable requires the definition of Models instead of a traditional schema. Models are inheritable. The website models are subclasses of one of the three following classes: PolyModel, Model, Expando. PolyModel derived classes support inheritance. Model derived classes are the standard model type. Expando derived classes support having additional fields stored with an entity of the model even when that additional data was not specified in the original model.
+
+In this document's diagrams Models are shown as classes (because they are implemented as classes). References are shown by denoting a member variable's type as the type of a model defined in this document.
+
+\subsection{Packages}
+
+There are four main packages. Each package contains the definitions of one of the component types specified in section \ref{sec:Views} through section \ref{sec:Models}. The package structure is show in figure \ref{fig:PackageStructure}.
+
+\FloatBarrier
+\begin{figure}[h1]
+\centering
+\includegraphics[scale=.75]{img/applicationStructure}
+\caption{Package Structure}
+\label{fig:PackageStructure}
+\end{figure}
+\FloatBarrier
 
 \subsection{User Login}
 
 \subsubsection{Flask Login Overview}
+
+In general Flask does not provide anything but the WSGI interface for an application. However, Flask's website links to many
+extensions to Flask. User Login is such a common task that an extension to Flask known as Flask-Login exists.
 
 \subsection{User Roles}
 
@@ -234,9 +314,10 @@ becomes the architecture depicted in figure \ref{fig:finalWebArchitecture}.
 
 \subsubsection{Album Class}
 
-\subsection{Oauth Classes}
+\subsection{Oauth}
 
-\subsubsection{Oauth Overview}
+Photobucket's API requires the use of Oauth. Oauth is a protocol that allows users of different websites to delegate access
+to parts of their account without giving away the account password. Oauth's protocol is specified in RFC 5849, however, because Oauth is so popular multiple libraries implementing the protocol are available for Python. \cite{eranhueniverse_oauth} The library recommended by the maintainers of the Oauth protocol is ``python-oauth2 library'' which can be found on Github. \cite{oauth_code} \cite{simplego_python-oauth2_2011}
 
 \newpage
 
