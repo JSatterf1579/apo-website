@@ -29,7 +29,8 @@ class EventModelTestCase(unittest.TestCase):
         event = models.Event(name='test',
                              date=datetime.date(1991,9,18),
                              startTime=datetime.time(),
-                             endTime=datetime.time())
+                             endTime=datetime.time(),
+                             description='test description')
 
         event.put()
 
@@ -67,6 +68,14 @@ class EventModelTestCase(unittest.TestCase):
 
         if q.count() != 1:
             self.fail('There should be one and only one result')
+
+        result = q.fetch(1)[0]
+        # Make sure the returned results match
+        self.assertEqual(result.name, 'test')
+        self.assertEqual(result.date, datetime.date(1991, 9, 18))
+        self.assertEqual(result.startTime, datetime.time())
+        self.assertEqual(result.endTime, datetime.time())
+        self.assertEqual(result.description, 'test description')
 
 if __name__ == '__main__':
     unittest.main()
