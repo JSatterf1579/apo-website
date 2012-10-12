@@ -19,7 +19,11 @@ class ExampleModel(db.Model):
 
 class Event(polymodel.PolyModel):
     """This models a general event type."""
-    pass
+    name = db.StringProperty(required=True)
+    date = db.DateProperty(required=True)
+    startTime = db.TimeProperty(required=True)
+    endTime = db.TimeProperty(required=True)
+    description = db.StringProperty()
 
 class Location(db.Model):
     """This models a general location. For use with an event."""
