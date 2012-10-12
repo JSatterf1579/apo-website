@@ -27,7 +27,9 @@ class Event(polymodel.PolyModel):
 
 class Location(db.Model):
     """This models a general location. For use with an event."""
-    pass
+    name = db.StringProperty(required=True)
+    event = db.ReferenceProperty(required=True)
+    address = db.PostalAddressProperty()
 
 # Taken from the Service Event tracking section of the design document
 class ServiceEvent(Event):

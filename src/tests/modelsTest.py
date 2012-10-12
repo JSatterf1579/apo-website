@@ -77,6 +77,57 @@ class EventModelTestCase(unittest.TestCase):
         self.assertEqual(result.endTime, datetime.time())
         self.assertEqual(result.description, 'test description')
 
+
+class EventModelTestCase(unittest.TestCase):
+    def setUp(self):
+        # setup app engine test bed
+        self.testbed = testbed.Testbed()
+        self.testbed.activate()
+        self.testbed.init_datastore_v3_stub()
+        self.testbed.init_user_stub()
+
+    def tearDown(self):
+        self.testbed.deactivate()
+
+    def testInsertAndQueryEntity(self):
+        event = models.Event(name='test',
+                             date=datetime.date(1991,9,18),
+                             startTime=datetime.time(),
+                             endTime=datetime.time(),
+                             description='test description')
+        event.put()
+        location = models.Location(name='Village House 3a Rm 142b',
+                                   event=event.key(),
+                                   address=db.PostalAddress('1681 E 116th St., Cleveland, OH 44106'))
+
+        location.put()
+
+        try:
+           models.Location(event=event.key(),
+                           address=db.PostalAddress('1681 E 116th St., Cleveland, OH 44106'))
+           self.fail('name field is not required but it should be')
+        except db.BadValueError:
+            pass
+
+        try:
+            models.Location(name='Village House 3a Rm 142b',
+                                   address=db.PostalAddress('1681 E 116th St., Cleveland, OH 44106'))
+            self.fail('event field is not required but it should be')
+        except db.BadValueError:
+            pass
+
+        q = models.Location.all()
+
+        if q.count() != 1:
+            self.fail('Should only be 1 location in the datastore but there are %i' % count(q))
+
+        result = q.fetch(1)[0]
+        self.assertEqual(result.name,'Village House 3a Rm 142b')
+        self.assertEqual(result.event.key(),event.key())
+        self.assertEqual(result.address,db.PostalAddress('1681 E 116th St., Cleveland, OH 44106'))
+
+        
+        
 if __name__ == '__main__':
     unittest.main()
         
