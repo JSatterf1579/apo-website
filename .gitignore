@@ -39,6 +39,12 @@ pip-log.txt
 *.blg
 *.out
 
+# Mac System Files
 .DS_Store
+
+# Doxygen Files
 doxygen
 .doxygen_workingdir/*
+
+# Secret Keys for app
+secret_keys.py
