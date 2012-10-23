@@ -48,3 +48,7 @@ doxygen
 
 # Secret Keys for app
 secret_keys.py
+
+# Emacs temp tiles
+\#*#
+*~
