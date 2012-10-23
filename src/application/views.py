@@ -24,6 +24,12 @@ from application import app
 
 @app.route('/')
 def home():
+    """
+       View for the homepage
+
+       :rtype: HTML page
+    """
+    
     return redirect(url_for('list_examples'))
 
 
