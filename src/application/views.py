@@ -33,6 +33,7 @@ def say_hello(username):
     return 'Hello %s' % username
 
 
+@app.route('/examples', methods=['GET','POST'])
 @login_required
 def list_examples():
     """List all examples"""
@@ -55,6 +56,7 @@ def list_examples():
     return render_template('list_examples.html', examples=examples, form=form)
 
 
+@app.route('/examples/delete/<int:example_id>', methods=['POST'])
 @login_required
 def delete_example(example_id):
     """Delete an example object"""
@@ -68,6 +70,7 @@ def delete_example(example_id):
         return redirect(url_for('list_examples'))
 
 
+@app.route('/admin_only')
 @admin_required
 def admin_only():
     """This view requires an admin account"""
@@ -81,3 +84,13 @@ def warmup():
     """
     return ''
 
+## Error handlers
+# Handle 404 errors
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('404.html'), 404
+
+# Handle 500 errors
+@app.errorhandler(500)
+def server_error(e):
+    return render_template('500.html'), 500
