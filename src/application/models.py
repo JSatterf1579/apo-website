@@ -9,6 +9,34 @@ App Engine datastore models
 from google.appengine.ext import db
 from google.appengine.ext.db import polymodel
 
+# Taken from the member profile section of the design document
+class User(db.Model):
+    """Models a user account"""
+    pass
+
+class UserRole(db.Model):
+    """Maps a User to a Role"""
+    pass
+
+class Role(db.Model):
+    """Contains the various roles in the chapter. Used in permissions"""
+    pass
+
+class Family(db.Model):
+    """Contains the various families"""
+    pass
+
+class Address(db.Model):
+    """Contains an address for a User"""
+    pass
+
+class Email(db.Model):
+    """Contains an email address for a User"""
+    pass
+
+class PhoneNumber(db.Model):
+    """Contains a phone number for a User"""
+    pass
 
 class ExampleModel(db.Model):
     """Example Model"""
@@ -28,17 +56,19 @@ class Event(polymodel.PolyModel):
 class Location(db.Model):
     """This models a general location. For use with an event."""
     name = db.StringProperty(required=True)
-    event = db.ReferenceProperty(required=True)
+    event = db.ReferenceProperty(Event, required=True)
     address = db.PostalAddressProperty()
 
 # Taken from the Service Event tracking section of the design document
 class ServiceEvent(Event):
     """This models a service event"""
-    pass
+    maxBro = db.IntegerProperty()
+    addInfo = db.StringProperty()
 
 class ServiceSignUp(db.Model):
     """This maps Users to ServiceEvents"""
-    pass
+    user = db.ReferenceProperty(User, required=True)
+    event = db.ReferenceProperty(ServiceEvent, required=True)
 
 class ServiceReport(polymodel.PolyModel):
     """This is the abstract base type of ServiceReport"""
@@ -80,36 +110,6 @@ class DuesReq(Requirement):
 class AttendanceReq(Requirement):
     """Models Attendance Requirements"""
     pass
-
-# Taken from the member profile section of the design document
-class User(db.Model):
-    """Models a user account"""
-    pass
-
-class UserRole(db.Model):
-    """Maps a User to a Role"""
-    pass
-
-class Role(db.Model):
-    """Contains the various roles in the chapter. Used in permissions"""
-    pass
-
-class Family(db.Model):
-    """Contains the various families"""
-    pass
-
-class Address(db.Model):
-    """Contains an address for a User"""
-    pass
-
-class Email(db.Model):
-    """Contains an email address for a User"""
-    pass
-
-class PhoneNumber(db.Model):
-    """Contains a phone number for a User"""
-    pass
-
 
 # Taken from the blog section of the design document
 class Post(db.Model):
