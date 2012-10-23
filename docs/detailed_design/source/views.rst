@@ -1,6 +1,5 @@
-Views
-=============
+application.views -- URL Route Handlers
+==============================================
 
 .. automodule:: application.views
-
-.. autofunction:: home
+   :members:

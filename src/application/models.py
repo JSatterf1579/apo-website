@@ -1,8 +1,9 @@
 """
-models.py
+.. module:: models
+   :synopsis: This module contains all of the app engine models for the application
 
-App Engine datastore models
-
+.. moduleauthor:: Devin Schwab <dts34@case.edu>
+.. moduleauthor:: Jon Chan <jtc77@case.edu>
 """
 
 
