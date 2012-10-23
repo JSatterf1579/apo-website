@@ -1,12 +1,10 @@
-"""
-views.py
+"""URL Route Handlers
 
-URL route handlers
+.. module:: application.views
+   :synopsis: URL Route Handlers
 
-Note that any handler params must match the URL route params.
-For example the *say_hello* handler, handling the URL route '/hello/<username>',
-  must be passed *username* as the argument.
-
+.. moduleauthor:: Devin Schwab <dts34@case.edu>
+.. moduleauthor:: Jon Chan <jtc77@case.edu>
 """
 
 
@@ -25,11 +23,10 @@ from application import app
 @app.route('/')
 def home():
     """
-       View for the homepage
+    View for the homepage
 
-       :rtype: HTML page
+    :rtype: HTML page
     """
-    
     return redirect(url_for('list_examples'))
 
 
