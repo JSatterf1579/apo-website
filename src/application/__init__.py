@@ -10,4 +10,4 @@ app.config.from_object('application.settings')
 
 # login manager stuff will go here
 
-import urls
+import views
