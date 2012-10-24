@@ -12,11 +12,14 @@ from google.appengine.ext.db import polymodel
 
 # Taken from the member profile section of the design document
 class User(db.Model):
-    """Stores user information
+    """
+    Stores user information
     
     .. method:: User()
 
        Creates a new User entity
+
+
     """
     pass
 
@@ -128,7 +131,7 @@ class Location(db.Model):
 # Taken from the Service Event tracking section of the design document
 class ServiceEvent(Event):
     """This models a service event
-
+    
     .. method:: ServiceEvent([maxBro[,addInfo]])
 
        Creates a new ServiceEvent entity
@@ -158,52 +161,112 @@ class ServiceSignUp(db.Model):
     event = db.ReferenceProperty(ServiceEvent, required=True)
 
 class ServiceReport(polymodel.PolyModel):
-    """This is the abstract base type of ServiceReport"""
+    """This is the abstract base type of ServiceReport
+
+    .. method:: ServiceReport()
+
+       Creates a new ServiceReport entity
+    """
     pass
 
 class InsideServiceReport(ServiceReport):
-    """This is the Service Report type for an inside service event"""
+    """This is the Service Report type for an inside service event
+
+    .. method:: InsideServiceReport()
+
+       Creates a new InsideServiceReport entity
+    """
     pass
 
 class OutsideServiceReport(ServiceReport):
-    """This is the Service Report type for an outside service event"""
+    """This is the Service Report type for an outside service event
+
+    .. method:: OutsideServiceReport()
+
+       Creates a new OutsideServiceReport entity
+    """
     pass
 
 class ServiceHour(db.Model):
-    """Maps the hours for each brother to a Service Report"""
+    """Maps the hours for each brother to a Service Report
+
+    .. method:: ServiceHour()
+
+       Creates a new ServiceHour entity
+    """
     pass
 
 # Taken from the Member Contract section of the design document
 class ChapterEvent(Event):
-    """Takes care of a chapter meeting"""
+    """Takes care of a chapter meeting
+
+    .. method:: ChapterEvent()
+
+       Creates a new ChapterEvent entity
+    """
     pass
 
 class Contract(db.Model):
-    """Stores contract types"""
+    """Stores contract types
+
+    .. method:: Contract()
+
+       Creates a new Contract entity
+    """
     pass
 
 class Requirement(polymodel.PolyModel):
-    """A general base class for a contract requirement"""
+    """A general base class for a contract requirement
+
+    .. method:: Requirement()
+
+       Creates a new Requirement entity
+    """
     pass
 
 class HourReq(Requirement):
-    """Models Service Hours Requirements"""
+    """Models Service Hours Requirements
+
+    .. method:: HourReq()
+
+       Creates a new HourReq entity
+    """
     pass
 
 class DuesReq(Requirement):
-    """Models Dues Requirements"""
+    """Models Dues Requirements
+
+    .. method:: DuesReq()
+
+       Creates a new DuesReq entity
+    """
     pass
 
 class AttendanceReq(Requirement):
-    """Models Attendance Requirements"""
+    """Models Attendance Requirements
+
+    .. method:: AttendanceReq()
+
+       Creates a new AttendanceReq entity
+    """
     pass
 
 # Taken from the blog section of the design document
 class Post(db.Model):
-    """Contains a Blog Post"""
+    """Contains a Blog Post
+
+    .. method:: Post()
+
+       Creates a new Post entity
+    """
     pass
 
 class Comment(db.Model):
-    """Contains a comment for a Blog Post"""
+    """Contains a comment for a Blog Post
+
+    .. method:: Comment()
+
+       Creates a new Comment entity
+    """
     pass
 
