@@ -7,205 +7,145 @@ This file contains the tests for the various models
 
 """
 import unittest
-import datetime
 
-from google.appengine.ext import testbed
 from google.appengine.ext import db
+
+from AppEngineTestCase import AppEngineTestCase as TestCase
 
 from application import models
 
-class EventModelTestCase(unittest.TestCase):
-    def setUp(self):
-        # setup app engine test bed
-        self.testbed = testbed.Testbed()
-        self.testbed.activate()
-        self.testbed.init_datastore_v3_stub()
-        self.testbed.init_user_stub()
+class FamilyModelTestCase(TestCase):
 
-    def tearDown(self):
-        self.testbed.deactivate()
+    def testAttributes(self):
+        self.fail('Not Implemented!')
 
-    def testInsertAndQueryEntity(self):
-        event = models.Event(name='test',
-                             date=datetime.date(1991,9,18),
-                             startTime=datetime.time(),
-                             endTime=datetime.time(),
-                             description='test description')
+class ContractModelTestCase(TestCase):
 
-        event.put()
+    def testAttributes(self):
+        self.fail('Not Implemented!')
 
-        # Check if all the fields that are supposed to be required are implemented
-        try:
-            event = models.Event(date=datetime.date(1991,9,18),
-                             startTime=datetime.time(),
-                             endTime=datetime.time())
-            self.fail('name field is not required but it should be')
-        except db.BadValueError:
-            pass
-        try:
-            event = models.Event(name='test',
-                             startTime=datetime.time(),
-                             endTime=datetime.time())
-            self.fail('date field is not required but it should be')
-        except db.BadValueError:
-            pass
-        try:
-            event = models.Event(name='test',
-                             date=datetime.date(1991,9,18),
-                             endTime=datetime.time())
-            self.fail('startTime field is not required but it should be')
-        except db.BadValueError:
-            pass
-        try:
-            event = models.Event(name='test',
-                             date=datetime.date(1991,9,18),
-                             startTime=datetime.time())
-            self.fail('endTime field is not required but it should be')
-        except db.BadValueError:
-            pass
-            
-        q = models.Event.all()
+class UserModelTestCase(TestCase):
 
-        if q.count() != 1:
-            self.fail('There should be one and only one result')
+    def testAttributes(self):
+        # Check if attributes exist
+        self.assertTrue(hasattr(models.User,'firstName'), 'User model has no firstName attribute')
+        self.assertTrue(hasattr(models.User,'lastName'), 'User model has no lastName attribute')
+        self.assertTrue(hasattr(models.User,'cwruID'), 'User model has no cwruID attribute')
+        self.assertTrue(hasattr(models.User,'salt'), 'User model has no salt attribute')
+        self.assertTrue(hasattr(models.User,'hash'), 'User model has no hash attribute')
+        self.assertTrue(hasattr(models.User,'middleName'), 'User model has no middleName attribute')
+        self.assertTrue(hasattr(models.User,'contractType'), 'User model has no contractType attribute')
+        self.assertTrue(hasattr(models.User,'family'), 'User model has no family attribute')
+        self.assertTrue(hasattr(models.User,'big'), 'User model has no big attribute')
+        self.assertTrue(hasattr(models.User,'avatar'), 'User model has no avatar attribute')
 
-        result = q.fetch(1)[0]
-        # Make sure the returned results match
-        self.assertEqual(result.name, 'test')
-        self.assertEqual(result.date, datetime.date(1991, 9, 18))
-        self.assertEqual(result.startTime, datetime.time())
-        self.assertEqual(result.endTime, datetime.time())
-        self.assertEqual(result.description, 'test description')
+        # Check if required attributes are required
+        self.assertTrue(models.User.firstName.required, 'User.firstName should be required')
+        self.assertTrue(models.User.lastName.required, 'User.lastName should be required')
+        self.assertTrue(models.User.cwruID.required, 'User.cwruID should be required')
+        self.assertTrue(models.User.salt.required, 'User.salt should be required')
+        self.assertTrue(models.User.hash.required, 'User.hash should be required')
 
+        # Check if optional attributes are optional
+        self.assertFalse(models.User.middleName.required, 'User.middleName should be optional')
+        self.assertFalse(models.User.contractType.required, 'User.contractType should be optional')
+        self.assertFalse(models.User.family.required, 'User.family should be optional')
+        self.assertFalse(models.User.big.required, 'User.big should be optional')
+        self.assertFalse(models.User.avatar.required, 'User.avatar should be optional')
 
-class LocationModelTestCase(unittest.TestCase):
-    def setUp(self):
-        # setup app engine test bed
-        self.testbed = testbed.Testbed()
-        self.testbed.activate()
-        self.testbed.init_datastore_v3_stub()
-        self.testbed.init_user_stub()
+class RoleModelTestCase(TestCase):
 
-    def tearDown(self):
-        self.testbed.deactivate()
+    def testAttributes(self):
+        self.fail('Not Implemented!')
 
-    def testInsertAndQueryEntity(self):
-        event = models.Event(name='test',
-                             date=datetime.date(1991,9,18),
-                             startTime=datetime.time(),
-                             endTime=datetime.time(),
-                             description='test description')
-        event.put()
-        location = models.Location(name='Village House 3a Rm 142b',
-                                   event=event.key(),
-                                   address=db.PostalAddress('1681 E 116th St., Cleveland, OH 44106'))
+class UserRoleModelTestCase(TestCase):
 
-        location.put()
+    def testAttributes(self):
+        self.fail('Not Implemented!')
 
-        try:
-           models.Location(event=event.key(),
-                           address=db.PostalAddress('1681 E 116th St., Cleveland, OH 44106'))
-           self.fail('name field is not required but it should be')
-        except db.BadValueError:
-            pass
+class AddressModelTestCase(TestCase):
 
-        try:
-            models.Location(name='Village House 3a Rm 142b',
-                                   address=db.PostalAddress('1681 E 116th St., Cleveland, OH 44106'))
-            self.fail('event field is not required but it should be')
-        except db.BadValueError:
-            pass
+    def testAttributes(self):
+        self.fail('Not Implemented!')
 
-        q = models.Location.all()
+class EmailModelTestCase(TestCase):
 
-        if q.count() != 1:
-            self.fail('Should only be 1 location in the datastore but there are %i' % count(q))
+    def testAttributes(self):
+        self.fail('Not Implemented!')
 
-        result = q.fetch(1)[0]
-        self.assertEqual(result.name,'Village House 3a Rm 142b')
-        self.assertEqual(result.event.key(),event.key())
-        self.assertEqual(result.address,db.PostalAddress('1681 E 116th St., Cleveland, OH 44106'))
+class PhoneNumberModelTestCase(TestCase):
 
+    def testAttributes(self):
+        self.fail('Not Implemented!')
 
-class ServiceEventModelTestCase(unittest.TestCase):
-    def setUp(self):
-        # setup app engine test bed
-        self.testbed = testbed.Testbed()
-        self.testbed.activate()
-        self.testbed.init_datastore_v3_stub()
-        self.testbed.init_user_stub()
+class EventModelTestCase(TestCase):
 
-    def tearDown(self):
-        self.testbed.deactivate()
+    def testAttributes(self):
+        self.fail('Not Implemented!')
 
-    def testInsertAndQueryEntity(self):
-        serviceEvent = models.ServiceEvent(name='test',
-                                           date=datetime.date(1991,9,18),
-                                           startTime=datetime.time(),
-                                           endTime=datetime.time(),
-                                           description='test description',
-                                           maxBro=10,
-                                           addInfo='additional info')
+class LocationModelTestCase(TestCase):
+   
+    def testAttributes(self):
+        pass
 
-        serviceEvent.put()
+class ServiceEventModelTestCase(TestCase):
+    def testAttributes(self):
+        self.fail('Not implemented!')
 
-        # Check if all the fields that are supposed to be required are implemented
-        try:
-            models.ServiceEvent(date=datetime.date(1991,9,18),
-                         startTime=datetime.time(),
-                         endTime=datetime.time(),
-                         description='test description',
-                         maxBro=10,
-                         addInfo='additional info')
-            self.fail('name field is not required but it should be')
-        except db.BadValueError:
-            pass
-        try:
-            models.ServiceEvent(name='test',
-                         startTime=datetime.time(),
-                         endTime=datetime.time(),
-                         description='test description',
-                         maxBro=10,
-                         addInfo='additional info')
-            self.fail('date field is not required but it should be')
-        except db.BadValueError:
-            pass
-        try:
-            models.ServiceEvent(name='test',
-                         date=datetime.date(1991,9,18),
-                         endTime=datetime.time(),
-                         description='test description',
-                         maxBro=10,
-                         addInfo='additional info')
-            self.fail('startTime field is not required but it should be')
-        except db.BadValueError:
-            pass
-        try:
-            models.ServiceEvent(name='test',
-                         date=datetime.date(1991,9,18),
-                         startTime=datetime.time(),
-                         description='test description',
-                         maxBro=10,
-                         addInfo='additional info')
-            self.fail('endTime field is not required but it should be')
-        except db.BadValueError:
-            pass
-            
-        q = models.ServiceEvent.all()
+class ServiceSignUpModelTestCase(TestCase):
 
-        if q.count() != 1:
-            self.fail('There should be one and only one result')
+    def testAttributes(self):
+        self.fail('Not Implemented!')
 
-        result = q.fetch(1)[0]
-        # Make sure the returned results match
-        self.assertEqual(result.name, 'test')
-        self.assertEqual(result.date, datetime.date(1991, 9, 18))
-        self.assertEqual(result.startTime, datetime.time())
-        self.assertEqual(result.endTime, datetime.time())
-        self.assertEqual(result.description, 'test description')
-        self.assertEqual(result.maxBro, 10)
-        self.assertEqual(result.addInfo, 'additional info')
-    
+class InsideServiceReportModelTestCase(TestCase):
+
+    def testAttributes(self):
+        self.fail('Not Implemented!')
+
+class OutsideServiceReportModelTestCase(TestCase):
+
+    def testAttributes(self):
+        self.fail('Not Implemented!')
+
+class ServiceHourModelTestCase(TestCase):
+
+    def testAttributes(self):
+        self.fail('Not Implemented!')
+
+class ChapterEventModelTestCase(TestCase):
+
+    def testAttributes(self):
+        self.fail('Not Implemented!')
+
+class RequirementModelTestCase(TestCase):
+
+    def testAttributes(self):
+        self.fail('Not Implemented!')
+
+class HourReqModelTestCase(TestCase):
+
+    def testAttributes(self):
+        self.fail('Not Implemented!')
+
+class DuesReqModelTestCase(TestCase):
+
+    def testAttributes(self):
+        self.fail('Not Implemented!')
+
+class AttendanceModelTestCase(TestCase):
+
+    def testAttributes(self):
+        self.fail('Not Implemented!')
+
+class PostModelTestCase(TestCase):
+
+    def testAttributes(self):
+        self.fail('Not Implemented!')
+
+class CommentModelTestCase(TestCase):
+
+    def testAttributes(self):
+        self.fail('Not Implemented!')
         
 if __name__ == '__main__':
     unittest.main()
