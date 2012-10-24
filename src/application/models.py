@@ -81,7 +81,7 @@ class User(db.Model):
     hash = db.StringProperty(required=True)
 
     # Optional attributes
-    middleName = db.StringProperty(required=True)
+    middleName = db.StringProperty()
     contractType = db.ReferenceProperty(Contract)
     family = db.ReferenceProperty(Family)
     big = db.SelfReferenceProperty()
