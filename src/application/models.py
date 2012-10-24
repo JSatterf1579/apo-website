@@ -15,65 +15,138 @@ class User(db.Model):
     """
     Stores user information
     
-    .. method:: User()
+    .. method:: User(firstName, lastName, cwruID, salt, hash[, middleName, contractType, family, big, avatar])
 
        Creates a new User entity
 
+       :param firstName: User's first name
+       :type firstName: unicode
 
+       :param lastName: User's last name
+       :type lastName: unicode
+
+       :param cwruID: User's Case network ID.
+       :type cwruID: unicode
+
+       :param salt: A unique string (per user) used in password hashing
+       :type salt: unicode
+
+       :param hash: A hash of the user's password with the user's salt
+       :type hash: unicode
+
+       :param middleName: User's middle name
+       :type middleName: unicode
+
+       :param contractType: User's Contract type
+       :type contractType: application.models.Contract
+
+       :param family: User's family
+       :type family: application.models.Family
+
+       :param big: User's big
+       :type big: application.models.User
+
+       :param avatar: User's gravatar user name
+       :type avatar: unicode
     """
     pass
 
 class UserRole(db.Model):
     """Maps a User to a Role
 
-    .. method:: UserRole()
+    .. method:: UserRole(user, role)
 
        Creates a new UserRole entity
+
+       :param user: The User associated with this UserRole entity
+       :type user: application.models.User
+
+       :param role: The Role associated with this UserRole entity
+       :type role: application.models.Role
     """
     pass
 
 class Role(db.Model):
     """Contains the various roles in the chapter. Used in permissions
 
-    .. method:: Role()
+    .. method:: Role(name[, desc])
 
        Creates a new Role entity
+
+       :param name: Name of the Role - e.g. admin
+       :type name: unicode
+
+       :param desc: Description of the Role
+       :type desc: unicode
     """
     pass
 
 class Family(db.Model):
     """Contains the various families
 
-    .. method:: Family()
+    .. method:: Family(name[, founder])
 
        Creates a new Family entity
+
+       :param name: Name of the Family - e.g. Boehms
+       :type name: unicode
+
+       :param founder: User that founded the family
+       :type name: application.models.User
     """
     pass
 
 class Address(db.Model):
     """Contains an address for a User
 
-    .. method:: Address()
+    .. method:: Address(user, address[, name])
 
        Creates a new Address entity
+
+       :param user: User this address belongs to
+       :type user: application.models.User
+
+       :param address: Address
+       :type address: google.appengine.ext.db.PostalAddress 
+
+       :param name: Nickname for Address - e.g. home
+       :type name: unicode
     """
     pass
 
 class Email(db.Model):
     """Contains an email address for a User
 
-    .. method:: Email()
+    .. method:: Email(user, email[, name])
 
        Creates a new Email entity
+
+       :param user: User this email address belongs to
+       :type user: application.model.User
+
+       :param email: User's email
+       :type email: google.appengine.ext.db.Email
+
+       :param name: Optional nickname for address - e.g. school
+       :type name: unicode
     """
     pass
 
 class PhoneNumber(db.Model):
     """Contains a phone number for a User
 
-    .. method:: PhoneNumber()
+    .. method:: PhoneNumber(user, number[, name])
 
        Creates a new PhoneNumber entity
+
+       :param user: User this phone number belongs to
+       :type user: application.model.User
+
+       :param number: Phone number with no dashes or spaces - e.g. "(111) 555-3333" is stored as 1115553333
+       :type number: int
+
+       :param name: Optional nickname for phone number - e.g. cell
+       :type name: unicode
     """
     pass
 
@@ -93,12 +166,16 @@ class Event(polymodel.PolyModel):
 
        :param name: Name of event
        :type name: unicode
+    
        :param date: Date of the event
        :type date: datetime.date
+    
        :param startTime: Time event starts at
        :type startTime: datetime.time
+    
        :param endTime: Time event ends at
        :type endTime: datetime.time
+    
        :param description: Description of the event
        :type description: unicode
 
@@ -119,8 +196,10 @@ class Location(db.Model):
 
        :param name: Name of Location
        :type name: unicode
+    
        :param event: A reference to an existing Event entity
        :type event: application.models.Event
+    
        :param address: Address of event
        :type address: google.appengine.ext.db.PostalAddress
     """
@@ -138,8 +217,10 @@ class ServiceEvent(Event):
 
        :param maxBro: Maximum number of brothers allowed at service Event
        :type maxBro: int
+    
        :param addInfo: Additional information about service event
        :type addInfo: unicode
+    
        :rtype: ServiceEvent
     """
     maxBro = db.IntegerProperty()
@@ -154,6 +235,7 @@ class ServiceSignUp(db.Model):
 
        :param user: User for service event sign up
        :type user: application.models.User
+    
        :param event: Event that user is signing up for
        :type event: application.models.Event
     """
@@ -166,33 +248,63 @@ class ServiceReport(polymodel.PolyModel):
     .. method:: ServiceReport()
 
        Creates a new ServiceReport entity
+
+    .. warning::
+       This class is an abstract base class. Do not to be instantiate an instance of this class
     """
     pass
 
 class InsideServiceReport(ServiceReport):
     """This is the Service Report type for an inside service event
 
-    .. method:: InsideServiceReport()
+    .. method:: InsideServiceReport(event)
 
        Creates a new InsideServiceReport entity
+
+       :param event: Service Event that this report is for
+       :type event: application.models.ServiceEvent
     """
     pass
 
 class OutsideServiceReport(ServiceReport):
     """This is the Service Report type for an outside service event
 
-    .. method:: OutsideServiceReport()
+    .. method:: OutsideServiceReport(name, desc, loc, date)
 
        Creates a new OutsideServiceReport entity
+
+       :param name: Name of event this report is for
+       :type name: unicode
+
+       :param desc: Description of event this report is for
+       :type desc: unicode
+
+       :param loc: Description of location of event this report is for
+       :type loc: unicode
+
+       :param date: Date of event this report is for
+       :type date: datetime.date
     """
     pass
 
 class ServiceHour(db.Model):
     """Maps the hours for each brother to a Service Report
 
-    .. method:: ServiceHour()
+    .. method:: ServiceHour(user, report, minutes[, dMinutes])
 
        Creates a new ServiceHour entity
+
+       :param user: User this service hour is for
+       :type user: application.models.User
+
+       :param report: Service report this hour entry is for
+       :type report: application.models.ServiceReport
+
+       :param minutes: Number of minutes of service provided
+       :type minutes: int
+
+       :param dMinutes: Number of minutes spent driving
+       :type dMinutes: int
     """
     pass
 
@@ -209,45 +321,72 @@ class ChapterEvent(Event):
 class Contract(db.Model):
     """Stores contract types
 
-    .. method:: Contract()
+    .. method:: Contract(name)
 
        Creates a new Contract entity
+
+       :param name: Name of contract - e.g. associate
+       :type name: unicode
     """
     pass
 
 class Requirement(polymodel.PolyModel):
     """A general base class for a contract requirement
 
-    .. method:: Requirement()
+    .. method:: Requirement(contract, dueDate[, name])
 
        Creates a new Requirement entity
+
+       :param contract: Contract this requirement is associated with
+       :type contract: application.models.Contract
+
+       :param dueDate: Date this requirement is due
+       :type dueDate: datetime.date
+
+       :param name: Optional nickname for requirement - e.g. inside hours
+       :type name: unicode
     """
     pass
 
 class HourReq(Requirement):
     """Models Service Hours Requirements
 
-    .. method:: HourReq()
+    .. method:: HourReq(min, type)
 
        Creates a new HourReq entity
+
+       :param min: Minutes needed to meet this requirement
+       :type min: int
+
+       :param type: Type of minutes needed - e.g. inside
+       :type type: unicode
     """
     pass
 
 class DuesReq(Requirement):
     """Models Dues Requirements
 
-    .. method:: DuesReq()
+    .. method:: DuesReq(amount)
 
        Creates a new DuesReq entity
+
+       :param amount: Amount of money need to meet this requirement
+       :type amount: float
     """
     pass
 
 class AttendanceReq(Requirement):
     """Models Attendance Requirements
 
-    .. method:: AttendanceReq()
+    .. method:: AttendanceReq(amount, type)
 
        Creates a new AttendanceReq entity
+
+       :param amount: Amount of events needed to meet this requirement. Allows for fractions of events to be specified
+       :type amount: float
+
+       :param type: Type of event needed - e.g. ServiceEvent
+       :type type: unicode
     """
     pass
 
@@ -255,18 +394,42 @@ class AttendanceReq(Requirement):
 class Post(db.Model):
     """Contains a Blog Post
 
-    .. method:: Post()
+    .. method:: Post(title, datetime, text, author)
 
        Creates a new Post entity
+
+       :param title: Title of Blog post
+       :type title: unicode
+
+       :param datetime: Date and time of posting
+       :type datetime: datetime.datetime
+
+       :param text: Content of post
+       :type text: unicode
+
+       :param author: User that made this post
+       :type author: application.models.User
     """
     pass
 
 class Comment(db.Model):
     """Contains a comment for a Blog Post
 
-    .. method:: Comment()
+    .. method:: Comment(post, datetime, author, text)
 
        Creates a new Comment entity
+
+       :param post: Post this comment is associated with
+       :type post: application.models.Post
+
+       :param datetime: Date and time of comment
+       :type datetime: datetime.datetime
+
+       :param author: User that posted this comment
+       :type author: application.models.User
+
+       :param text: Content of comment
+       :type text: unicode
     """
     pass
 
