@@ -11,6 +11,30 @@ from google.appengine.ext import db
 from google.appengine.ext.db import polymodel
 
 # Taken from the member profile section of the design document
+class Family(db.Model):
+    """Contains the various families
+
+    .. method:: Family(name)
+
+       Creates a new Family entity
+
+       :param name: Name of the Family - e.g. Boehms
+       :type name: unicode
+    """
+    pass
+
+class Contract(db.Model):
+    """Stores contract types
+
+    .. method:: Contract(name)
+
+       Creates a new Contract entity
+
+       :param name: Name of contract - e.g. associate
+       :type name: unicode
+    """
+    pass
+
 class User(db.Model):
     """
     Stores user information
@@ -49,7 +73,19 @@ class User(db.Model):
        :param avatar: User's gravatar user name
        :type avatar: unicode
     """
-    pass
+    # Required attributes
+    firstName = db.StringProperty(required=True)
+    lastName = db.StringProperty(required=True)
+    cwruID = db.StringProperty(required=True)
+    salt = db.StringProperty(required=True)
+    hash = db.StringProperty(required=True)
+
+    # Optional attributes
+    middleName = db.StringProperty(required=True)
+    contractType = db.ReferenceProperty(Contract)
+    family = db.ReferenceProperty(Family)
+    big = db.SelfReferenceProperty()
+    avatar = db.StringProperty()
 
 class UserRole(db.Model):
     """Maps a User to a Role
@@ -78,21 +114,6 @@ class Role(db.Model):
 
        :param desc: Description of the Role
        :type desc: unicode
-    """
-    pass
-
-class Family(db.Model):
-    """Contains the various families
-
-    .. method:: Family(name[, founder])
-
-       Creates a new Family entity
-
-       :param name: Name of the Family - e.g. Boehms
-       :type name: unicode
-
-       :param founder: User that founded the family
-       :type name: application.models.User
     """
     pass
 
@@ -315,18 +336,6 @@ class ChapterEvent(Event):
     .. method:: ChapterEvent()
 
        Creates a new ChapterEvent entity
-    """
-    pass
-
-class Contract(db.Model):
-    """Stores contract types
-
-    .. method:: Contract(name)
-
-       Creates a new Contract entity
-
-       :param name: Name of contract - e.g. associate
-       :type name: unicode
     """
     pass
 
