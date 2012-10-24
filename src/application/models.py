@@ -21,7 +21,7 @@ class Family(db.Model):
        :param name: Name of the Family - e.g. Boehms
        :type name: unicode
     """
-    pass
+    name = db.StringProperty(required=True)
 
 class Contract(db.Model):
     """Stores contract types
@@ -33,7 +33,7 @@ class Contract(db.Model):
        :param name: Name of contract - e.g. associate
        :type name: unicode
     """
-    pass
+    name = db.StringProperty(required=True)
 
 class User(db.Model):
     """
@@ -87,21 +87,6 @@ class User(db.Model):
     big = db.SelfReferenceProperty()
     avatar = db.StringProperty()
 
-class UserRole(db.Model):
-    """Maps a User to a Role
-
-    .. method:: UserRole(user, role)
-
-       Creates a new UserRole entity
-
-       :param user: The User associated with this UserRole entity
-       :type user: application.models.User
-
-       :param role: The Role associated with this UserRole entity
-       :type role: application.models.Role
-    """
-    pass
-
 class Role(db.Model):
     """Contains the various roles in the chapter. Used in permissions
 
@@ -115,7 +100,24 @@ class Role(db.Model):
        :param desc: Description of the Role
        :type desc: unicode
     """
-    pass
+    name = db.StringProperty(required=True)
+    desc = db.StringProperty()
+
+class UserRole(db.Model):
+    """Maps a User to a Role
+
+    .. method:: UserRole(user, role)
+
+       Creates a new UserRole entity
+
+       :param user: The User associated with this UserRole entity
+       :type user: application.models.User
+
+       :param role: The Role associated with this UserRole entity
+       :type role: application.models.Role
+    """
+    user = db.ReferenceProperty(User,required=True)
+    role = db.ReferenceProperty(Role, required=True)
 
 class Address(db.Model):
     """Contains an address for a User
@@ -133,7 +135,12 @@ class Address(db.Model):
        :param name: Nickname for Address - e.g. home
        :type name: unicode
     """
-    pass
+    # Required attributes
+    user = db.ReferenceProperty(User, required=True)
+    address = db.PostalAddressProperty(required=True)
+
+    # Optional attributes
+    name = db.StringProperty()
 
 class Email(db.Model):
     """Contains an email address for a User
@@ -151,7 +158,12 @@ class Email(db.Model):
        :param name: Optional nickname for address - e.g. school
        :type name: unicode
     """
-    pass
+    # Required attributes
+    user = db.ReferenceProperty(User, required=True)
+    email = db.EmailProperty(required=True)
+
+    # Optional attributes
+    name = db.StringProperty()
 
 class PhoneNumber(db.Model):
     """Contains a phone number for a User
@@ -163,13 +175,18 @@ class PhoneNumber(db.Model):
        :param user: User this phone number belongs to
        :type user: application.model.User
 
-       :param number: Phone number with no dashes or spaces - e.g. "(111) 555-3333" is stored as 1115553333
-       :type number: int
+       :param number: Phone number with in the following format "(111) 555-3333"
+       :type number: google.appengine.ext.db.PhoneNumber
 
        :param name: Optional nickname for phone number - e.g. cell
        :type name: unicode
     """
-    pass
+    # Required Attributes
+    user = db.ReferenceProperty(User, required=True)
+    number = db.PhoneNumberProperty(required=True)
+
+    #Optional Attributes
+    name = db.StringProperty()
 
 class ExampleModel(db.Model):
     """Example Model"""
@@ -202,10 +219,13 @@ class Event(polymodel.PolyModel):
 
        :rtype: Event model instance
     """
+    # Required Attributes
     name = db.StringProperty(required=True)
     date = db.DateProperty(required=True)
     startTime = db.TimeProperty(required=True)
     endTime = db.TimeProperty(required=True)
+
+    # Optional Attributes
     description = db.StringProperty()
 
 class Location(db.Model):
@@ -224,8 +244,11 @@ class Location(db.Model):
        :param address: Address of event
        :type address: google.appengine.ext.db.PostalAddress
     """
+    # Required Attributes
     name = db.StringProperty(required=True)
     event = db.ReferenceProperty(Event, required=True)
+
+    # Optional Attributes
     address = db.PostalAddressProperty()
 
 # Taken from the Service Event tracking section of the design document
@@ -285,7 +308,7 @@ class InsideServiceReport(ServiceReport):
        :param event: Service Event that this report is for
        :type event: application.models.ServiceEvent
     """
-    pass
+    event = db.ReferenceProperty(ServiceEvent, required=True)
 
 class OutsideServiceReport(ServiceReport):
     """This is the Service Report type for an outside service event
@@ -306,7 +329,10 @@ class OutsideServiceReport(ServiceReport):
        :param date: Date of event this report is for
        :type date: datetime.date
     """
-    pass
+    name = db.StringProperty(required=True)
+    desc = db.StringProperty(required=True)
+    loc = db.StringProperty(required=True) # consider changing this to Location reference
+    date = db.DateTimeProperty(required=True)
 
 class ServiceHour(db.Model):
     """Maps the hours for each brother to a Service Report
@@ -327,7 +353,13 @@ class ServiceHour(db.Model):
        :param dMinutes: Number of minutes spent driving
        :type dMinutes: int
     """
-    pass
+    # Required Attributes
+    user = db.ReferenceProperty(User, required=True)
+    report = db.ReferenceProperty(ServiceReport, required=True)
+    minutes = db.IntegerProperty(required=True)
+
+    # Optional Attributes
+    dMinutes = db.IntegerProperty()
 
 # Taken from the Member Contract section of the design document
 class ChapterEvent(Event):
@@ -355,7 +387,12 @@ class Requirement(polymodel.PolyModel):
        :param name: Optional nickname for requirement - e.g. inside hours
        :type name: unicode
     """
-    pass
+    # Required Attributes
+    contract = db.ReferenceProperty(Contract, required=True)
+    dueDate = db.DateProperty(required=True)
+
+    # Optional Attributes
+    name = db.StringProperty()
 
 class HourReq(Requirement):
     """Models Service Hours Requirements
@@ -370,7 +407,8 @@ class HourReq(Requirement):
        :param type: Type of minutes needed - e.g. inside
        :type type: unicode
     """
-    pass
+    min = db.IntegerProperty(required=True)
+    type = db.StringProperty(required=True)
 
 class DuesReq(Requirement):
     """Models Dues Requirements
@@ -382,7 +420,7 @@ class DuesReq(Requirement):
        :param amount: Amount of money need to meet this requirement
        :type amount: float
     """
-    pass
+    amount = db.FloatProperty(required=True)
 
 class AttendanceReq(Requirement):
     """Models Attendance Requirements
@@ -397,7 +435,8 @@ class AttendanceReq(Requirement):
        :param type: Type of event needed - e.g. ServiceEvent
        :type type: unicode
     """
-    pass
+    amount = db.FloatProperty(required=True)
+    type = db.StringProperty(required=True)
 
 # Taken from the blog section of the design document
 class Post(db.Model):
@@ -419,7 +458,10 @@ class Post(db.Model):
        :param author: User that made this post
        :type author: application.models.User
     """
-    pass
+    title = db.StringProperty(required=True)
+    datetime = db.DateTimeProperty(required=True)
+    text = db.StringProperty(required=True)
+    author = db.ReferenceProperty(User, required=True)
 
 class Comment(db.Model):
     """Contains a comment for a Blog Post
@@ -440,5 +482,8 @@ class Comment(db.Model):
        :param text: Content of comment
        :type text: unicode
     """
-    pass
+    post = db.ReferenceProperty(Post, required=True)
+    datetime = db.DateTimeProperty(required=True)
+    author = db.ReferenceProperty(User, required=True)
+    text = db.StringProperty(required=True)
 
