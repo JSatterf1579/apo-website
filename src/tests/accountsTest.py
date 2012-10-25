@@ -3,7 +3,7 @@
 """
 accountsTest.py
 
-Tis file contains tests for the functions and classes in the accounts module
+This file contains tests for the functions and classes in the accounts module
 """
 import unittest
 
@@ -29,6 +29,8 @@ class AccountsTestCase(TestCase):
         self.families = [family1, family2]
         
         # First create some fake users
+
+        # password is "password1"
         user1 = User(firstName='Darryl',
                      lastName='Gillmore',
                      cwruID='dag23',
@@ -36,7 +38,8 @@ class AccountsTestCase(TestCase):
                      hash='ba46d29894dcde81c7f82a154df2d1584eef07f2',
                      family=family1)
         user1.put()
-        
+
+        # password is "password2"
         user2 = User(firstName='Darryl',
                      lastName='Styer',
                      cwruID='dxs',
@@ -44,7 +47,8 @@ class AccountsTestCase(TestCase):
                      hash='2db50a4bab58562e1d9ec8ea2b68945fdf3c6f52',
                      family=family2)
         user2.put()
-        
+
+        # password is "password3"
         user3 = User(firstName='Kurt',
                      lastName='Styer',
                      cwruID='kss3',
@@ -53,7 +57,8 @@ class AccountsTestCase(TestCase):
                      family=family2,
                      big=user2)
         user3.put()
-        
+
+        # password is "password4"
         user4 = User(firstName='Odessa',
                      lastName='Dietrich',
                      cwruID='ord5',
