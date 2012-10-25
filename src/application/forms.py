@@ -16,7 +16,7 @@ class ExampleForm(wtf.Form):
     example_name = wtf.TextField('Name', validators=[validators.Required()])
     example_description = wtf.TextAreaField('Description', validators=[validators.Required()])
 
-class LogInForm(Form):
+class LogInForm(wtf.Form):
     """This is the Log In form
     
     .. method:: LogInForm(username, password)
@@ -28,10 +28,10 @@ class LogInForm(Form):
        
        :rtype: Form instance
     """   
-    username = TextField('Username: ',[validators.Required()])
-    password = PasswordField('Password: ',[validators.Required()])
+    username = wtf.TextField('Username: ',[validators.Required()])
+    password = wtf.PasswordField('Password: ',[validators.Required()])
 	
-class CreateServiceEventForm(Form):
+class CreateServiceEventForm(wtf.Form):
     """This is the Create a Service Event Form
     
     .. method:: CreateServiceEventForm(name, date, startTime, endTime, location[, summary, maxBrothers])
@@ -53,15 +53,15 @@ class CreateServiceEventForm(Form):
         
        :rtype: Form instance
     """
-    name = TextField('Name: ',validators=[validators.Required()])
+    name = wtf.TextField('Name: ',validators=[validators.Required()])
     date = wtf.TextField('Date: ', validators=[validators.Required()])
     startTime = wtf.TextField('Start Time: ', validators=[validators.Required()])
-    endTime = TextField('End Time: ', validators=[validators.Required()])
+    endTime = wtf.TextField('End Time: ', validators=[validators.Required()])
     location = wtf.TextAreaField('Location: ', validators=[validators.Required()])
     summary = wtf.TextAreaField('Summary: ', validators=[validators.Required()])
-    maxBrothers = wtf.Textfield('Max # of brothers: ', validators=[validators.Optional()])
+    maxBrothers = wtf.TextField('Max number of brothers: ', validators=[validators.Optional()])
     
-class EventSignUpForm(Form):
+class EventSignUpForm(wtf.Form):
     """Event Sign up form
     .. method:: EventSignUpForm(name)
         
@@ -70,9 +70,9 @@ class EventSignUpForm(Form):
            
        :rtype: Form instance
     """
-    name = TextField('Name: ', validators=[validators.Required()])
+    name = wtf.TextField('Name: ', validators=[validators.Required()])
 
-class CreateUpdateContractForm(Form):
+class CreateUpdateContractForm(wtf.Form):
     """Form for Creating and Updating Contract types
     .. method:: CreateUpdateContractForm(name, hours, minutes, hoursDueDate, amount, duesDueDate, attendanceReq, attDueDate)
         
@@ -95,16 +95,16 @@ class CreateUpdateContractForm(Form):
        
        :rtype: Form instance
     """
-    name = TextField('Name: ',validators=[validators.Required()])
-    hours = TextField('Hours: ',validators=[validators.Required()])
-    min = TextField('Minutes: ',validators=[validators.Required()])
-    hoursDueDate = TextField('Hours Due Date: ',validators=[validators.Required()])
-    amount = TextField('Dues Amount: 'validators=[validators.Required()])
-    duesDueDate = TextField('Dues Due Date: ',validators=[validators.Required()])
-    attendanceReq = TextField('Attendance Requirements: ',validators=[validators.Required()])
-    attDueDate = TextField('Attendance Due Date: ',validators=[validators.Required()])
+    name = wtf.TextField('Name: ',validators=[validators.Required()])
+    hours = wtf.TextField('Hours: ',validators=[validators.Required()])
+    min = wtf.TextField('Minutes: ',validators=[validators.Required()])
+    hoursDueDate = wtf.TextField('Hours Due Date: ',validators=[validators.Required()])
+    amount = wtf.TextField('Dues Amount: ',validators=[validators.Required()])
+    duesDueDate = wtf.TextField('Dues Due Date: ',validators=[validators.Required()])
+    attendanceReq = wtf.TextField('Attendance Requirements: ',validators=[validators.Required()])
+    attDueDate = wtf.TextField('Attendance Due Date: ',validators=[validators.Required()])
 
-class CreateUpdateProfileForm(Form):
+class CreateUpdateProfileForm(wtf.Form):
     """Form for Creating and Updating User Profiles
     .. method:: CreateUpdateProfileForm(fname, mname, lname, caseid, avatar, contract[, family, big])
        
@@ -127,16 +127,16 @@ class CreateUpdateProfileForm(Form):
        
        :rtype: Form instance
     """
-    fname = TextField('First Name: ',validators=[validators.Required()])
-    mname = TextField('Middle Name: ',validators=[validators.Optional()])
-    lname = TextField('Last Name: ',validators=[validators.Required()])
-    caseid = TextField('Case ID: ',validators=[validators.Required()])
-    contract = TextField('Contract type: ',validators=[validators.Required()])
-    family = TextField('Family: ',validators=[validators.Optional()])
-    big = TextField('Big: ',validators=[validators.Optional()])
-    avatar = TextField('Avatar: ',validators=[validators.Required()])
+    fname = wtf.TextField('First Name: ',validators=[validators.Required()])
+    mname = wtf.TextField('Middle Name: ',validators=[validators.Optional()])
+    lname = wtf.TextField('Last Name: ',validators=[validators.Required()])
+    caseid = wtf.TextField('Case ID: ',validators=[validators.Required()])
+    contract = wtf.TextField('Contract type: ',validators=[validators.Required()])
+    family = wtf.TextField('Family: ',validators=[validators.Optional()])
+    big = wtf.TextField('Big: ',validators=[validators.Optional()])
+    avatar = wtf.TextField('Avatar: ',validators=[validators.Required()])
     
-class CreateBlogForm(Form):
+class CreateBlogForm(wtf.Form):
     """Form for creating a blog post
     .. method:: CreateBlogForm(title, blog)
     
@@ -147,10 +147,10 @@ class CreateBlogForm(Form):
        
        :rtype: Form instance
     """
-    title = TextField('Title: ',validators=[validators.Required()])
-    blog = TextAreaField('Blog entry: ',validators=[validators.Required()])
+    title = wtf.TextField('Title: ',validators=[validators.Required()])
+    blog = wtf.TextAreaField('Blog entry: ',validators=[validators.Required()])
 
-class CreateCommentForm(Form):
+class CreateCommentForm(wtf.Form):
     """Form for making a comment on a blog post
     .. method:: CreateCommentForm(comment)
        
@@ -159,9 +159,9 @@ class CreateCommentForm(Form):
        
        :rtype: Form instance
     """
-    comment = TextAreaField('Comment: ',validators=[validators.Required()])
+    comment = wtf.TextAreaField('Comment: ',validators=[validators.Required()])
     
-class OrganizePhotoForm(Form):
+class OrganizePhotoForm(wtf.Form):
     """Form for adding a photo to a photo album
     .. method:: OrganizePhotoForm(albumName, photo)
        
@@ -172,10 +172,10 @@ class OrganizePhotoForm(Form):
        
        :rtype: Form instance
     """
-    albumName = TextField('Album Name: ',validators=[validators.Required()])
-    photo = TextField('Photo URL: ',validators=[validators.Required()])
+    albumName = wtf.TextField('Album Name: ',validators=[validators.Required()])
+    photo = wtf.TextField('Photo URL: ',validators=[validators.Required()])
     
-class SubmitPhotoForm(Form);
+class SubmitPhotoForm(wtf.Form):
     """Form for submitting a photo to the website
     .. method:: SubmitPhotoForm(name, photo)
        
@@ -186,7 +186,7 @@ class SubmitPhotoForm(Form);
        
        :rtype: Form instance
     """
-    name = TextField('Photo Name: ',validators=[validators.Required()])
-    photo = TextField('Photo URL: ',validators=[validators.Required()])
+    name = wtf.TextField('Photo Name: ',validators=[validators.Required()])
+    photo = wtf.TextField('Photo URL: ',validators=[validators.Required()])
     
     
