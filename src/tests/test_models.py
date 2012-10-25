@@ -17,12 +17,26 @@ from application import models
 class FamilyModelTestCase(TestCase):
 
     def testAttributes(self):
-        self.fail('Not Implemented!')
+        # Check if attributes exist
+        self.assertTrue(hasattr(models.Family, 'name'), 'Family model has no name attribute')
+
+        # Check type of attributes
+        self.assertTrue(isinstance(models.Family.name, db.StringProperty), 'Family.name should be a unicode string')
+
+        # Check if required attributes are required
+        self.assertTrue(models.Family.name.required, 'Family.name should be required')
 
 class ContractModelTestCase(TestCase):
 
     def testAttributes(self):
-        self.fail('Not Implemented!')
+        # Check if attributes exist
+        self.assertTrue(hasattr(models.Contract, 'name'), 'Contract model has no name attribute')
+
+        # Check type of attributes
+        self.assertTrue(isinstance(models.Contract.name, db.StringProperty), 'Contract.name should be a unicode string')
+
+        # Check if required attributes are required
+        self.assertTrue(models.Contract.name.required, 'Contract.name should be required')
 
 class UserModelTestCase(TestCase):
 
@@ -38,6 +52,18 @@ class UserModelTestCase(TestCase):
         self.assertTrue(hasattr(models.User,'family'), 'User model has no family attribute')
         self.assertTrue(hasattr(models.User,'big'), 'User model has no big attribute')
         self.assertTrue(hasattr(models.User,'avatar'), 'User model has no avatar attribute')
+
+        # Check type of attributes
+        self.assertTrue(isinstance(models.User.firstName, db.StringProperty), 'User.firstName should be a unicode string')
+        self.assertTrue(isinstance(models.User.lastName, db.StringProperty), 'User.lastName should be a unicode string')
+        self.assertTrue(isinstance(models.User.cwruID, db.StringProperty), 'User.cwruID should be a unicode string')
+        self.assertTrue(isinstance(models.User.salt, db.StringProperty), 'User.salt should be a unicode string')
+        self.assertTrue(isinstance(models.User.hash, db.StringProperty), 'User.hash should be a unicode string')
+        self.assertTrue(isinstance(models.User.middleName, db.StringProperty), 'User.middleName should be a unicode string')
+        self.assertTrue(isinstance(models.User.contractType, db.ReferenceProperty), 'User.contractType should be a reference to a Contract entity')
+        self.assertTrue(isinstance(models.User.family, db.ReferenceProperty), 'User.family should be a reference to a Family entity')
+        self.assertTrue(isinstance(models.User.big, db.ReferenceProperty), 'User.big should be a self reference')
+        self.assertTrue(isinstance(models.User.avatar, db.StringProperty), 'User.avatar should be a unicode string')
 
         # Check if required attributes are required
         self.assertTrue(models.User.firstName.required, 'User.firstName should be required')
@@ -56,17 +82,54 @@ class UserModelTestCase(TestCase):
 class RoleModelTestCase(TestCase):
 
     def testAttributes(self):
-        self.fail('Not Implemented!')
+        # Check if attributes exist
+        self.assertTrue(hasattr(models.Role, 'name'), 'Role model has no name attribute')
+        self.assertTrue(hasattr(models.Role, 'desc'), 'Role model has no desc attribute')
+
+        # Check if attributes are correct type
+        self.assertTrue(isinstance(models.Role.name, db.StringProperty), 'Role.name should be a unicode string')
+        self.assertTrue(isinstance(models.Role.desc, db.StringProperty), 'Role.desc should be a unicode string')
+
+        # Check if required attributes are required
+        self.assertTrue(models.Role.name.required, 'Role.name should be required')
+
+        # Check if optional attributes are optional
+        self.assertFalse(models.Role.desc.required, 'Role.desc should be optional')
 
 class UserRoleModelTestCase(TestCase):
 
     def testAttributes(self):
-        self.fail('Not Implemented!')
+        # Check if attributes exist
+        self.assertTrue(hasattr(models.UserRole, 'user'), 'UserRole model has no user attribute')
+        self.assertTrue(hasattr(models.UserRole, 'role'), 'UserRole model has no role attribute')
+
+        # Check if attributes are correct type
+        self.assertTrue(isinstance(models.UserRole.user, db.ReferenceProperty), 'UserRole.user should be a reference to a User entity')
+        self.assertTrue(isinstance(models.UserRole.role, db.ReferenceProperty), 'UserRole.role should be a reference to a Role entity')
+
+        # Check if required attributes are required
+        self.assertTrue(models.UserRole.user.required, 'UserRole.user should be required')
+        self.assertTrue(models.UserRole.role.required, 'UserRole.role should be required')
 
 class AddressModelTestCase(TestCase):
 
     def testAttributes(self):
-        self.fail('Not Implemented!')
+        # Check if attributes exist
+        self.assertTrue(hasattr(models.Address, 'user'), 'Address model has no user attribute')
+        self.assertTrue(hasattr(models.Address, 'address'), 'Address model has no address attribute')
+        self.assertTrue(hasattr(models.Address, 'name'), 'Address model has no name attribute')
+
+        # Check if attributes are correct type
+        self.assertTrue(isinstance(models.Address.user, db.ReferenceProperty), 'Address.user should be a reference to a User entity')
+        self.assertTrue(isinstance(models.Address.address, db.PostalAddressProperty), 'Address.address should be a PostalAddress entity')
+        self.assertTrue(isinstance(models.Address.name, db.StringProperty), 'Address.name should be a unicode string')
+
+        # Check if required attributes are required
+        self.assertTrue(models.Address.user.required, 'Address.user should be required')
+        self.assertTrue(models.Address.address.required, 'Address.address should be required')
+
+        # Check if optional attributes are optional
+        self.assertFalse(models.Address.name.required, 'Address.name should be optional')
 
 class EmailModelTestCase(TestCase):
 
