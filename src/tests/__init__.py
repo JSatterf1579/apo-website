@@ -1,3 +1,3 @@
 import unittest
 
-from AppEngineTestCase import AppEngineTestCase
+from testHarness import AppEngineTestCase

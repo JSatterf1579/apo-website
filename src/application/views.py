@@ -17,7 +17,11 @@ from models import ExampleModel
 from decorators import login_required, admin_required
 from forms import ExampleForm
 
-# this allows the use of the URL decorators
+import models
+
+from flaskext.flask_login import login_user, login_required, logout_user, current_user
+
+# this allows the use of the URL decorators and flask-login
 from application import app
 
 @app.route('/')
@@ -29,17 +33,30 @@ def home():
     """
     return redirect(url_for('list_examples'))
 
+@app.route('/login')
+def login():
+    """
+    View for the login page
+    """
+    return "Login page"
+
 
 @app.route('/hello/<username>')
 def say_hello(username):
-    """Contrived example to demonstrate Flask's url routing capabilities"""
+    """Contrived example to demonstrate Flask's url routing capabilities
+
+    :rtype: HTML page
+    """
     return 'Hello %s' % username
 
 
 @app.route('/examples', methods=['GET','POST'])
 @login_required
 def list_examples():
-    """List all examples"""
+    """List all examples
+
+    :rtype: HTML page
+    """
     examples = ExampleModel.all()
     form = ExampleForm()
     if form.validate_on_submit():
