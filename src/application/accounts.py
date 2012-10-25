@@ -12,7 +12,7 @@ from Crypto.Hash import SHA
 from generate_keys import generate_randomkey
 
 @login_manager.user_loader
-def load_user(userid):
+def load_user(cwruID):
     """This function is required by Flask-Login.
 
     It uses the login manager's user_loader decorator.
@@ -24,7 +24,7 @@ def load_user(userid):
 
     :rtype: application.models.User
     """
-    pass
+    return getUsers(limit=1,cwruID=cwruID)[0]
 
 def getUsers(limit=None,**kwargs):
     """This function takes the information in the kwargs dictionary
