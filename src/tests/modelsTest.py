@@ -10,7 +10,7 @@ import unittest
 
 from google.appengine.ext import db
 
-from AppEngineTestCase import AppEngineTestCase as TestCase
+from testHarness import AppEngineTestCase as TestCase
 
 from application import models
 

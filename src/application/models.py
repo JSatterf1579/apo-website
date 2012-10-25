@@ -10,6 +10,8 @@
 from google.appengine.ext import db
 from google.appengine.ext.db import polymodel
 
+import flaskext.flask_login as login
+
 # Taken from the member profile section of the design document
 class Family(db.Model):
     """Contains the various families
@@ -35,9 +37,9 @@ class Contract(db.Model):
     """
     name = db.StringProperty(required=True)
 
-class User(db.Model):
+class User(db.Model, login.UserMixin):
     """
-    Stores user information
+    Stores user information. Also provides the methods needed to Flask-Login.
     
     .. method:: User(firstName, lastName, cwruID, salt, hash[, middleName, contractType, family, big, avatar])
 
@@ -73,6 +75,10 @@ class User(db.Model):
        :param avatar: User's gravatar user name
        :type avatar: unicode
     """
+    def __eq__(self, other):
+        """Check if two entities are equal"""
+        return self.key() == other.key()
+    
     # Required attributes
     firstName = db.StringProperty(required=True)
     lastName = db.StringProperty(required=True)
@@ -81,11 +87,20 @@ class User(db.Model):
     hash = db.StringProperty(required=True)
 
     # Optional attributes
-    middleName = db.StringProperty()
-    contractType = db.ReferenceProperty(Contract)
-    family = db.ReferenceProperty(Family)
-    big = db.SelfReferenceProperty()
-    avatar = db.StringProperty()
+    middleName = db.StringProperty(default=None)
+    contractType = db.ReferenceProperty(Contract,default=None)
+    family = db.ReferenceProperty(Family,default=None)
+    big = db.SelfReferenceProperty(default=None, collection_name='littles')
+    avatar = db.StringProperty(default=None)
+
+    def get_id(self):
+        """Returns a unicode representation of the User entity. Used with flask-login
+
+        .. method:: get_id()
+
+           :rtype: unicode
+        """
+        return unicode(self.cwruID) # each user should have a unique cwruID
 
 class Role(db.Model):
     """Contains the various roles in the chapter. Used in permissions
