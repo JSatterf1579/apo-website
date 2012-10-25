@@ -91,21 +91,53 @@ class LoginTestCase(TestCase):
         # actual user
         self.users = [user1, user2, user3, user4]
 
+    def login(self, username, password):
+        return self.app.post('/login', data=dict(username=username,
+                                                 password=password),
+                             follow_redirects=True)
+
+    def logout(self):
+        return self.app.get('/logout', follow_redirects=True)
     
     def test_AccessDenied(self):
         # Make sure that brand new user is denied access
         # to login required pages
         rv  = self.app.get('/secretTest')
-        self.assertNotIn("Shhh! It's a secret!", rv.data, "client wasn't denied login to /secretTest")
+        self.assertNotIn("Shhh! It's a secret!", rv.data, "client wasn't denied access to /secretTest")
 
         rv = self.app.get('/secretTest', follow_redirects=True)
         self.assertIn("Login", rv.data, "Client wasn't redirected to login page")
 
     def test_login(self):
-        self.fail('Not Implemented')
+        # Test logging in with incorrect username
+        rv = self.login('111','password1')
+        self.assertNotIn('Success', rv.data, "Login was successful with incorrect username")
+        
+        # Test logging in with incorrect password
+        rv = self.login('dxs','wrong!')
+        self.assertNotIn('Success', rv.data, "Login was successful with incorrect password")
+        
+        # Test logging in with correct username and password
+        rv = self.app.post('/login', data=dict(username='dxs',
+                                               password='password2'),
+                           follow_redirects=True)
+        self.assertIn('Success', rv.data, "Client login wasn't a success")
+
+        rv = self.app.get('/secretTest')
+        self.assertIn("Shhh! It's a secret!", rv.data, "Client was denied access to /secretTest")
 
     def test_logout(self):
-        self.fail('Not Implemented')
+        # login
+        rv = self.app.post('/login', data=dict(username='kss3',
+                                               password='password3'),
+                           follow_redirects=True)
+        self.assertIn('Success', rv.data, "Client login wasn't a success")
+
+        # logout
+        rv = self.app.get('/logout', follow_redirects=True)
+
+        rv = self.app.get('/secretTest')
+        self.assertNotIn("Shhh! It's a secret!", rv.data, "Client wasn't denied access to /secretTest")
 
 if __name__ == "__main__":
     unittest.main()

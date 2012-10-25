@@ -11,13 +11,13 @@
 from google.appengine.api import users
 from google.appengine.runtime.apiproxy_errors import CapabilityDisabledError
 
-from flask import render_template, flash, url_for, redirect
+from flask import render_template, flash, url_for, redirect, request
 
 from models import ExampleModel
 from decorators import login_required, admin_required
 from forms import ExampleForm
 
-import models
+import models, forms, accounts
 
 from flaskext.flask_login import login_user, login_required, logout_user, current_user
 
@@ -33,13 +33,41 @@ def home():
     """
     return redirect(url_for('list_examples'))
 
-@app.route('/login')
+@app.route('/login', methods=['GET', 'POST'])
 def login():
     """
     View for the login page
     """
-    return "Login page"
+    form = forms.LogInForm(request.form)
 
+    if request.method == 'POST' and form.validate():
+
+        # get the User from the database based on the username
+        cwruID = form.username.data
+        password = form.password.data
+        
+
+
+        if accounts.verifyLogin(cwruID, password):
+            user = accounts.getUsers(limit=1,cwruID=cwruID)[0]
+            login_user(user)
+
+            return "Success"
+
+        else:
+            return "Failure"
+    else:
+        return "Login Page"
+
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for('home'))
+
+@app.route('/')
+def home():
+    return "Home Page!"
 
 @app.route('/hello/<username>')
 def say_hello(username):
