@@ -134,7 +134,7 @@ class CreateUpdateProfileForm(wtf.Form):
     contract = wtf.TextField('Contract type: ',validators=[validators.Optional()])
     family = wtf.TextField('Family: ',validators=[validators.Optional()])
     big = wtf.TextField('Big: ',validators=[validators.Optional()])
-    avatar = wtf.TextField('Avatar: ',validators=[validators.Optional()])
+    avatar = wtf.TextField('Gravatar Email: ',validators=[validators.Optional()])
     password = wtf.PasswordField('Password: ', validators=[validators.Optional()])
     
 class CreateBlogForm(wtf.Form):
