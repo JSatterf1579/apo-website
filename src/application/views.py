@@ -31,7 +31,8 @@ def before_first_request():
     accounts.createUser(firstName='Devin',
                         lastName='Schwab',
                         cwruID='dts34',
-                        password='default')
+                        password='default',
+                        avatar='digidevin@gmail.com')
     accounts.createUser(firstName='Jon',
                         lastName='Chan',
                         cwruID='jtc77',
@@ -105,10 +106,16 @@ def createUser():
             password = generate_keys.generate_randomkey(10)
         else:
             password = form.password.data
+            
         newUser = accounts.createUser(form.fname.data,
                                       form.lname.data,
                                       form.caseid.data,
                                       password)
+
+        if(form.avatar.data != ''):
+           newUser.avatar = form.avatar.data
+           newUser.put()
+        
         if newUser is not None:
             flash("User '%s' created with password '%s'" % (newUser.cwruID,password))
             if(not current_user.is_authenticated):
@@ -155,7 +162,14 @@ def viewUser(cwruID):
     View for viewing the user's profile
     """
 
-    return "Member profile for %s would display here" % cwruID
+    try:
+        user = accounts.getUsers(limit=1,cwruID=cwruID)[0]
+    except IndexError:
+        return render_template('404.html'), 404
+
+    avatar = accounts.getAvatar(cwruID, request.host_url, size=300)
+
+    return render_template('viewMember.html', user=user, avatar=avatar)
 
 @app.route('/logout')
 @login_required

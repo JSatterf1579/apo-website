@@ -8,8 +8,9 @@
 from application import login_manager
 from application.models import User
 
-from Crypto.Hash import SHA
+from Crypto.Hash import SHA,MD5
 from generate_keys import generate_randomkey
+import urllib, urlparse
 
 @login_manager.user_loader
 def load_user(cwruID):
@@ -169,3 +170,31 @@ def verifyLogin(cwruID, password):
         return True
     else:
         return False
+
+def getAvatar(cwruID, host, size=100, default="/static/img/avatar.png"):
+    """
+    Looks up gravatar avatar url based on cwruID
+
+    This code is based on the code at
+    http://en.gravatar.com/site/implement/images/python/
+    """
+
+    q = User.all()
+    q.filter('cwruID =', cwruID)
+
+    if( q.count() == 0):
+        return default
+
+    user = q.fetch(1)[0]
+
+    if user.avatar is None:
+        return default
+    
+    email = user.avatar
+
+    default = urlparse.urljoin(host, default)
+    
+    gravatar_url = "http://www.gravatar.com/avatar/" + MD5.new(email.lower()).hexdigest() + "?"
+    gravatar_url += urllib.urlencode({'d':default, 's':str(size)})
+
+    return gravatar_url
