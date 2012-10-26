@@ -31,7 +31,7 @@ def home():
 
     :rtype: HTML page
     """
-    return redirect(url_for('list_examples'))
+    return render_template('index.html')
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -46,28 +46,28 @@ def login():
         cwruID = form.username.data
         password = form.password.data
         
-
-
         if accounts.verifyLogin(cwruID, password):
             user = accounts.getUsers(limit=1,cwruID=cwruID)[0]
             login_user(user)
 
-            return "Success"
+            nextPage = 'home'
+            try:
+                nextPage = request.args['redirect']
+            except KeyError:
+                flash(str(request.args))
+            return redirect(url_for(nextPage))
 
         else:
-            return "Failure"
+            flash("Error: Incorrect username or password")
+            return redirect(url_for('home'))
     else:
-        return "Login Page"
+        return render_template('login.html', loginForm=forms.LogInForm())
 
 @app.route('/logout')
 @login_required
 def logout():
     logout_user()
     return redirect(url_for('home'))
-
-@app.route('/')
-def home():
-    return "Home Page!"
 
 @app.route('/hello/<username>')
 def say_hello(username):
