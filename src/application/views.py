@@ -26,10 +26,22 @@ import urllib, urlparse
 # this allows the use of the URL decorators and flask-login
 from application import app
 
+@app.before_first_request
+def before_first_request():
+    accounts.createUser(firstName='Devin',
+                        lastName='Schwab',
+                        cwruID='dts34',
+                        password='default')
+    accounts.createUser(firstName='Jon',
+                        lastName='Chan',
+                        cwruID='jtc77',
+                        password='default')
+
 @app.context_processor
 def loginLink():
     if current_user.is_authenticated():
-        return dict(loginLink='<a href="/logout">Logout %s</a>' % current_user.cwruID)
+        return dict(loggedIn = True,
+                    loginLink='<a href="/logout">Logout %s</a>' % current_user.cwruID)
     else:
         return dict(loginLink='<a href="/login">Login</a>')
 
@@ -80,6 +92,7 @@ def login():
         return render_template('login.html', loginForm=forms.LogInForm(), next=next)
 
 @app.route('/exec/members/create', methods=['GET', 'POST'])
+@login_required
 def createUser():
     """
     View for creating a user
@@ -105,6 +118,44 @@ def createUser():
         return redirect(url_for('createUser'))
         
     return render_template('createUser.html', userForm=forms.CreateUpdateProfileForm())
+
+@app.route('/exec/members')
+@login_required
+def listUsers():
+    """
+    View for listing users
+    """
+
+    users = accounts.getUsers()
+    return render_template('listMembers.html', users=users)
+
+@app.route('/exec/members/delete/<cwruID>')
+@login_required
+def deleteUser(cwruID):
+    """
+    View for deleting the user specified by cwruID
+    """
+
+    nextPage = 'listUsers'
+    if current_user.cwruID == cwruID:
+        logout_user()
+        nextPage = 'home'
+
+    success = accounts.deleteUser(cwruID)
+
+    if(success):
+        flash("Successfully deleted account '%s'" % cwruID)
+    else:
+        flash("Failed to delete account '%s'" % cwruID)
+    return redirect(url_for(nextPage))
+
+@app.route('/members/<cwruID>')
+def viewUser(cwruID):
+    """
+    View for viewing the user's profile
+    """
+
+    return "Member profile for %s would display here" % cwruID
 
 @app.route('/logout')
 @login_required
