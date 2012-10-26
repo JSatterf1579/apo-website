@@ -8,7 +8,7 @@ Login
 
 <h1>Login</h1>
 {% from "_formhelpers.html" import render_field %}
-<form method=post action="/login">
+<form method=post action="/login?next={{ next }}">
   <dl>
     {{ render_field(loginForm.username) }}
     {{ render_field(loginForm.password) }}

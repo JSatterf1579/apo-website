@@ -17,12 +17,21 @@ from models import ExampleModel
 from decorators import login_required, admin_required
 from forms import ExampleForm
 
-import models, forms, accounts
+import models, forms, accounts, generate_keys
 
 from flaskext.flask_login import login_user, login_required, logout_user, current_user
 
+import urllib, urlparse
+
 # this allows the use of the URL decorators and flask-login
 from application import app
+
+@app.context_processor
+def loginLink():
+    if current_user.is_authenticated():
+        return dict(loginLink='<a href="/logout">Logout %s</a>' % current_user.cwruID)
+    else:
+        return dict(loginLink='<a href="/login">Login</a>')
 
 @app.route('/')
 def home():
@@ -50,18 +59,52 @@ def login():
             user = accounts.getUsers(limit=1,cwruID=cwruID)[0]
             login_user(user)
 
-            nextPage = 'home'
             try:
-                nextPage = request.args['redirect']
+                nextPage = request.args['next']
             except KeyError:
-                flash(str(request.args))
-            return redirect(url_for(nextPage))
+                nextPage = 'home'
+            flash('Success! You are now logged.', 'success')
+            return redirect(urlparse.urljoin(request.host_url, nextPage))
 
         else:
-            flash("Error: Incorrect username or password")
-            return redirect(url_for('home'))
+            flash("Error: Incorrect username or password", 'error')
+            params = '?'
+            for key in request.args:
+                params = params + '%s=%s' % (urllib.quote_plus(key),urllib.quote_plus(request.args[key]))
+            return redirect(urlparse.urljoin(request.path, params)) # try again
     else:
-        return render_template('login.html', loginForm=forms.LogInForm())
+        try:
+            next = urllib.quote_plus(request.args['next'])
+        except KeyError:
+            next = urllib.quote_plus('/')
+        return render_template('login.html', loginForm=forms.LogInForm(), next=next)
+
+@app.route('/exec/members/create', methods=['GET', 'POST'])
+def createUser():
+    """
+    View for creating a user
+    """
+
+    form = forms.CreateUpdateProfileForm(request.form)
+    
+    if request.method == 'POST' and form.validate():
+        if form.password.data == '':
+            password = generate_keys.generate_randomkey(10)
+        else:
+            password = form.password.data
+        newUser = accounts.createUser(form.fname.data,
+                                      form.lname.data,
+                                      form.caseid.data,
+                                      password)
+        if newUser is not None:
+            flash("User '%s' created with password '%s'" % (newUser.cwruID,password))
+            if(not current_user.is_authenticated):
+                login_user(newUser)
+        else:
+            flash("Error: User was not created")
+        return redirect(url_for('createUser'))
+        
+    return render_template('createUser.html', userForm=forms.CreateUpdateProfileForm())
 
 @app.route('/logout')
 @login_required
