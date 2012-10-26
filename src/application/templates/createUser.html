@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %}
+Create User
+{% endblock title %}
+
+{% block content %}
+
+<h1>Create a User</h1>
+{% from "_formhelpers.html" import render_field %}
+<form method="post" action="/exec/members/create">
+  <dl>
+    {{ render_field(userForm.fname) }}
+    {{ render_field(userForm.lname) }}
+    {{ render_field(userForm.caseid) }}
+    {{ render_field(userForm.password) }}
+    {{ userForm.csrf_token }}
+  </dl>
+  <p><input type=submit value=Create>
+</form>
+{% endblock content %}

@@ -131,10 +131,11 @@ class CreateUpdateProfileForm(wtf.Form):
     mname = wtf.TextField('Middle Name: ',validators=[validators.Optional()])
     lname = wtf.TextField('Last Name: ',validators=[validators.Required()])
     caseid = wtf.TextField('Case ID: ',validators=[validators.Required()])
-    contract = wtf.TextField('Contract type: ',validators=[validators.Required()])
+    contract = wtf.TextField('Contract type: ',validators=[validators.Optional()])
     family = wtf.TextField('Family: ',validators=[validators.Optional()])
     big = wtf.TextField('Big: ',validators=[validators.Optional()])
-    avatar = wtf.TextField('Avatar: ',validators=[validators.Required()])
+    avatar = wtf.TextField('Avatar: ',validators=[validators.Optional()])
+    password = wtf.PasswordField('Password: ', validators=[validators.Optional()])
     
 class CreateBlogForm(wtf.Form):
     """Form for creating a blog post
