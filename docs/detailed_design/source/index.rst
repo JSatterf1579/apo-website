@@ -11,7 +11,10 @@ Contents:
 .. toctree::
    :maxdepth: 2
 
+   gae/index.rst
    accounts
+   external_libraries/index
+   glossary
 
 Indices and tables
 ==================
