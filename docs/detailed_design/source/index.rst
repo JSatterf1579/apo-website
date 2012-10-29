@@ -11,8 +11,13 @@ Contents:
 .. toctree::
    :maxdepth: 2
 
-   gae/index.rst
+   gae/index
+   extensions/index
+   main_templates
+   main_models
    accounts
+   member_profiles_and_administration
+   photo_gallery
    external_libraries/index
    glossary
 

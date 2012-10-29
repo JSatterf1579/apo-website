@@ -7,4 +7,5 @@ Contents:
    :maxdepth: 1
 
    pycrypto
+   oauth2
 
