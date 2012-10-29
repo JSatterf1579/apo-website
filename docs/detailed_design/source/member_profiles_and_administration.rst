@@ -13,10 +13,71 @@ application to render the user interface for member related tasks.
 
 .. module:: members.models
 
+.. function:: get_avatar_url(avatar_address)
+
+   This function takes the avatar field and converts it to a gravatar
+   image url.
+
+   :param avatar_address: The avatar field from the :class:`accounts.models.__UserModel`
+   :type avatar_address: unicode
+
+   :rtype: unicode url for avatar image
+
 :mod:`members.models` -- Member Related Models
 ----------------------------------------------
 
 .. module:: members.models
+
+.. class:: accounts.models.AddressModel(db.Model)
+
+   Contains an address for a User
+
+   .. method:: __init__(user, address[, name])
+
+       Creates a new Address entity
+
+       :param user: User this address belongs to
+       :type user: application.models.User
+
+       :param address: Address
+       :type address: google.appengine.ext.db.PostalAddress 
+
+       :param name: Nickname for Address - e.g. home
+       :type name: unicode
+
+.. class:: accounts.models.PhoneNumberModel(db.Model)
+
+   Contains a phone number for a User
+
+   .. method:: __init__(user, number[, name])
+
+       Creates a new PhoneNumber entity
+
+       :param user: User this phone number belongs to
+       :type user: application.model.User
+
+       :param number: Phone number with in the following format "(111) 555-3333"
+       :type number: google.appengine.ext.db.PhoneNumber
+
+       :param name: Optional nickname for phone number - e.g. cell
+       :type name: unicode
+
+.. class:: accounts.models.EmailAddressModel(db.Model)
+
+   Contains an email address for a User
+
+   .. method:: __init__(user, email[, name])
+
+       Creates a new Email entity
+
+       :param user: User this email address belongs to
+       :type user: application.model.User
+
+       :param email: User's email
+       :type email: google.appengine.ext.db.Email
+
+       :param name: Optional nickname for address - e.g. school
+       :type name: unicode
 
 :mod:`members.views` -- Member Related Views
 --------------------------------------------
@@ -47,7 +108,7 @@ application to render the user interface for member related tasks.
    It accepts a GET and POST request.
 
    If a POST request expects information from
-   :class:`members.forms.SearchMembersForm` to be present. It will
+   :class:`members.forms.UpdateSearchMembersForm` to be present. It will
    then render the :ref:`List Members Template` with only the members
    matching the search criteria.
 
@@ -113,7 +174,7 @@ application to render the user interface for member related tasks.
    is displayed. These forms are populated with the information in
    each of the models. Additionally a blank one of each form is provided in
    case the user wants to add an additional phone number, address, or
-   email. Finally a :class:`members.models.UpdateUserForm` is
+   email. Finally a :class:`members.models.UpdateSearchUserForm` is
    displayed. When the user saves the changes they are POSTed to this
    view. All of this is rendered in the :ref:`Edit User Template`.
 
@@ -130,6 +191,183 @@ application to render the user interface for member related tasks.
 
 .. module:: members.forms
 
+.. class:: members.forms.AddressForm
+
+   This class is used for validating an address
+
+   .. attribute:: addrName - Specifies a nickname for the address
+
+      * TextField
+
+   .. attribute:: street1 - first line of an address
+
+      * TextField
+      * Required
+
+   .. attribute:: street2 - second line of an address
+
+      * TextField
+      * Required
+
+   .. attribute:: city
+
+      * TextField
+      * Required
+
+   .. attribute:: state
+
+      * TextField
+      * Required
+
+   .. attribute:: zip
+
+      * TextField
+      * Required
+
+.. class:: members.forms.PhoneNumberForm
+
+   This class is used for validating a phone number
+
+   .. attribute:: phoneNumber
+
+      * PhoneField
+      * Required
+
+.. class:: members.forms.EmailAddressForm
+
+   This class is used for validating an email address
+
+   .. attribute:: emailAddress
+   
+      * EmailField
+      * Required
+
+.. class:: members.forms.UpdateSearchUserForm
+
+   This class is used for collecting information to update a user
+   profile.
+
+   .. attribute:: firstName
+      
+      * TextField
+      * Required
+
+   .. attribute:: middleName
+
+      * TextField
+      * Optional
+
+   .. attribute:: lastName
+
+      * TextField
+      * Required
+
+   .. attribute:: family
+      
+      * TextField
+      * Optional
+
+   .. attribute:: big
+      
+      * TextField
+      * Optional
+
+   .. attribute:: avatar
+
+      * EmailField
+      * Optional
+
+   .. attribute:: roles
+
+      * TextField
+      * Optional
+
+.. class:: members.forms.CreateUserForm
+
+   This class is used for collecting information to create a user
+   profile.
+
+   .. attribute:: firstName
+      
+      * TextField
+      * Required
+
+   .. attribute:: middleName
+
+      * TextField
+      * Optional
+
+   .. attribute:: lastName
+
+      * TextField
+      * Required
+
+   .. attribute:: cwruID
+
+      * TextField
+      * Required
+
+   .. attribute:: family
+      
+      * TextField
+      * Optional
+
+   .. attribute:: big
+      
+      * TextField
+      * Optional
+
+   .. attribute:: avatar
+
+      * EmailField
+      * Optional
+
+    .. attribute:: roles
+      
+      * TextField
+      * Optional
+
+
 Member Templates
 ----------------
+
+.. module:: accounts.templates
+
+Create Member Template
+**********************
+
+This template renders the form to create members.
+
+It requires an instance of the :class:`members.forms.CreateMemberForm`.
+
+List Members Template
+*********************
+
+This templates displays a list of all users matching the information
+from the search form.
+
+It also renders the search form.
+
+It requires an instance of the
+:class:`members.forms.UpdateSearchMemberForm`. It also requires
+instances of the :class:`accounts.accounts.__User` model for all users
+to be displayed.
+
+View Profile Template
+*********************
+
+This template displays a member profile.
+
+It requires an instance of the user to be displayed and instances of
+the member profile models such as :class:`members.models.AddressModel`
+
+Edit User Template
+******************
+
+This template renders the forms to update a user
+
+It requires an instance of the user to be displayed and instances of
+the member profile models such as :class:`members.models.AddressModel`
+
+
 

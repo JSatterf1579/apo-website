@@ -1,10 +1,12 @@
 :mod:`application.serviceEvent` -- Service Event Tracking Package
 =================================================================
-Classes
-*******
+
 
 :mod:`serviceEvent.serviceEvent` -- Service Event class
 -------------------------------------------------------
+
+Classes
+*******
 
 .. module:: serviceEvent.serviceEvent
 
@@ -87,14 +89,6 @@ Module Functions
 
    This method returns a list of current service events from the datastore
 
-.. function:: serviceEvent.serviceEvent.signUp
-
-   This method adds a name to the service event sign up list
-   
-.. function:: serviceEvent.serviceEvent.unsignUp
-
-   This method removes a name from the service event sign up list
-   
 .. function:: serviceEvent.serviceEvent.signUp(name)
 
    This method adds a name to the service event sign up list
@@ -112,7 +106,7 @@ Module Functions
    :type name: unicode
    
    :rtype: bool
-   
+
 .. function:: serviceEvent.serviceReport.createReport
 
    This method is a factory method for service reports.
@@ -142,10 +136,10 @@ Module Functions
    :type maxBro: int
     
    :param addInfo: Additional information about service event
+
    :type addInfo: unicode
     
    :rtype: ServiceEvent
-
 
 .. method:: ServiceSignUp(user, event)
 
@@ -202,7 +196,7 @@ Module Functions
 
    :param dMinutes: Number of minutes spent driving
    :type dMinutes: int
-   
+
 :mod:`serviceEvent.views` -- serviceEvent related views
 --------------------------------------------------------
 
@@ -227,7 +221,7 @@ The reportHoursView is used to report service events and hours
    :get: displays the corresponding report hours form dependent on service report type
 This view uses a template
    :Template: application.serviceEvent.reportHoursTemplate() 
-   
+
 :mod:`serviceEvent.forms` -- serviceEvent related forms
 --------------------------------------------------------
 
@@ -315,7 +309,6 @@ This form containst the fields required for a user to input their outside event'
    
    :rtype: Form instance
    
-
 :mod:`serviceEvent.templates` -- serviceEvent related templates
 ----------------------------------------------------------------
 

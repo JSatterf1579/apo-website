@@ -1,11 +1,12 @@
 :mod:`application.contract` -- Contract Tracking Package
 ========================================================
-Classes
-*******
 
 
 :mod:`contract.contract` -- Contract class
 ------------------------------------------
+
+Classes
+*******
 
 .. module:: contract.contract
 
@@ -45,7 +46,8 @@ Classes
    attendanceReq.amount - must be greater than or equal to 0
       
 Module Functions
-****************
+
+****************  
 
 .. function:: contract.contract.createContract
 

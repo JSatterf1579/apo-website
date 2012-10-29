@@ -1,10 +1,12 @@
 :mod:`application.blog` -- Blog Post Package
 ============================================
-Classes
-*******
+
 
 :mod:`blog.blog` -- Blog class
 ------------------------------
+
+Classes
+*******
 
 .. module:: blog.blog
 

@@ -545,7 +545,7 @@ Module Functions
 Account Templates
 -----------------
 
-.. module:: accounts.forms
+.. module:: accounts.templates
 
 Login Template
 **************
