@@ -458,6 +458,13 @@ Module Functions
 	 :param role: Reference to a Role
 	 :type role: Reference
       
+Account Model Diagrams
+**********************
+
+.. image:: img/modelDiagrams/userModel.png
+   :width: 90%
+   :align: center
+
 
 :mod:`accounts.views` -- Account Related Views
 ---------------------------------------------------------

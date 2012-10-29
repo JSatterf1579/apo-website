@@ -28,7 +28,7 @@ application to render the user interface for member related tasks.
 
 .. module:: members.models
 
-.. class:: accounts.models.AddressModel(db.Model)
+.. class:: members.models.AddressModel(db.Model)
 
    Contains an address for a User
 
@@ -45,7 +45,7 @@ application to render the user interface for member related tasks.
        :param name: Nickname for Address - e.g. home
        :type name: unicode
 
-.. class:: accounts.models.PhoneNumberModel(db.Model)
+.. class:: members.models.PhoneNumberModel(db.Model)
 
    Contains a phone number for a User
 
@@ -62,7 +62,7 @@ application to render the user interface for member related tasks.
        :param name: Optional nickname for phone number - e.g. cell
        :type name: unicode
 
-.. class:: accounts.models.EmailAddressModel(db.Model)
+.. class:: members.models.EmailAddressModel(db.Model)
 
    Contains an email address for a User
 
@@ -78,6 +78,14 @@ application to render the user interface for member related tasks.
 
        :param name: Optional nickname for address - e.g. school
        :type name: unicode
+
+Members Model Diagrams
+**********************
+
+.. image:: img/modelDiagrams/userModel.png
+   :width: 90%
+   :align: center
+
 
 :mod:`members.views` -- Member Related Views
 --------------------------------------------

@@ -265,6 +265,7 @@ This form contains the fields for filling out the parameters of a service event 
 serviceEvent.serviceEvent.createEvent
 
    .. method:: CreateServiceEventForm(name, date, startTime, endTime, location[, summary, maxBrothers])
+   
    This is the Create a Service Event Form
     
    :param name: Name of event
