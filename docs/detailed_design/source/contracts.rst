@@ -1,4 +1,4 @@
-:mod:`application.contract` -- Contract Tracking Package
+:mod:`contract` -- Contract Tracking Package
 ========================================================
 
 
@@ -71,60 +71,80 @@ Module Functions
 
 .. module:: contract.models
 
-.. method:: ChapterEvent()
+.. class:: ChapterEvent(application.Event)
 
-   Creates a new ChapterEvent entity
+   .. method:: __init__()
+
+      Creates a new ChapterEvent entity
    
-   :param date: Date of event
-   :type date: datetime.date
+      :param date: Date of event
+      :type date: datetime.date
    
 
-.. method:: Contract(name)
+.. class:: Contract(db.Model)
 
-   Creates a new Contract entity
+   .. method:: __init__(name)
 
-   :param name: Name of contract - e.g. associate
-   :type name: unicode
+      Creates a new Contract entity
 
-.. method:: Requirement(contract, dueDate[, name])
+      :param name: Name of contract - e.g. associate
+      :type name: unicode
 
-   Creates a new Requirement entity
+.. class:: Requirement(db.PolyModel)
 
-   :param contract: Contract this requirement is associated with
-   :type contract: application.models.Contract
+    .. method:: __init__(contract, dueDate[, name])
 
-   :param dueDate: Date this requirement is due
-   :type dueDate: datetime.date
+      Creates a new Requirement entity
 
-   :param name: Optional nickname for requirement - e.g. inside hours
-   :type name: unicode
+      :param contract: Contract this requirement is associated with
+      :type contract: application.models.Contract
 
-.. method:: HourReq(min, type)
+      :param dueDate: Date this requirement is due
+      :type dueDate: datetime.date
 
-   Creates a new HourReq entity
+      :param name: Optional nickname for requirement - e.g. inside hours
+      :type name: unicode
 
-   :param min: Minutes needed to meet this requirement
-   :type min: int
+.. class:: HourReq(Requirement)
 
-   :param type: Type of minutes needed - e.g. inside
-   :type type: unicode
+   .. method:: __init__(min, type)
 
-.. method:: DuesReq(amount)
+      Creates a new HourReq entity
 
-   Creates a new DuesReq entity
+      :param min: Minutes needed to meet this requirement
+      :type min: int
 
-   :param amount: Amount of money need to meet this requirement
-   :type amount: float
+      :param type: Type of minutes needed - e.g. inside
+      :type type: unicode
 
-.. method:: AttendanceReq(amount, type)
+.. class:: DuesReq(Requirement)
 
-   Creates a new AttendanceReq entity
+   .. method:: __init__(amount)
 
-   :param amount: Amount of events needed to meet this requirement. Allows for fractions of events to be specified
-   :type amount: float
+      Creates a new DuesReq entity
 
-   :param type: Type of event needed - e.g. ServiceEvent
-   :type type: unicode   
+      :param amount: Amount of money need to meet this requirement
+      :type amount: float
+
+.. class:: AttendanceReq(Requirement)
+
+   .. method:: __init__(amount, type)
+
+      Creates a new AttendanceReq entity
+
+      :param amount: Amount of events needed to meet this requirement. Allows for fractions of events to be specified
+      :type amount: float
+
+      :param type: Type of event needed - e.g. ServiceEvent
+      :type type: unicode   
+
+Contract Model Diagrams
+***********************
+
+.. image:: img/modelDiagrams/contractModel.png
+   :width: 90%
+   :align: center
+   :name: Contract Model Diagram
     
 :mod:`contract.views` -- Contract related views
 -----------------------------------------------

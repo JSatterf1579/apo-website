@@ -1,4 +1,4 @@
-:mod:`application.blog` -- Blog Post Package
+:mod:`blog` -- Blog Post Package
 ============================================
 
 
@@ -31,37 +31,54 @@ Module Functions
 
 .. module:: blog.models
 
-.. method:: Post(title, datetime, text, author)
+.. class:: Post(db.Model)
 
-   Creates a new Post entity
+Stores Post information in the datastore
 
-   :param title: Title of Blog post
-   :type title: unicode
+   .. method:: __init__(title, datetime, text, author)
 
-   :param datetime: Date and time of posting
-   :type datetime: datetime.datetime
+      Creates a new Post entity
 
-   :param text: Content of post
-   :type text: unicode
+      :param title: Title of Blog post
+      :type title: unicode
 
-   :param author: User that made this post
-   :type author: application.models.User
+      :param datetime: Date and time of posting
+      :type datetime: datetime.datetime
+
+      :param text: Content of post
+      :type text: unicode
+
+      :param author: User that made this post
+      :type author: application.models.User
    
-.. method:: Comment(post, datetime, author, text)
 
-   Creates a new Comment entity
+.. class:: Comment(db.Model)
 
-   :param post: Post this comment is associated with
-   :type post: application.models.Post
+   Stores Comment information in the datastore
 
-   :param datetime: Date and time of comment
-   :type datetime: datetime.datetime
+   .. method:: __init__(post, datetime, author, text)
 
-   :param author: User that posted this comment
-   :type author: application.models.User
+      Creates a new Comment entity
 
-   :param text: Content of comment
-   :type text: unicode   
+      :param post: Post this comment is associated with
+      :type post: application.models.Post
+
+      :param datetime: Date and time of comment
+      :type datetime: datetime.datetime
+
+      :param author: User that posted this comment
+      :type author: application.models.User
+ 
+      :param text: Content of comment
+      :type text: unicode 
+
+Blog Model Diagrams
+*******************
+
+.. image:: img/modelDiagrams/blogModel.png
+   :width: 90%
+   :align: center
+   :name: Blog Model Diagram
 
 :mod:`blog.views` -- Blog related views
 --------------------------------------------------------

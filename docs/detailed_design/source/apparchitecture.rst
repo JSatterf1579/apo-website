@@ -56,6 +56,29 @@ hierarchical template definition. For instance a website can have a main
 template which includes the static parts of a page that never change and
 each individual page can extend the page and add their own content.
 
+Base Template Overview
+*****************
+
+  The system will have a Base Template consisting of the following
+  blocks. All templates defined in the submodules will override the
+  content block.
+     
+     header
+       This block contains the header image for the website
+       
+     main_menu
+       This block contains the main navigation menu for the website
+       
+     submenu_top
+       This block contains the log in template
+       
+     content
+       This block is overriden by the templates defined in sub-modules,
+         eg- CreateUpdateEventTemplate
+       
+     footers
+       This block contains general website and association information
+
 Forms
 ~~~~~
 

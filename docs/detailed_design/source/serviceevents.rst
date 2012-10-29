@@ -1,4 +1,4 @@
-:mod:`application.serviceEvent` -- Service Event Tracking Package
+:mod:`serviceEvent` -- Service Event Tracking Package
 =================================================================
 
 
@@ -128,74 +128,106 @@ Module Functions
 
 .. module:: serviceEvents.models
 
-.. method:: ServiceEvent([maxBro[,addInfo]])
+.. class:: ServiceEvent(application.Event)
 
-   Creates a new ServiceEvent entity
+   .. method:: __init__([maxBro[,addInfo]])
 
-   :param maxBro: Maximum number of brothers allowed at service Event
-   :type maxBro: int
+      Creates a new ServiceEvent entity
+
+      :param maxBro: Maximum number of brothers allowed at service Event
+      :type maxBro: int
     
-   :param addInfo: Additional information about service event
+      :param addInfo: Additional information about service event
 
-   :type addInfo: unicode
+      :type addInfo: unicode
     
-   :rtype: ServiceEvent
+      :rtype: ServiceEvent
 
-.. method:: ServiceSignUp(user, event)
+.. class:: ServiceSignUp(db.Model)
 
-   Creates a new ServiceSignUp entity
+   .. method:: __init__(user, event)
 
-   :param user: User for service event sign up
-   :type user: application.models.User
+      Creates a new ServiceSignUp entity
+
+      :param user: User for service event sign up
+      :type user: application.models.User
     
-   :param event: Event that user is signing up for
-   :type event: application.models.Event
-
-.. method:: ServiceReport()
+      :param event: Event that user is signing up for
+      :type event: application.models.Event
+ 
+.. class:: ServiceReport(db.PolyModel)
 
    Creates a new ServiceReport entity
 
    .. warning::
       This class is an abstract base class. Do not instantiate an instance of this class
       
-.. method:: InsideServiceReport(event)
+.. class:: InsideServiceReport(ServiceReport)
 
-   Creates a new InsideServiceReport entity
+   .. method:: __init__(event)
 
-   :param event: Service Event that this report is for
-   :type event: application.models.ServiceEvent
+      Creates a new InsideServiceReport entity
 
-.. method:: OutsideServiceReport(name, desc, loc, date)
+      :param event: Service Event that this report is for
+      :type event: application.models.ServiceEvent
 
-   Creates a new OutsideServiceReport entity
+.. class:: OutsideServiceReport(ServiceReport)
 
-   :param name: Name of event this report is for
-   :type name: unicode
+   .. method:: __init__(name, desc, loc, date)
 
-   :param desc: Description of event this report is for
-   :type desc: unicode
+      Creates a new OutsideServiceReport entity
 
-   :param loc: Description of location of event this report is for
-   :type loc: unicode
+      :param name: Name of event this report is for
+      :type name: unicode
 
-   :param date: Date of event this report is for
-   :type date: datetime.date
+      :param desc: Description of event this report is for
+      :type desc: unicode
 
-.. method:: ServiceHour(user, report, minutes[, dMinutes])
+      :param loc: Description of location of event this report is for
+      :type loc: unicode
+ 
+      :param date: Date of event this report is for
+      :type date: datetime.date
 
-   Creates a new ServiceHour entity
+.. class:: ServiceHour(db.Model)
 
-   :param user: User this service hour is for
-   :type user: application.models.User
+   .. method:: __init__(user, report, minutes[, dMinutes])
 
-   :param report: Service report this hour entry is for
-   :type report: application.models.ServiceReport
+      Creates a new ServiceHour entity
 
-   :param minutes: Number of minutes of service provided
-   :type minutes: int
+      :param user: User this service hour is for
+      :type user: application.models.User
 
-   :param dMinutes: Number of minutes spent driving
-   :type dMinutes: int
+      :param report: Service report this hour entry is for
+      :type report: application.models.ServiceReport
+
+      :param minutes: Number of minutes of service provided
+      :type minutes: int
+
+      :param dMinutes: Number of minutes spent driving
+      :type dMinutes: int
+
+Service Model Diagrams
+***************************
+   
+.. image:: img/modelDiagrams/serviceEventModel.png
+   :width: 90%
+   :align: center
+   :name: Service Event Model
+
+Service Hour Model diagram
+
+.. image:: img/modelDiagrams/serviceHourModel.png
+   :width: 90%
+   :align: center
+   :name: Service Hour Model
+
+Service Report Model diagram
+
+.. image:: img/modelDiagrams/serviceReportModel.png
+   :width: 90%
+   :align: center
+   :name: Service Repord Model
 
 :mod:`serviceEvent.views` -- serviceEvent related views
 --------------------------------------------------------
