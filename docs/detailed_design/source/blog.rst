@@ -87,11 +87,13 @@ Blog Model Diagrams
 
 .. class:: blogView()
 
-The blogView is used to provide the view for the blog.
+   The blogView is used to provide the view for the blog.
    This view responds to get and post requests
   :post: causes the view to store the submitted blog or comment information to the datastore
   :get: displays the create or submit blog forms
-This view uses a template
+
+   This view uses a template
+
   :Template: application.blog.blogTemplate()
     
 :mod:`blog.forms` -- Blog related forms
@@ -99,8 +101,8 @@ This view uses a template
 
 .. class:: CreateBlogForm(Form)
 
-This form contains the fields for filling out the parameters of a blog in conjunction with
-blog.blog.createBlog
+   This form contains the fields for filling out the parameters of a blog in conjunction with
+   blog.blog.createBlog
 
    .. method:: CreateBlogForm(title, blog)
    The CreateBlogForm method is used to create a blog form, which in turn is used to create a BlogPost
@@ -127,11 +129,18 @@ blog.blog.createBlog
 
 .. class:: BlogTemplate()
 
-Used to display blog posts, comments, blog post form, and comment form. 
+   Used to display blog posts, comments, blog post form, and comment
+   form. 
+
 .. class:: blogTemplate()
-Used to display blog posts, blog creation form, and comment creation form. 
+   
+    Used to display blog posts, blog creation form, and comment
+    creation form. 
+
    :Requires: application.blog.CreateBlogForm()
    :Requires: application.blog.CreateCommentForm()
-Extends  
+
+   Extends  
+
    :extends: MainTemplate
    :extends: blogView()

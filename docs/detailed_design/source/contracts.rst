@@ -153,22 +153,27 @@ Contract Model Diagrams
 
 .. class:: CreateContractView()
 
-The CreateContractView is used to provide the view for creating contracts.
+   The CreateContractView is used to provide the view for creating contracts.
    This view requires a current :term:`exec` User instance
    This view responds to get and post requests
   :post: causes the view to store the submitted create contract information to the datastore
   :get: displays the list of existing contract types.
-This view uses a template
+   
+   This view uses a template
+
   :Template: application.contract.CreateContractTemplate()
   
 .. class:: SignTrackContractView()
 
-The signTrackContractView is used to sign and track contract hours.
+   The signTrackContractView is used to sign and track contract hours.
     This view requires a current User instance
     This view responds to get and post requests
    :post: causes the view to store the contract signed type and information to the datastore
-   :get: displays a list of the contract types available or displays a list of requirements and the progress made toward them
-This view uses a template
+   :get: displays a list of the contract types available or displays a
+    list of requirements and the progress made toward them
+
+    This view uses a template
+
    :Template: application.contract.SignTrackContractTemplate() 
    
 :mod:`contract.forms` -- contract related forms
@@ -178,8 +183,8 @@ This view uses a template
 
 .. class:: CreateContractForm(Form)
 
-This form contains the fields for filling out the parameters of a contract in conjunction with
-contract.contract.createContract
+   This form contains the fields for filling out the parameters of a contract in conjunction with
+   contract.contract.createContract
 
    .. method:: CreateUpdateContractForm(name, hours, minutes, hoursDueDate, amount, duesDueDate, attendanceReq, attDueDate)
         
@@ -209,17 +214,20 @@ contract.contract.createContract
 
 .. class:: CreateContractTemplate()
 
-Used to display create contract form. 
+   Used to display create contract form. 
 
    :Requires: application.serviceEvent.CreateUpdateContractForm()
-Extends  
+
+   Extends  
+
    :extends: MainTemplate
    :extends: CreateContractView()
    
 .. class:: SignTrackContractTemplate()
 
-Used to sign and track contracts. 
+   Used to sign and track contracts. 
 
-Extends  
+   Extends  
+
    :extends: MainTemplate
    :extends: SignTrackContractView()

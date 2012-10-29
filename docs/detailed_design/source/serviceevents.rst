@@ -236,22 +236,24 @@ Service Report Model diagram
 
 .. class:: serviceEventView()
 
-The serviceEventView is used to provide the view for service events.
+   The serviceEventView is used to provide the view for service events.
    This view requires a current User instance
    This view responds to get and post requests
   :post: causes the view to store the submitted create service event or service event sign up to the datastore
   :get: displays the list of existing service events or members signed up for the event.
-This view uses a template
+   This view uses a template
+
   :Template: application.serviceEvent.serviceEventTemplate()
   
 .. class:: reportHoursView()
 
-The reportHoursView is used to report service events and hours
+    The reportHoursView is used to report service events and hours
     This view requires a current User instance
     This view responds to get and post requests
    :post: causes the view to store the submitted service report and hours information to the datastore
    :get: displays the corresponding report hours form dependent on service report type
-This view uses a template
+   This view uses a template
+
    :Template: application.serviceEvent.reportHoursTemplate() 
 
 :mod:`serviceEvent.forms` -- serviceEvent related forms
@@ -261,29 +263,29 @@ This view uses a template
 
 .. class:: CreateServiceEventForm(Form)
 
-This form contains the fields for filling out the parameters of a service event in conjunction with
-serviceEvent.serviceEvent.createEvent
+   This form contains the fields for filling out the parameters of a service event in conjunction with
+   serviceEvent.serviceEvent.createEvent
 
    .. method:: CreateServiceEventForm(name, date, startTime, endTime, location[, summary, maxBrothers])
    
-   This is the Create a Service Event Form
+      This is the Create a Service Event Form
     
-   :param name: Name of event
-   :type name: unicode
-   :param date: Date of the event 
-   :type date: datetime.date
-   :param startTime: Time event starts at
-   :type startTime: datetime.time
-   :param endTime: Time event ends at        
-   :type endTime: datetime.time
-   :param location: Location of the event
-   :type location: application.models.Location
-   :param summary: Description of the event
-   :type summary: unicode
-   :param maxBrothers: Maximum Number of Brothers
-   :type maxBrothers: int
+      :param name: Name of event
+      :type name: unicode
+      :param date: Date of the event 
+      :type date: datetime.date
+      :param startTime: Time event starts at
+      :type startTime: datetime.time
+      :param endTime: Time event ends at        
+      :type endTime: datetime.time
+      :param location: Location of the event
+      :type location: application.models.Location
+      :param summary: Description of the event
+      :type summary: unicode
+      :param maxBrothers: Maximum Number of Brothers
+      :type maxBrothers: int
         
-   :rtype: Form instance
+      :rtype: Form instance
 
 .. class:: EventSignUpForm(Form)
 
@@ -299,8 +301,8 @@ This form contains the field necessary for signing up for a service event.
    
 .. class:: ReportHoursForm(Form)
 
-This form contains the fields necessary for reporting service hours. Depending on the type of service,
-the user will have to fill out the ReportInsideHoursForm or ReportOutsideHoursForm.
+    This form contains the fields necessary for reporting service hours. Depending on the type of service,
+    the user will have to fill out the ReportInsideHoursForm or ReportOutsideHoursForm.
 
    .. method:: ReportHoursForm(hours, type)
    Form for reporting service hours
@@ -314,7 +316,7 @@ the user will have to fill out the ReportInsideHoursForm or ReportOutsideHoursFo
 
 .. class:: ReportInsideHoursForm(Form)
 
-This form contains a field for a user to input what preexisting event their hours were for. 
+   This form contains a field for a user to input what preexisting event their hours were for. 
 
    .. method:: ReportInsideHoursForm(event)
    Form for reporting inside service hours
@@ -326,9 +328,10 @@ This form contains a field for a user to input what preexisting event their hour
 
 .. class:: ReportOutsideHoursForm(Form)
 
-This form containst the fields required for a user to input their outside event's information.
+   This form containst the fields required for a user to input their outside event's information.
    
    .. method:: ReportOutsideHoursForm(name, desc, loc, date)
+   
    Form for reporting outside service hours
    
    :param name: Service event name
