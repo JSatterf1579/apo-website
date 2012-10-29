@@ -3,6 +3,9 @@
 Classes
 *******
 
+:mod:`blog.blog` -- Blog class
+------------------------------
+
 .. module:: blog.blog
 
 .. class:: BlogPost(object)
@@ -21,8 +24,10 @@ Module Functions
 
    Removes a comment from the current BlogPost
 
-:mod:'serviceEvents.models' -- Service Event related Models
------------------------------------------------------------   
+:mod:`blog.models` -- Blog related Models
+----------------------------------------- 
+
+.. module:: blog.models
 
 .. method:: Post(title, datetime, text, author)
 
@@ -58,6 +63,8 @@ Module Functions
 
 :mod:`blog.views` -- Blog related views
 --------------------------------------------------------
+
+.. module:: blog.views
 
 .. class:: blogView()
 
@@ -96,6 +103,8 @@ blog.blog.createBlog
    
 :mod:`blog.templates` -- Blog related templates
 ----------------------------------------------------------------
+
+.. module:: blog.templates
 
 .. class:: BlogTemplate()
 

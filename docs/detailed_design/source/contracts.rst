@@ -3,6 +3,10 @@
 Classes
 *******
 
+
+:mod:`contract.contract` -- Contract class
+------------------------------------------
+
 .. module:: contract.contract
 
 .. class:: contract(object)
@@ -41,7 +45,8 @@ Classes
    attendanceReq.amount - must be greater than or equal to 0
       
 Module Functions
-****************  
+****************
+
 .. function:: contract.contract.createContract
 
    This method is a factory method for service contracts. 
@@ -59,8 +64,10 @@ Module Functions
    This method compares a User's contract requirements and contract type requirements and 
    determines if the requirements are satisfied.
 
-:mod:'contract.models' -- Contract related Models
------------------------------------------------------------
+:mod:`contract.models` -- Contract related Models
+-------------------------------------------------
+
+.. module:: contract.models
 
 .. method:: ChapterEvent()
 
@@ -118,7 +125,9 @@ Module Functions
    :type type: unicode   
     
 :mod:`contract.views` -- Contract related views
---------------------------------------------------------
+-----------------------------------------------
+
+.. module:: contract.views
 
 .. class:: CreateContractView()
 
@@ -143,6 +152,8 @@ This view uses a template
 :mod:`contract.forms` -- contract related forms
 --------------------------------------------------------
    
+.. module:: contract.forms   
+
 .. class:: CreateContractForm(Form)
 
 This form contains the fields for filling out the parameters of a contract in conjunction with
@@ -171,6 +182,8 @@ contract.contract.createContract
    
 :mod:`contract.templates` -- contract related templates
 ----------------------------------------------------------------
+
+.. module:: contract.templates
 
 .. class:: CreateContractTemplate()
 

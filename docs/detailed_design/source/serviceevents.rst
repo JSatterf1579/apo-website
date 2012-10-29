@@ -3,6 +3,9 @@
 Classes
 *******
 
+:mod:`serviceEvent.serviceEvent` -- Service Event class
+-------------------------------------------------------
+
 .. module:: serviceEvent.serviceEvent
 
 .. class:: serviceEvent(object)
@@ -36,7 +39,10 @@ Classes
    maxBrothers - must be None or blank or greater than 0
    
    signedUp - must be less than or equal to maxBrothers if maxBrothers is not None or blank
-   
+
+:mod:`serviceEvent.serviceReport` -- Service Report class
+---------------------------------------------------------
+
 .. module:: serviceEvent.serviceReport
    
 .. class:: serviceReport(object)
@@ -89,6 +95,24 @@ Module Functions
 
    This method removes a name from the service event sign up list
    
+.. function:: serviceEvent.serviceEvent.signUp(name)
+
+   This method adds a name to the service event sign up list
+   
+   :param name: Name of user
+   :type name: unicode
+   
+   :rtype: bool
+   
+.. function:: serviceEvent.serviceEvent.unsignUp(name)
+
+   This method removes a name from the service event sign up list
+   
+   :param name: Name of user
+   :type name: unicode
+   
+   :rtype: bool
+   
 .. function:: serviceEvent.serviceReport.createReport
 
    This method is a factory method for service reports.
@@ -98,12 +122,17 @@ Module Functions
    This method allows :term:`exec` to reject a service report
    Service reports that are rejected are removed from the datastore
 
-.. function:: serviceEvent.serviceReport.addHours
+.. function:: serviceEvent.serviceReport.addHours(hours)
 
    This method adds hours submitted to a :term:`brother`'s current :term:`contract`.
    
-:mod:'serviceEvents.models' -- Service Event related Models
+   :param hours: Number of hours to add
+   :type hours: int
+   
+:mod:`serviceEvent.models` -- Service Event related Models
 -----------------------------------------------------------
+
+.. module:: serviceEvents.models
 
 .. method:: ServiceEvent([maxBro[,addInfo]])
 
@@ -116,6 +145,7 @@ Module Functions
    :type addInfo: unicode
     
    :rtype: ServiceEvent
+
 
 .. method:: ServiceSignUp(user, event)
 
@@ -173,8 +203,10 @@ Module Functions
    :param dMinutes: Number of minutes spent driving
    :type dMinutes: int
    
-:mod:`serviceEvents.views` -- serviceEvent related views
+:mod:`serviceEvent.views` -- serviceEvent related views
 --------------------------------------------------------
+
+.. module:: serviceEvents.views
 
 .. class:: serviceEventView()
 
@@ -196,9 +228,11 @@ The reportHoursView is used to report service events and hours
 This view uses a template
    :Template: application.serviceEvent.reportHoursTemplate() 
    
-:mod:`serviceEvents.forms` -- serviceEvent related forms
+:mod:`serviceEvent.forms` -- serviceEvent related forms
 --------------------------------------------------------
-   
+
+.. module:: serviceEvents.forms
+
 .. class:: CreateServiceEventForm(Form)
 
 This form contains the fields for filling out the parameters of a service event in conjunction with
@@ -281,8 +315,11 @@ This form containst the fields required for a user to input their outside event'
    
    :rtype: Form instance
    
-:mod:`serviceEvents.templates` -- serviceEvent related templates
+
+:mod:`serviceEvent.templates` -- serviceEvent related templates
 ----------------------------------------------------------------
+
+.. module:: serviceEvent.templates
 
 .. class:: serviceEventTemplate()
 
