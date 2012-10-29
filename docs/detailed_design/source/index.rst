@@ -14,7 +14,6 @@ Contents:
    overview
    sitearchitecture
    apparchitecture
-   gae/index
    extensions/index
    main_templates
    main_models

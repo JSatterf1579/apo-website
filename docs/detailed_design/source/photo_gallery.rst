@@ -22,14 +22,16 @@ member related tasks.
    necessary to talk to photobucket. It provides a number of methods
    that in turn call the methods on the photobucket server via oauth.
 
-
-
    .. attribute:: consumer_token
    .. attribute:: consumer_key
    .. attribute:: application_token
    .. attribute:: application_key
 
    .. attribute:: base_url
+
+   .. method:: getAlbumList()
+
+      This method uses the  
 
 :mod:`photos.views` - Photos Related Views
 -----------------------------------------
