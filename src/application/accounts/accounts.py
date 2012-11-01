@@ -1,6 +1,7 @@
 """This module contains methods related to user accounts and logins.
+Contained in the accounts package
 
-.. module:: accounts
+.. module:: application.accounts.accounts
 
 .. moduleauthor:: Devin Schwab <dts34@case.edu>
 """
