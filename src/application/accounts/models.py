@@ -60,3 +60,17 @@ class UserModel(db.Model): # pylint: disable=R0904
                                   collection_name='family')
     big = db.SelfReferenceProperty(default=None, collection_name='littles')
     avatar = db.StringProperty(default=None)
+
+class RoleModel(db.Model):
+    
+    # required attributes
+    name = db.StringProperty(required=True)
+
+    # optional attributes
+    desc = db.StringProperty(required=True)
+
+class UserRoleModel(db.Model):
+
+    # required attributes
+    user = db.ReferenceProperty(UserModel, required=True)
+    role = db.ReferenceProperty(RoleModel, required=True)

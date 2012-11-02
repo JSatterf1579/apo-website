@@ -81,6 +81,34 @@ class UserModelTestCase(TestCase):
         self.assertTrue(isinstance(models.UserModel.family, db.ReferenceProperty))
         self.assertTrue(isinstance(models.UserModel.big, db.ReferenceProperty))
         self.assertTrue(isinstance(models.UserModel.avatar, db.StringProperty))        
+
+class RoleModelTestCase(TestCase):
+
+    def test_attributes_present(self):
+        self.assertTrue(hasattr(models.RoleModel, 'name'))
+        self.assertTrue(hasattr(models.RoleModel, 'desc'))
+
+    def test_attr_type(self):
+        self.assertTrue(isinstance(models.RoleModel.name, db.StringProperty))
+        self.assertTrue(isinstance(models.RoleModel.desc, db.StringProperty))
+
+    def test_required_attr(self):
+        self.assertTrue(models.RoleModel.name.required)
+        self.assertTrue(models.RoleModel.desc.required)
+
+class UserRoleModelTestCase(TestCase):
+
+    def test_attributes_present(self):
+        self.assertTrue(hasattr(models.UserRoleModel, 'user'))
+        self.assertTrue(hasattr(models.UserRoleModel, 'role'))
+
+    def test_attr_type(self):
+        self.assertTrue(isinstance(models.UserRoleModel.user, db.ReferenceProperty))
+        self.assertTrue(isinstance(models.UserRoleModel.role, db.ReferenceProperty))
+
+    def test_required_attr(self):
+        self.assertTrue(models.UserRoleModel.user.required)
+        self.assertTrue(models.UserRoleModel.role.required)
         
 if __name__ == '__main__':
     unittest.main()
