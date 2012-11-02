@@ -7,17 +7,14 @@ accounts.accounts package
 """
 import sys, os
 
-sys.path.insert(0, os.path.abspath('../../'))
-
-print sys.path
+if os.path.abspath('../../') not in sys.path:
+    sys.path.insert(0, os.path.abspath('../../'))
 
 import unittest
 
 from tests.testHarness import AppEngineTestCase as TestCase
 
 import application.accounts.accounts as accounts
-
-import pdb
 
 def create_test_users():
     # create some test users
