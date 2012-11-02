@@ -253,14 +253,32 @@ class UserTestCase(TestCase): # pylint: disable=R0904
         method on the User class updates the
         attributes in the datastore
         """
-        self.fail('Not implemented!')
+        testid = 'sxm1'
+        user = accounts.find_users(cwruid=('=', testid))[0]
+
+        user.fname = 'Stanley'
+
+        self.assertEqual(user.fname, u'Stanley')
+        self.assertEqual(user._User__UserModel.fname, u'Stan')
+
+        user.save()
+
+        self.assertEqual(user.fname, 'Stanley')
+        self.assertEqual(user._User__UserModel.fname, 'Stanley')
 
     def test_delete(self):
         """This method verifies that the
         delete method on the User class
         updates the users in the datastore
         """
-        self.fail('Not implemented!')
+        testid = 'sxm1'
+        user1 = accounts.find_users(cwruid=('=', testid))[0]
+
+        user1.delete()
+
+        user2 = accounts.find_users(cwruid=('=', testid))
+
+        self.assertEqual(len(user2), 0)
 
     def test_getattr_nochanges(self):
         """This method verifies that the
@@ -384,7 +402,20 @@ class UserTestCase(TestCase): # pylint: disable=R0904
         rollback method will rollback
         all pending changes when no names
         are specified"""
-        self.fail('Not implemented!')
+        testid = 'sxm1'
+        user = accounts.find_users(cwruid=('=', testid))[0]
+
+        # make some changes
+        user.fname = 'Stanley'
+        user.lname = 'March'
+
+        self.assertEqual(user.fname, u'Stanley')
+        self.assertEqual(user.lname, u'March')
+
+        user.rollback()
+
+        self.assertEqual(user.fname, u'Stan')
+        self.assertEqual(user.lname, u'Marsh')
 
     def test_rollback_multi(self):
         """This method verifies that the
@@ -399,15 +430,15 @@ class UserTestCase(TestCase): # pylint: disable=R0904
         user.lname = 'March'
         user.big = self.users[0].key()
 
-        self.assertEqual(user.fname, 'Stanley')
-        self.assertEqual(user.lname, 'March')
+        self.assertEqual(user.fname, u'Stanley')
+        self.assertEqual(user.lname, u'March')
         self.assertEqual(user.big, self.users[0].key())
 
         user.rollback('lname', 'big')
 
-        self.assertEqual(user.fname, 'Stanley')
-        self.assertEqual(user.lname, 'Marsh')
-        self.assertEqual(user.big, self.users[1].key())
+        self.assertEqual(user.fname, u'Stanley')
+        self.assertEqual(user.lname, u'Marsh')
+        self.assertEqual(user.big.key(), self.users[1].key())
 
     def test_key(self):
         """This method verifies that the

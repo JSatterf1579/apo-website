@@ -133,7 +133,8 @@ class User(login.UserMixin, object):
     def rollback(self, *args):
         # roll back everything
         if(len(args) == 0):
-            for key in self.__dict__:
+            keys = self.__dict__.keys()
+            for key in keys:
                 if key != '_User__UserModel':
                     self.__delattr__(key)
         else:
@@ -143,7 +144,17 @@ class User(login.UserMixin, object):
                 except AttributeError:
                     pass # silently ignore
             
+    def save(self):
+        keys = self.__dict__.keys()
+        for key in keys:
+            if key != '_User__UserModel':
+                self.__UserModel.__setattr__(key, self.__dict__[key])
+                self.__delattr__(key)
+        self.__UserModel.put()
 
+    def delete(self):
+        self.__UserModel.delete()
+                    
     def get_id(self):
         """This is an override
         of the method provided by the login.UserMixin
