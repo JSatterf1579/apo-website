@@ -17,6 +17,31 @@ from tests.testHarness import AppEngineTestCase as TestCase
 
 import application.accounts.accounts as accounts
 
+import pdb
+
+def create_test_users():
+    # create some test users
+    users = []
+    users.append(accounts.create_user('Eric',
+                                      'Cartman',
+                                      'exc',
+                                      'password'))
+    users.append(accounts.create_user('Randy',
+                                      'Marsh',
+                                      'rxm',
+                                      'password'))
+    users.append(accounts.create_user('Stan',
+                                      'Marsh',
+                                      'sxm1',
+                                      'password',
+                                      big=users[1].key()))
+    users.append(accounts.create_user('Kyle',
+                                      'Broflovski',
+                                      'kxb1',
+                                      'password'))
+
+    return users
+
 class CreateUserTestCase(TestCase): # pylint: disable=R0904
     """This class tests the create_user function
     in the accounts.accounts module"""
@@ -52,7 +77,8 @@ class CreateUserTestCase(TestCase): # pylint: disable=R0904
         """This method tests whether the create_user
         function will ignore kwarg keys that don't
         actually exist in the user model"""
-        
+
+
         new_user = accounts.create_user('John',
                                       'Schmidt',
                                       'jjs11',
@@ -130,25 +156,7 @@ class FindUsersTestCase(TestCase): # pylint: disable=R0904
         # do the normal setup
         super(FindUsersTestCase, self).setUp()
 
-        # create some test users
-        self.users = []
-        self.users.append(accounts.create_user('Eric',
-                                               'Cartman',
-                                               'exc',
-                                               'password'))
-        self.users.append(accounts.create_user('Randy',
-                                               'Marsh',
-                                               'rxm',
-                                               'password'))
-        self.users.append(accounts.create_user('Stan',
-                                               'Marsh',
-                                               'sxm1',
-                                               'password',
-                                               big=self.users[1].key()))
-        self.users.append(accounts.create_user('Kyle',
-                                               'Broflovski',
-                                               'kxb1',
-                                               'password'))
+        self.users = create_test_users()
 
     def test_return_all_users(self):
         """This method tests whether find_users
@@ -228,20 +236,199 @@ class UserTestCase(TestCase): # pylint: disable=R0904
         # do the normal setup
         super(UserTestCase, self).setUp()
 
-        # create an instance of the User object
-        self.user = accounts.create_user('John',
-                                        'Smith',
-                                        'jxs11',
-                                        'password')
+        # create test users
+        self.users = create_test_users()
         
     def test_attributes(self):
-        """This method verifies that the __User
+        """This method verifies that the User
         class as the attributes specified in the design
         docs"""
-        
+        user = accounts.find_users(limit=1)[0]
         # check if there is an internal __User
-        self.assertTrue(hasattr(self.user, '_User__UserModel'),
+        self.assertTrue(hasattr(user, '_User__UserModel'),
                         'User class has no internal __UserModel attribute')
+
+    def test_save(self):
+        """This method verifies that the save
+        method on the User class updates the
+        attributes in the datastore
+        """
+        self.fail('Not implemented!')
+
+    def test_delete(self):
+        """This method verifies that the
+        delete method on the User class
+        updates the users in the datastore
+        """
+        self.fail('Not implemented!')
+
+    def test_getattr_nochanges(self):
+        """This method verifies that the
+        __getattribute__ method will
+        return the value of the corresponding
+        attribute of internal User Model
+        instance
+        """
+        testid = 'sxm1'
+        user = accounts.find_users(cwruid=('=', testid))[0]
+        self.assertEqual(user.cwruid, testid)
+
+    def test_getattr_changes(self):
+        """This method verifies that the
+        __getattribute__ method will
+        return the value that is
+        pending"""
+        testid = 'sxm1'
+        user = accounts.find_users(cwruid=('=', testid))[0]
+        user.fname = 'Stanley'
+
+        olduser = accounts.find_users(cwruid=('=', testid))[0]
+        self.assertEqual(user.fname, 'Stanley')
+        self.assertEqual(olduser.fname, 'Stan')
+
+    def test_getattr_noexist(self):
+        """This method verifies that the
+        __getattribute__ method will
+        raise an AttributeError if the
+        request attribute doesn't exist"""
+        testid = 'sxm1'
+        user = accounts.find_users(cwruid=('=', testid))[0]
+
+        try:
+            user.fake
+            self.fail('Should have raised an AttributeError')
+        except AttributeError:
+            pass
+
+    def test_getattr_noaccess(self):
+        """This method verifies that the
+        __getattribute__ method will
+        raise an AttributeError if the request
+        attribute is marked as non accessible in
+        the User class"""
+        testid = 'sxm1'
+        user = accounts.find_users(cwruid=('=', testid))[0]
+
+        try:
+            user.hash
+            self.fail('Should have raised an AttributeError')
+        except AttributeError:
+            pass
+
+    def test_setattr(self):
+        """This method verifies that the
+        __setattr__ method will
+        set a pending change on a valid
+        attribute name"""
+        testid = 'sxm1'
+        user = accounts.find_users(cwruid=('=', testid))[0]
+
+        user.fname='Stanley'
+
+    def test_setattr_noexist(self):
+        """This method verifies that the
+        __setattr__ method will
+        raise an AttributeError when
+        the attribute being set
+        doesn't exist"""
+        testid = 'sxm1'
+        user = accounts.find_users(cwruid=('=', testid))[0]
+
+        try:
+            user.fake = 'fake'
+            self.fail('Should raise an AttributeError')
+        except AttributeError:
+            pass
+            
+    def test_setattr_nomod(self):
+        """This method verifies that the
+        __setattr__ method will
+        not modify values marked as no
+        modify in the User class
+        """
+        testid = 'sxm1'
+        user = accounts.find_users(cwruid=('=', testid))[0]
+
+        try:
+            user.cwruid = 'cwruid'
+            self.fail('Should raise an AttributeError')
+        except AttributeError:
+            pass
+
+    def test_set_new_password(self):
+        """This method verifies that the
+        set_new_password method works
+        properly"""
+        testid = 'sxm1'
+        user = accounts.find_users(cwruid=('=', testid))[0]
+
+        self.assertTrue(user.valid_password('password'))
+
+        user.set_new_password('newpassword')
+
+        self.assertFalse(user.valid_password('password'))
+        self.assertTrue(user.valid_password('newpassword'))
+
+    def test_valid_password(self):
+        """This method verifies that the
+        check_password method works
+        properly"""
+        testid = 'sxm1'
+        user = accounts.find_users(cwruid=('=', testid))[0]
+
+        self.assertTrue(user.valid_password('password'))
+        self.assertFalse(user.valid_password('wrong'))
+
+    def test_rollback_all(self):
+        """This method verifies that the
+        rollback method will rollback
+        all pending changes when no names
+        are specified"""
+        self.fail('Not implemented!')
+
+    def test_rollback_multi(self):
+        """This method verifies that the
+        rollback method will rollback
+        multiple pending parameters
+        """
+        testid = 'sxm1'
+        user = accounts.find_users(cwruid=('=', testid))[0]
+
+        # set some "mistakes"
+        user.fname = 'Stanley'
+        user.lname = 'March'
+        user.big = self.users[0].key()
+
+        self.assertEqual(user.fname, 'Stanley')
+        self.assertEqual(user.lname, 'March')
+        self.assertEqual(user.big, self.users[0].key())
+
+        user.rollback('lname', 'big')
+
+        self.assertEqual(user.fname, 'Stanley')
+        self.assertEqual(user.lname, 'Marsh')
+        self.assertEqual(user.big, self.users[1].key())
+
+    def test_key(self):
+        """This method verifies that the
+        key method will return a key value
+        """
+        testid = 'sxm1'
+        user = accounts.find_users(cwruid=('=', testid))[0]
+
+        key = user.key()
+
+        self.assertIsNotNone(key)
+
+    def test_get_id(self):
+        """This method verifies that the
+        get_id method returns the cwruid
+        of the user"""
+        testid = 'sxm1'
+        user = accounts.find_users(cwruid=('=', testid))[0]
+
+        self.assertEqual(user.get_id(), user.cwruid)
+        
 
 if __name__ == '__main__':
     unittest.main()

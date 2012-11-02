@@ -17,7 +17,9 @@ from application.generate_keys import generate_randomkey
 
 from google.appengine.ext.db import BadValueError
 
-class User(login.UserMixin):
+import pdb
+
+class User(login.UserMixin, object):
     """This call is the main class used for accounts.
     It contains all of the information about a specific
     user that is in the datastore. This class is a wrapper
@@ -32,7 +34,7 @@ class User(login.UserMixin):
 
     # add more attribute names here to make them
     # nonmodifiable via __setattr__
-    non_modifiable_attr = ['hash', 'salt']
+    non_modifiable_attr = ['cwruid', 'hash', 'salt']
     non_accessible_attr = ['hash', 'salt']
     
     def __init__(self): # pylint: disable=W0231
@@ -59,10 +61,97 @@ class User(login.UserMixin):
         except AttributeError:
             return False
 
+    def __getattr__(self, name):
+        # block access to attributes marked as inaccessible
+        if name in User.non_accessible_attr:
+            raise AttributeError("%s is not accessible" % name)
+            
+        
+        return self.__UserModel.__getattribute__(name)
+
+    def __setattr__(self, name, value):
+        # block access to attributes marked as non modifiable
+        if name in User.non_modifiable_attr:
+            raise AttributeError("%s is not modifiable" % name)
+
+        if name == '_User__UserModel':
+            self.__dict__[name] = value
+            return
+
+        try:
+            if hasattr(self.__dict__['_User__UserModel'], name):
+                # store the value currently in the data model
+                temp = self.__dict__['_User__UserModel'].__getattribute__(name)
+                # try and set the value
+                # this is to check that the data is valid according to the model
+                self.__dict__['_User__UserModel'].__setattr__(name, value)
+                # set a local attribute
+                self.__dict__[name] = value
+                # copy the original value back to the model
+                self.__dict__['_User__UserModel'].__setattr__(name, temp)
+            else:
+                raise AttributeError("%s does not exist" % name)
+        except KeyError:
+            raise AttributeError("%s does not exist" % name)
+        
     def key(self):
         """Wrapper method to access internal UserModel's
         key() method"""
         return self.__UserModel.key() # pylint: disable=E1101
+
+    def valid_password(self, password):
+        """This method checks the User's password.
+
+        Returns True if correct password
+        Returns False otherwise
+        """
+        salt = self.__UserModel.salt
+        hash = self.__UserModel.hash
+
+        hasher = SHA.new(salt + password)
+
+        if(hasher.hexdigest() == hash):
+            return True
+
+        return False
+
+    def set_new_password(self, password):
+        """This method sets a new password for the User
+        A new salt is also generated
+
+        This cannot be rolled back
+        """
+
+        salt = generate_randomkey(256)
+        hash = SHA.new(salt + password).hexdigest()
+
+        self.__UserModel.salt = salt
+        self.__UserModel.hash = hash
+
+        self.__UserModel.put()
+
+    def rollback(self, *args):
+        # roll back everything
+        if(len(args) == 0):
+            for key in self.__dict__:
+                if key != '_User__UserModel':
+                    self.__delattr__(key)
+        else:
+            for arg in args:
+                try:
+                    self.__delattr__(arg)
+                except AttributeError:
+                    pass # silently ignore
+            
+
+    def get_id(self):
+        """This is an override
+        of the method provided by the login.UserMixin
+        class.
+
+        Simply returns the cwruid of the user
+        """
+        return self.cwruid
 
 def create_user(fname, lname, cwruid, password, **kwargs):
     """This method is a factory method for User accounts.
@@ -120,7 +209,8 @@ def create_user(fname, lname, cwruid, password, **kwargs):
         if key in User.non_modifiable_attr:
             raise AttributeError
         try:
-            user_model.__setattr__(key, kwargs[key])
+            if hasattr(user_model, key):
+                user_model.__setattr__(key, kwargs[key])
         except BadValueError:
             raise AttributeError("%s has invalid type" % key)
 
