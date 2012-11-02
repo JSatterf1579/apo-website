@@ -13,8 +13,6 @@ print sys.path
 
 import unittest
 
-from google.appengine.ext import db
-
 from tests.testHarness import AppEngineTestCase as TestCase
 
 import application.accounts.accounts as accounts
@@ -67,7 +65,7 @@ class CreateUserTestCase(TestCase): # pylint: disable=R0904
         except AttributeError:
             pass
 
-    def test_error_on_nonmodifiable_kwargs(self):
+    def test_error_on_nonmod_kwargs(self):
         """This method tests whether the create_user
         function will throw an error when a nonmodifiable
         field of kwargs is tried to be set via the kwargs
@@ -78,7 +76,7 @@ class CreateUserTestCase(TestCase): # pylint: disable=R0904
                                  'jjs11',
                                  'password',
                                  hash='hash')
-            self.fail('Should have thrown a BadValueError')
+            self.fail('Should have thrown an AttributeError')
         except AttributeError:
             pass
 
@@ -94,8 +92,8 @@ class CreateUserTestCase(TestCase): # pylint: disable=R0904
                                 'jjs11',
                                 'password',
                                 mname=55)
-            self.fail('Should have thrown a BadValueError')
-        except db.BadValueError:
+            self.fail('Should have thrown an AttributeError')
+        except AttributeError:
             pass
 
     def test_non_unique_cwruid(self):
@@ -118,6 +116,109 @@ class CreateUserTestCase(TestCase): # pylint: disable=R0904
         except AttributeError:
             pass
 
+class FindUsersTestCase(TestCase): # pylint: disable=R0904
+    """This class contains methods that
+    test the application.accounts.accounts.find_users
+    method"""
+
+    def setUp(self): # pylint: disable=C0103
+        """This method calls the normal
+        setUp method provided by the AppEngineTestCase.
+        It also sets up multiple test users that
+        are queried against to test the find_users
+        method"""
+        # do the normal setup
+        super(FindUsersTestCase, self).setUp()
+
+        # create some test users
+        self.users = []
+        self.users.append(accounts.create_user('Eric',
+                                               'Cartman',
+                                               'exc',
+                                               'password'))
+        self.users.append(accounts.create_user('Randy',
+                                               'Marsh',
+                                               'rxm',
+                                               'password'))
+        self.users.append(accounts.create_user('Stan',
+                                               'Marsh',
+                                               'sxm1',
+                                               'password',
+                                               big=self.users[1].key()))
+        self.users.append(accounts.create_user('Kyle',
+                                               'Broflovski',
+                                               'kxb1',
+                                               'password'))
+
+    def test_return_all_users(self):
+        """This method tests whether find_users
+        will return all users with no parameters
+        """
+        users = accounts.find_users()
+
+        self.assertEqual(len(users), 4)
+
+        for user in users:
+            self.assertIn(user, self.users)
+
+    def test_return_limited(self):
+        """This method tests whether the find_users
+        will return a limited amount of users
+        when limit is specified
+        """
+        users = accounts.find_users(1)
+
+        self.assertEqual(len(users), 1)
+
+        self.assertIn(users[0], self.users)
+
+    def test_return_cwruid_match(self):
+        """This method tests whether the find_users
+        method will return the user matching the
+        cwruid specified
+        """
+        users = accounts.find_users(cwruid=('=','rxm'))
+
+        self.assertEqual(len(users), 1)
+
+        self.assertEqual(users[0], self.users[1])
+
+    def test_return_multiple_match(self):
+        """This method tests whether multiple
+        users will be returned when multiple
+        users are matched
+        """
+        users = accounts.find_users(lname=('=','Marsh'))
+
+        self.assertEqual(len(users), 2)
+
+        for user in users:
+            self.assertIn(user, self.users[1:3])
+
+    def test_invalid_queries(self):
+        """This method tests whether errors
+        are raised when invalid queries are
+        issued"""
+
+        try:
+            accounts.find_users(fake=('=','fake'))
+            self.fail("Should have raised an error")
+        except AttributeError:
+            pass
+
+        try:
+            accounts.find_users(limit=-1)
+            self.fail("Should have raised an error")
+        except TypeError:
+            pass
+
+        try:
+            accounts.find_users(lname=('='))
+            self.fail("Should have raised an error")
+        except TypeError:
+            pass
+
+                          
 class UserTestCase(TestCase): # pylint: disable=R0904
     """This class contains methods that
     test the User class in the accounts.accounts
