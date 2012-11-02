@@ -5,197 +5,101 @@ Contained in the accounts package
 
 .. moduleauthor:: Devin Schwab <dts34@case.edu>
 """
+import sys, os
 
-from application import login_manager
-from application.models import User
+sys.path.insert(0, os.path.abspath('../../'))
 
-from Crypto.Hash import SHA,MD5
-from generate_keys import generate_randomkey
-import urllib, urlparse
+import flaskext.flask_login as login
 
-@login_manager.user_loader
-def load_user(cwruID):
-    """This function is required by Flask-Login.
+from application.accounts.models import UserModel
+from Crypto.Hash import SHA # used with the passwords
+from application.generate_keys import generate_randomkey
 
-    It uses the login manager's user_loader decorator.
+class User(login.UserMixin):
+    """This call is the main class used for accounts.
+    It contains all of the information about a specific
+    user that is in the datastore. This class is a wrapper
+    around the user model
 
-    The purpose of this function is to return the User entity with the matching userid.
+    This class should not be instantiated by anything other than
+    the application.accounts.accounts.create_user and the
+    application.accounts.accounts.find_users methods. This is
+    to prevent security issues when dealing with passwords.
+    It also enforces data integrity rules such as no two users
+    can share the same cwruID"""
 
-    :param userid: The unique user identifier. Currently this is a unicode version of the cwru ID
-    :type userid: unicode
-
-    :rtype: application.models.User
-    """
-    return getUsers(limit=1,cwruID=cwruID)[0]
-
-def getUsers(limit=None,**kwargs):
-    """This function takes the information in the kwargs dictionary
-    and queries the datastore for the information. It returns the query results.
-
-    If keys in kwargs don't match attributes of the User model then those keys are ignored
-
-    If there are no kwargs then all Users will be returned.
-
-    When limit is None all entities matching the query parameters will be returned.
-
-    :param limit: This is the maximum number of users returned
-    :type limit: int or None
-
-    :param kwargs: Optional parameters that will be specified in the search
-    :type kwargs: dict
-
-    :rtype: list of application.models.User
-    """
-    if limit <= 0 and limit is not None:
-        return []
-
-    q = User.all()
-    for key in kwargs:
-        if(hasattr(User,key)): # only filter on valid attributes
-            q.filter(key + ' =', kwargs[key])
-
-    if(limit is None):
-        limit = q.count()
-
-    return q.fetch(limit)
+    # add more attribute names here to make them
+    # nonmodifiable via __setattr__
+    non_modifiable_attr = ['hash', 'salt']
     
+    def __init__(self): # pylint: disable=W0231
+        pass
 
-def createUser(firstName, lastName, cwruID, password, middleName=None, contractType=None, family=None, big=None, avatar=None):
-    """This function takes in information for a new user and creates a new user entity
-    in the datastore. If the creation is successful it returns the User entity object
-    just created. If the creation is not successful None is returned.
+    def __setattr__(self, name, value):
+        if name in User.non_modifiable_attr:
+            raise AttributeError('%s is nonmodifiable' % name)
+        else:
+            self.__dict__[name] = value
 
-    :param firstName: First name of new user
-    :type firstName: unicode
+def create_user(fname, lname, cwruid, password, **kwargs):
+    """This method is a factory method for User accounts.
+    It takes in the required fields of fname, lname,
+    and cwruid. It queries the database to make sure that the
+    cwruid is unique. If it is not an AttributeError exception
+    is raised with the message stating that the cwruid is not
+    unique. It then generates a string of salt using the
+    secure random number generator in the Crypto module. The
+    provided password is then hashed with the salt. All of this
+    information is added to an instance of a UserModel class
+    from the application.accounts.models module.
 
-    :param lastName: Last name of new user
-    :type lastName: unicode
+    If any optional arguments are supplied through the kwargs
+    dictionary they are checked against the attributes of the
+    UserModel class. If the argument matches an attribute
+    in the UserModel and the attribute is modifiable
+    outside of the accounts module and the value is valid
+    for that attribute it is added to the UserModel instance
+    created during the initial steps. If these conditions are
+    not met an AttributeError exception is raised with the
+    message specifying the argument that caused the problem.
 
-    :param cwruID: CWRU ID of User
-    :type cwruID: unicode
+    Finally the entire UserModel instance is saved to the
+    datastore via the UserModel's put method. This UserModel
+    is then stored inside of a new instance of the
+    application.accounts.accounts.User class.
 
-    :param password: Password of User
-    :type password: unicode
-
-    :param middleName: Middle Name of user - default: None
-    :type middleName: unicode
-
-    :param contractType: Contact Type of User - default: None
-    :type contractType: application.models.Contract
-
-    :param family: Family of User - default: None
-    :type family: application.models.Family
-
-    :param big: Big of User - default: None
-    :type big: application.models.User
-
-    :param avatar: Gravatar URL of user - default:None
-    :type avatar: unicode
-
-    :rtype: application.models.User or None
+    If everything was successful the User instance is
+    returned. Otherwise None is returned
     """
+
+    query = UserModel.all()
+    query.filter('cwruid =', cwruid)
+
+    # If there is already a user in the database
+    # with the same cwruID
+    if(query.count() > 0):
+        raise AttributeError('CWRU ID %s already exists. ' % cwruid +
+                             'CWRU ID must be unique')
+    
     salt = generate_randomkey(256)
-    hasher = SHA.new(salt +  password)
-    newUser = User(firstName=firstName,
-                   lastName=lastName,
-                   cwruID=cwruID,
-                   salt=salt,
-                   hash=hasher.hexdigest(),
-                   middleName=middleName,
-                   contractType=contractType,
-                   family=family,
-                   big=big,
-                   avatar=avatar)
-
-    q = User.all()
-    q.filter('cwruID =', cwruID)
-
-    # make sure the cwruID's are unique
-    if(q.count() == 1):
-        return None
-        
-    try:
-        newUser.put()
-    except:
-        return None
-        
-    return newUser
-
-def deleteUser(cwruID):
-    """Deletes the user specified by the cwruID
-
-    Returns True if the deletion is a success
-    Otherwise returns False
+    hasher = SHA.new(salt + password)
     
-    :param cwruID: CWRU ID of the user
-    :type cwruID: unicode
+    user_model = UserModel(fname=fname,
+                          lname=lname,
+                          cwruid=cwruid,
+                          salt=salt,
+                          hash=hasher.hexdigest())
 
-    :rtype: bool
-    """
-    q = User.all()
-    q.filter('cwruID =', cwruID)
+    for key in kwargs:
+        # the values in non_modifiable_attr
+        # should not be modified by information
+        # from outside of this function
+        if key in User.non_modifiable_attr:
+            raise AttributeError
+        user_model.__setattr__(key, kwargs[key])
 
-    if( q.count() == 0):
-        return False
-        
-    result = q.fetch(1)
+    user_model.put()
 
-    result[0].delete()
-
-    return True
-
-def verifyLogin(cwruID, password):
-    """Checks the user id and password combination
-
-    Returns True if the password is valid
-    Returns False otherwise
-
-    :param cwruID: CWRU ID of user
-    :type cwruID: unicode
-
-    :param password: Password of user
-    :type password: unicode
-
-    :rtype: bool
-    """
-    q = User.all()
-    q.filter('cwruID =', cwruID)
-
-    if( q.count() == 0):
-        return False
-
-    user = q.fetch(1)[0]
-        
-    hasher = SHA.new(user.salt + password)
-    if hasher.hexdigest() == user.hash:
-        return True
-    else:
-        return False
-
-def getAvatar(cwruID, host, size=100, default="/static/img/avatar.png"):
-    """
-    Looks up gravatar avatar url based on cwruID
-
-    This code is based on the code at
-    http://en.gravatar.com/site/implement/images/python/
-    """
-
-    q = User.all()
-    q.filter('cwruID =', cwruID)
-
-    if( q.count() == 0):
-        return default
-
-    user = q.fetch(1)[0]
-
-    if user.avatar is None:
-        return default
-    
-    email = user.avatar
-
-    default = urlparse.urljoin(host, default)
-    
-    gravatar_url = "http://www.gravatar.com/avatar/" + MD5.new(email.lower()).hexdigest() + "?"
-    gravatar_url += urllib.urlencode({'d':default, 's':str(size)})
-
-    return gravatar_url
+    new_user = User()
+    new_user._User__UserModel = user_model # pylint: disable=C0103,W0201
+    return new_user
