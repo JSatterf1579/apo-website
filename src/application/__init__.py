@@ -15,3 +15,4 @@ login_manager.setup_app(app)
 login_manager.login_view = "login" # set this to the view name
 
 import views
+import accounts.views

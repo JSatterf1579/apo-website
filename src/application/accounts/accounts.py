@@ -17,7 +17,7 @@ from application.generate_keys import generate_randomkey
 
 from google.appengine.ext.db import BadValueError
 
-import pdb
+from application import login_manager
 
 class User(login.UserMixin, object):
     """This call is the main class used for accounts.
@@ -295,4 +295,6 @@ def find_users(limit=None, **kwargs):
 
     return users
 
-        
+@login_manager.user_loader
+def load_user(cwruid):
+    return find_users(limit=1,cwruid=('=',cwruid))[0]

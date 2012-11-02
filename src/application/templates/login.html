@@ -10,7 +10,7 @@ Login
 {% from "_formhelpers.html" import render_field %}
 <form method=post action="/login?next={{ next }}">
   <dl>
-    {{ render_field(loginForm.username) }}
+    {{ render_field(loginForm.cwruid) }}
     {{ render_field(loginForm.password) }}
     {{ loginForm.csrf_token }}
   </dl>

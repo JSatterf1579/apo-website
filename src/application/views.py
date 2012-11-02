@@ -28,23 +28,16 @@ from application import app
 
 @app.before_first_request
 def before_first_request():
-    accounts.createUser(firstName='Devin',
-                        lastName='Schwab',
-                        cwruID='dts34',
-                        password='default',
-                        avatar='digidevin@gmail.com')
-    accounts.createUser(firstName='Jon',
-                        lastName='Chan',
-                        cwruID='jtc77',
-                        password='default')
+    accounts.accounts.create_user('Devin',
+                                  'Schwab',
+                                  'dts34',
+                                  'default',
+                                  avatar='digidevin@gmail.com')
+    accounts.accounts.create_user('Jon',
+                                  'Chan',
+                                  'jtc77',
+                                  'default')
 
-@app.context_processor
-def loginLink():
-    if current_user.is_authenticated():
-        return dict(loggedIn = True,
-                    loginLink='<a href="/logout">Logout %s</a>' % current_user.cwruID)
-    else:
-        return dict(loginLink='<a href="/login">Login</a>')
 
 @app.route('/')
 def home():
@@ -54,43 +47,6 @@ def home():
     :rtype: HTML page
     """
     return render_template('index.html')
-
-@app.route('/login', methods=['GET', 'POST'])
-def login():
-    """
-    View for the login page
-    """
-    form = forms.LogInForm(request.form)
-
-    if request.method == 'POST' and form.validate():
-
-        # get the User from the database based on the username
-        cwruID = form.username.data
-        password = form.password.data
-        
-        if accounts.verifyLogin(cwruID, password):
-            user = accounts.getUsers(limit=1,cwruID=cwruID)[0]
-            login_user(user)
-
-            try:
-                nextPage = request.args['next']
-            except KeyError:
-                nextPage = 'home'
-            flash('Success! You are now logged.', 'success')
-            return redirect(urlparse.urljoin(request.host_url, nextPage))
-
-        else:
-            flash("Error: Incorrect username or password", 'error')
-            params = '?'
-            for key in request.args:
-                params = params + '%s=%s' % (urllib.quote_plus(key),urllib.quote_plus(request.args[key]))
-            return redirect(urlparse.urljoin(request.path, params)) # try again
-    else:
-        try:
-            next = urllib.quote_plus(request.args['next'])
-        except KeyError:
-            next = urllib.quote_plus('/')
-        return render_template('login.html', loginForm=forms.LogInForm(), next=next)
 
 @app.route('/exec/members/create', methods=['GET', 'POST'])
 @login_required
@@ -171,11 +127,6 @@ def viewUser(cwruID):
 
     return render_template('viewMember.html', user=user, avatar=avatar)
 
-@app.route('/logout')
-@login_required
-def logout():
-    logout_user()
-    return redirect(url_for('home'))
 
 @app.route('/hello/<username>')
 def say_hello(username):
