@@ -40,12 +40,6 @@ class User(login.UserMixin, object):
     def __init__(self): # pylint: disable=W0231
         pass
 
-    def __setattr__(self, name, value):
-        if name in User.non_modifiable_attr:
-            raise AttributeError('%s is nonmodifiable' % name)
-        else:
-            self.__dict__[name] = value
-
     def __eq__(self, obj):
         """Override of __eq__ method.
 
@@ -78,20 +72,17 @@ class User(login.UserMixin, object):
             self.__dict__[name] = value
             return
 
-        try:
-            if hasattr(self.__dict__['_User__UserModel'], name):
-                # store the value currently in the data model
-                temp = self.__dict__['_User__UserModel'].__getattribute__(name)
-                # try and set the value
-                # this is to check that the data is valid according to the model
-                self.__dict__['_User__UserModel'].__setattr__(name, value)
-                # set a local attribute
-                self.__dict__[name] = value
-                # copy the original value back to the model
-                self.__dict__['_User__UserModel'].__setattr__(name, temp)
-            else:
-                raise AttributeError("%s does not exist" % name)
-        except KeyError:
+        if hasattr(self.__dict__['_User__UserModel'], name):
+            # store the value currently in the data model
+            temp = self.__dict__['_User__UserModel'].__getattribute__(name)
+            # try and set the value
+            # this is to check that the data is valid according to the model
+            self.__dict__['_User__UserModel'].__setattr__(name, value)
+            # set a local attribute
+            self.__dict__[name] = value
+            # copy the original value back to the model
+            self.__dict__['_User__UserModel'].__setattr__(name, temp)
+        else:
             raise AttributeError("%s does not exist" % name)
         
     def key(self):

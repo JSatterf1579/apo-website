@@ -63,7 +63,7 @@ Classes
 
 .. module:: accounts.accounts
 
-.. class:: __User(object, login.UserMixin)
+.. class:: __User(login.UserMixin)
 
    This class is the main class used for accounts. It contains
    the information about a specific user that is in the datastore.

@@ -177,6 +177,14 @@ class FindUsersTestCase(TestCase): # pylint: disable=R0904
 
         self.assertIn(users[0], self.users)
 
+    def test_return_big_limit(self):
+        """This method tests whether if limit
+        is bigger than the total number of users
+        that all users will be returned"""
+        users = accounts.find_users(10)
+
+        self.assertEqual(len(users), 4)
+
     def test_return_cwruid_match(self):
         """This method tests whether the find_users
         method will return the user matching the
@@ -262,6 +270,40 @@ class UserTestCase(TestCase): # pylint: disable=R0904
 
         self.assertEqual(user.fname, 'Stanley')
         self.assertEqual(user._User__UserModel.fname, 'Stanley')
+
+    def test_equal(self):
+        """This method verifies that the __eq__
+        method works properly"""
+        testid = 'sxm1'
+        user1 = accounts.find_users(cwruid=('=', testid))[0]
+
+        user2 = accounts.find_users(cwruid=('=', testid))[0]
+
+        self.assertEqual(user1, user2)
+
+    def test_not_equal(self):
+        """This method verifies that when not equal
+        __eq__ returns false"""
+        testid = 'sxm1'
+        user1 = accounts.find_users(cwruid=('=', testid))[0]
+
+        user2 = accounts.find_users(cwruid=('=', 'exc'))[0]
+
+        self.assertNotEqual(user1, user2)
+
+    def test_equal_wrong_obj(self):
+        """This method verifies that an AttributeError
+        is thrown when equal is compared with the wrong type"""
+        testid = 'sxm1'
+        user1 = accounts.find_users(cwruid=('=', testid))[0]
+
+        class Fake(object):
+            pass
+
+        fake = Fake()
+        
+        self.assertFalse(user1 == fake)
+
 
     def test_delete(self):
         """This method verifies that the
@@ -369,6 +411,8 @@ class UserTestCase(TestCase): # pylint: disable=R0904
             self.fail('Should raise an AttributeError')
         except AttributeError:
             pass
+        except:
+            self.fail()
 
     def test_set_new_password(self):
         """This method verifies that the
