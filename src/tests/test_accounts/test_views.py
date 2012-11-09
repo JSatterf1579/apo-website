@@ -10,7 +10,7 @@ if os.path.abspath('../../') not in sys.path:
     sys.path.insert(0, os.path.abspath('../../'))
 
 import unittest
-from tests.testHarness import AppEngineTestCase as TestCase
+from tests.harness import AppEngineTestCase as TestCase
 
 from flask import url_for
 
@@ -20,7 +20,9 @@ from application import app
 
 import application.accounts.accounts as accounts
 
+from nose.tools import nottest
 
+@nottest
 def create_test_users():
     # create some test users
     users = []

@@ -12,10 +12,13 @@ if os.path.abspath('../../') not in sys.path:
 
 import unittest
 
-from tests.testHarness import AppEngineTestCase as TestCase
+from tests.harness import AppEngineTestCase as TestCase
 
 import application.accounts.accounts as accounts
 
+from nose.tools import nottest
+
+@nottest
 def create_test_users():
     # create some test users
     users = []

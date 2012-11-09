@@ -13,7 +13,7 @@ if os.path.abspath('../../') not in sys.path:
 
 import unittest
 
-from tests.testHarness import AppEngineTestCase as TestCase
+from tests.harness import AppEngineTestCase as TestCase
 
 from google.appengine.ext import db
 
