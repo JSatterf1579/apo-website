@@ -11,7 +11,7 @@ sys.path.insert(0, os.path.abspath('../../'))
 
 import flaskext.flask_login as login
 
-from application.accounts.models import UserModel
+from application.accounts.models import UserModel, UserRoleModel, RoleModel
 from Crypto.Hash import SHA # used with the passwords
 from application.generate_keys import generate_randomkey
 
@@ -292,7 +292,7 @@ def find_users(limit=None, **kwargs):
 def load_user(cwruid):
     return find_users(limit=1,cwruid=('=',cwruid))[0]
 
-def require_role(*fn, **options):
+def require_roles(*fn, **options):
     """This function takes in a tuple or list
     of names and checks if the current user has any
     roles with a name matching a name in names.
@@ -301,24 +301,40 @@ def require_role(*fn, **options):
     to the login page with an error that they do not have
     the privileges required
     """
-    from flask import flash
+    from flask import flash, redirect, url_for, request
+    
     names = options.pop('names', [])
+    redirect = options.pop('redirect', [])
     if options:
         raise TypeError("unsupported keyword arguments: %s" % ",".join(options.keys()))
 
-    if fn:
-        @functools.wraps(fn[0])
+    if fn: # if the function was passed in as an argument
+        f = fn[0] # store it in f so that wrapper is decorated correctly
+
+    def decorator(f):
+        @functools.wraps(f)
         def wrapper(*args, **kwargs):
-            flash('names: %s' % names)
-            return fn[0](*args, **kwargs)
+            """Performs a check to see
+            if any of the roles listed in the names
+            (list/tuple) are a role of the current user
+            """
+            if login.current_user.is_authenticated():
+                match = False
+                query = UserRoleModel.all()
+                query.filter('user = ', login.current_user.key())
+                results = query.fetch(query.count())
+                for result in results:
+                    if result.role.name in names:
+                        flash('You have the matching role of %s' % result.role.name, 'success')
+                        match = True
+                if not match:
+                    flash('You do not have the required privileges. Please login with an \
+                          account with the proper permissions to continue', 'error')
+            else:
+                flash('You must be logged in to access this page', 'error')
+                
+            return f(*args, **kwargs) # finally execute the view function and return the result
         return wrapper
-    else:
-        def decorator(fn):
-            @functools.wraps(fn)
-            def wrapper(*args, **kwargs):
-                flash('names: %s' % names)
-                return fn(*args, **kwargs)
-            return wrapper
-        return decorator
+    return decorator
 
         

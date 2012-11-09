@@ -26,20 +26,49 @@ import urllib, urlparse
 # this allows the use of the URL decorators and flask-login
 from application import app
 
+from accounts.accounts import require_roles
+
 @app.before_first_request
 def before_first_request():
-    accounts.accounts.create_user('Devin',
-                                  'Schwab',
-                                  'dts34',
-                                  'default',
-                                  avatar='digidevin@gmail.com')
-    accounts.accounts.create_user('Jon',
-                                  'Chan',
-                                  'jtc77',
-                                  'default')
+    from accounts.models import UserRoleModel, RoleModel
+    try:
+        accounts.accounts.create_user('Devin',
+                                      'Schwab',
+                                      'dts34',
+                                      'default',
+                                      avatar='digidevin@gmail.com')
+        accounts.accounts.create_user('Jon',
+                                      'Chan',
+                                      'jtc77',
+                                      'default')
+
+        admin_role = RoleModel(name='admin', desc='administrator')
+        admin_role.put()
+        exec_role = RoleModel(name='exec', desc='exec member')
+        exec_role.put()
+    
+        default_users = accounts.accounts.find_users()
+        urole1 = UserRoleModel(user=default_users[0].key(), role=admin_role.key())
+        urole2 = UserRoleModel(user=default_users[1].key(), role=admin_role.key())
+        urole3 = UserRoleModel(user=default_users[0].key(), role=exec_role.key())
+
+        urole1.put()
+        urole2.put()
+        urole3.put()
+    
+    except AttributeError,e:
+        import os
+        if not os.environ.get('SERVER_SOFTWARE','').startswith('Development'):
+            raise e
 
 
+@app.route('/test')
+@require_roles
+def test():
+    return "testing"
+    
 @app.route('/')
+@require_roles(names=['president'])
 def home():
     """
     View for the homepage

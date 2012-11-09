@@ -28,7 +28,7 @@ def login():
         users = accounts.find_users(cwruid=('=',cwruid))
 
         if(len(users) != 1):
-            flash("Error: Something went wrong. Please contact the webmasters")
+            flash("Error: Something went wrong. Please contact the webmasters", 'error')
             params = '?'
             for key in request.args:
                 params += '%s=%s' % (urllib.quote_plus(key), urllib.quote_plus(request.args[key]))
@@ -43,6 +43,8 @@ def login():
                 nextPage = '/'
             flash('Success! You are now logged in', 'success')
             return redirect(urlparse.urljoin(request.host_url, nextPage))
+        else:
+            flash('Error: Incorrect username or password', 'error')
         
 
     try:
