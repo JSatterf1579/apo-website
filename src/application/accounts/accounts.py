@@ -19,6 +19,8 @@ from google.appengine.ext.db import BadValueError
 
 from application import login_manager
 
+import functools
+
 class User(login.UserMixin, object):
     """This call is the main class used for accounts.
     It contains all of the information about a specific
@@ -289,3 +291,34 @@ def find_users(limit=None, **kwargs):
 @login_manager.user_loader
 def load_user(cwruid):
     return find_users(limit=1,cwruid=('=',cwruid))[0]
+
+def require_role(*fn, **options):
+    """This function takes in a tuple or list
+    of names and checks if the current user has any
+    roles with a name matching a name in names.
+
+    If redirect is not specified then the user is redirected
+    to the login page with an error that they do not have
+    the privileges required
+    """
+    from flask import flash
+    names = options.pop('names', [])
+    if options:
+        raise TypeError("unsupported keyword arguments: %s" % ",".join(options.keys()))
+
+    if fn:
+        @functools.wraps(fn[0])
+        def wrapper(*args, **kwargs):
+            flash('names: %s' % names)
+            return fn[0](*args, **kwargs)
+        return wrapper
+    else:
+        def decorator(fn):
+            @functools.wraps(fn)
+            def wrapper(*args, **kwargs):
+                flash('names: %s' % names)
+                return fn(*args, **kwargs)
+            return wrapper
+        return decorator
+
+        
