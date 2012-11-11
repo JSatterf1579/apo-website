@@ -1,6 +1,17 @@
 General Requirements Functional Tests
 =====================================
 
+.. |1| replace:: 1
+.. |2| replace:: 2
+.. |3| replace:: 3
+.. |4| replace:: 4
+.. |5| replace:: 5
+.. |6| replace:: 6
+.. |7| replace:: 7
+.. |8| replace:: 8
+.. |9| replace:: 9
+.. |10| replace:: 10
+
 +-----+-----------+--------------+-------------+
 |Functional Test Requirements for REQ-1: The   |
 |user shall be able to login with a username   |
@@ -9,7 +20,7 @@ General Requirements Functional Tests
 |ID   |Description|Test          |Expected     |
 |     |           |Steps         |Result       |
 +=====+===========+==============+=============+
-|1    |Test that a|Step 1: Go to |User         |
+||1|  |Test that a|Step 1: Go to |User         |
 |     |user can't |the login page|denied       |
 |     |login with |              |access and   |
 |     |incorrect  |Step 2: Type  |error        |
@@ -32,7 +43,7 @@ General Requirements Functional Tests
 |     |           |              |             |
 |     |           |              |             |
 +-----+-----------+--------------+-------------+
-|2    |Test that a|Step          |User         |
+||2|  |Test that a|Step          |User         |
 |     |user can't |1: Go         |denied       |
 |     |login with |to            |access and   |
 |     |incorrect  |the           |error        |
@@ -59,7 +70,7 @@ General Requirements Functional Tests
 |     |           |              |             |
 |     |           |              |             |
 +-----+-----------+--------------+-------------+
-|3    |Test that a|Step          |A message    |
+||3|  |Test that a|Step          |A message    |
 |     |user can   |1: Go         |saying the   |
 |     |login with |to            |user has     |
 |     |correct    |the           |successfully |
@@ -94,7 +105,7 @@ General Requirements Functional Tests
 +-----+------------+--------------+-------------+
 |ID   |Description |Test Steps    |Expected     |
 +=====+============+==============+=============+
-|4    |Test that   |Step          |Error message|
+||4|  |Test that   |Step          |Error message|
 |     |passwords   |1: Go         |about        |
 |     |less than 8 |to the        |password     |
 |     |characters  |create        |length is    |
@@ -118,7 +129,7 @@ General Requirements Functional Tests
 |     |            |on the create |             |
 |     |            |user button   |             |
 +-----+------------+--------------+-------------+
-|5    |Test that   |Step          |Message      |
+||5|  |Test that   |Step          |Message      |
 |     |passwords 8 |1: Go         |saying       |
 |     |characters  |to the        |user was     |
 |     |or longer   |create        |created      |
@@ -151,7 +162,7 @@ General Requirements Functional Tests
 |ID    |Description |Test Steps    |Expected       |
 |      |            |              |Outcome        |
 +======+============+==============+===============+
-|6     |Test that   |Step 1: Go to |The first      |
+||6|   |Test that   |Step 1: Go to |The first      |
 |      |duplicate   |the create a  |user is        |
 |      |users can't |user page     |created, but   |
 |      |be created  |              |the second     |
