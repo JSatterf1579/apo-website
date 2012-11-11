@@ -1,6 +1,21 @@
 Member Profile Functional Tests
 ===============================
 
+.. These allow the ID numbers to be relative to the overall test
+   numbers in the entire document yet still be labeled starting from one on
+   each page.
+
+.. |1| replace:: 1
+.. |2| replace:: 2
+.. |3| replace:: 3
+.. |4| replace:: 4
+.. |5| replace:: 5
+.. |6| replace:: 6
+.. |7| replace:: 7
+.. |8| replace:: 8
+.. |9| replace:: 9
+.. |10| replace:: 10
+
 +---------------------------------------------------------------+
 |Functional Test Requirements for REQ-16: Exec members shall be |
 |able to create member profile types                            |
@@ -8,7 +23,7 @@ Member Profile Functional Tests
 |ID             |Description    |Test Steps     |Expected       |
 |               |               |               |Outcome        |
 +===============+===============+===============+===============+
-|1              |Test if a non  |Step 1: Go to  |An error       |
+||1|            |Test if a non  |Step 1: Go to  |An error       |
 |               |exec member can|login page and |message saying |
 |               |create create  |login with     |that the user  |
 |               |roles          |username       |doesn't have   |
@@ -20,7 +35,7 @@ Member Profile Functional Tests
 |               |               |the create user|               |
 |               |               |roles page.    |               |
 +---------------+---------------+---------------+---------------+
-|2              |Test if an exec|Step 1: Go to  |A message      |
+||2|            |Test if an exec|Step 1: Go to  |A message      |
 |               |member can     |the login page |saying the role|
 |               |create         |and login with |was            |
 |               |roles. Also    |username       |successfully   |
@@ -51,19 +66,20 @@ Member Profile Functional Tests
 |               |               |the create role|               |
 |               |               |button         |               |
 +---------------+---------------+---------------+---------------+
-|3              |Test if a role |Step 1: If test|An error       |
-|               |can be used to |2 has not been |message should |
-|               |stop a user    |completed, then|be displayed   |
-|               |from accessing |complete test 2|stating that   |
-|               |the page. Also |               |the user does  |
-|               |tests.         |Step 2: Go to  |not have the   |
-|               |**REQ-16.2:    |the page       |privileges to  |
-|               |Exec members   |permissions    |view this page.|
-|               |shall be able  |page           |               |
-|               |to assign page |               |               |
-|               |permission for |Step 3: Select |               |
-|               |new profile    |the home page  |               |
-|               |type**         |and the test   |               |
+||3|            |Test if a role |Step 1: If test|An error       |
+|               |can be used to ||2| has not    |message should |
+|               |stop a user    |been completed,|be displayed   |
+|               |from accessing |then complete  |stating that   |
+|               |the page. Also |test |2|       |the user does  |
+|               |tests.         |               |not have the   |
+|               |**REQ-16.2:    |Step 2: Go to  |privileges to  |
+|               |Exec members   |the page       |view this page.|
+|               |shall be able  |permissions    |               |
+|               |to assign page |page           |               |
+|               |permission for |               |               |
+|               |new profile    |Step 3: Select |               |
+|               |type**         |the home page  |               |
+|               |               |and the test   |               |
 |               |               |role.          |               |
 |               |               |               |               |
 |               |               |Step 4: click  |               |
@@ -73,22 +89,22 @@ Member Profile Functional Tests
 |               |               |               |               |
 |               |               |Step 5: Go to  |               |
 |               |               |the homepage.  |               |
-|               |               |               |               |
 +---------------+---------------+---------------+---------------+
-|4              |Tests if when  |Step 1: If test|The homepage   |
-|               |the user has   |3 has not been |should be      |
-|               |the correct    |complete then  |successfully   |
-|               |type the user  |complete test 3|displayed      |
-|               |can access the |               |               |
-|               |page. Also     |Step 2: Go to  |               |
-|               |tests.         |the user roles |               |
-|               |**REQ-16.2:    |page           |               |
-|               |Exec members   |               |               |
-|               |shall be able  |Step 3: Add the|               |
-|               |to assign page |test role      |               |
-|               |permission for |create in test |               |
-|               |new profile    |2 to the       |               |
-|               |type**         |'admin' user   |               |
+||4|            |Tests if when  |Step 1: If test|The homepage   |
+|               |the user has   ||3| has not    |should be      |
+|               |the correct    |been complete  |successfully   |
+|               |type the user  |then complete  |displayed      |
+|               |can access the |test |3|       |               |
+|               |page. Also     |               |               |
+|               |tests.         |Step 2: Go to  |               |
+|               |**REQ-16.2:    |the user roles |               |
+|               |Exec members   |page           |               |
+|               |shall be able  |               |               |
+|               |to assign page |Step 3: Add the|               |
+|               |permission for |test role      |               |
+|               |new profile    |create in test |               |
+|               |type**         |2 to the       |               |
+|               |               |'admin' user   |               |
 |               |               |               |               |
 |               |               |Step 4: Go to  |               |
 |               |               |the homepage.  |               |
@@ -102,7 +118,7 @@ Member Profile Functional Tests
 |ID             |Description     |Test Steps     |Expected       |
 |               |                |               |Outcome        |
 +===============+================+===============+===============+
-|5              |Tests if REQ-17 |Step 1: Login  |All of the     |
+||5|            |Tests if REQ-17 |Step 1: Login  |All of the     |
 |               |and all         |with test      |information    |
 |               |sub-requirements|account        |entered on the |
 |               |are satisfied   |username       |member creation|
@@ -163,11 +179,12 @@ Member Profile Functional Tests
 |ID             |Description    |Test Steps     |Expected       |
 |               |               |               |Outcome        |
 +===============+===============+===============+===============+
-|6              |Determine if a |Step 1: If test|User created in|
-|               |user can be    |5 has not been |test 5 no      |
-|               |deleted        |completed then |longer shows up|
-|               |               |go and complete|on all members |
-|               |               |test 5         |page.          |
+||6|            |Determine if a |Step 1: If test|User created in|
+|               |user can be    ||5| has not    |test |5| no    |
+|               |deleted        |been completed |longer shows up|
+|               |               |then go and    |on all members |
+|               |               |complete test  |page.          |
+|               |               ||5|            |               |
 |               |               |               |               |
 |               |               |Step 2: Go to  |               |
 |               |               |the all members|               |
@@ -197,7 +214,7 @@ Member Profile Functional Tests
 |ID             |Description    |Test Steps     |Expected       |
 |               |               |               |Outcome        |
 +===============+===============+===============+===============+
-|7              |Determine if a |Step 1: Go to  |The user roles |
+||7|            |Determine if a |Step 1: Go to  |The user roles |
 |               |new profile    |the roles page |page will show |
 |               |type can be    |and verify that|that the       |
 |               |assigned to an |the 'test' role|'admin' account|
@@ -249,7 +266,7 @@ Member Profile Functional Tests
 |ID             |Description      |Test Steps     |Expected       |
 |               |                 |               |Outcome        |
 +===============+=================+===============+===============+
-|8              |Test if the user |Step 1: Login  |The information|
+||8|            |Test if the user |Step 1: Login  |The information|
 |               |can add and      |as 'test' with |on the member  |
 |               |update their own |password       |profile page   |
 |               |profile          |'password'     |should match   |
@@ -257,7 +274,7 @@ Member Profile Functional Tests
 |               |tests all        |Step 1: Go to  |entered by the |
 |               |sub-requirements |the all members|tester.        |
 |               |of **REQ-20** and|page           |               |
-|               |**REQ-21**       |               |               |
+|               |                 |               |               |
 |               |                 |Step 2: Find   |               |
 |               |                 |the currently  |               |
 |               |                 |logged in      |               |
@@ -303,7 +320,7 @@ Member Profile Functional Tests
 |               |                 |Step 10: Click |               |
 |               |                 |on the view    |               |
 |               |                 |link for the   |               |
-|               |                 |'admin' member |               |
+|               |                 |'test' member  |               |
 |               |                 |               |               |
 |               |                 |Step 11: Verify|               |
 |               |                 |that the       |               |
@@ -315,3 +332,50 @@ Member Profile Functional Tests
 +---------------+-----------------+---------------+---------------+
 
 
++----------------------------------------------------------------+
+|Functional Tests for REQ-21: All members should be able to view |
+|other member profiles                                           |
++---------------+----------------+---------------+---------------+
+|ID             |Description     |Test Steps     |Expected       |
+|               |                |               |Outcome        |
++===============+================+===============+===============+
+||9|            |Test if a member|Step 1: Login  |All of the     |
+|               |can see another |as the user    |information    |
+|               |members         |'test' with the|listed in the  |
+|               |profile. This   |password       |test is        |
+|               |also tests all  |'password'     |displayed      |
+|               |sub-requirements|               |               |
+|               |of REQ-21       |Step 2: Go to  |               |
+|               |                |the all members|               |
+|               |                |page           |               |
+|               |                |               |               |
+|               |                |Step 3: Find   |               |
+|               |                |the 'admin'    |               |
+|               |                |account        |               |
+|               |                |               |               |
+|               |                |Step 4: Click  |               |
+|               |                |on the view    |               |
+|               |                |button for the |               |
+|               |                |'admin' account|               |
+|               |                |               |               |
+|               |                |Step 5: Verify |               |
+|               |                |that the user's|               |
+|               |                |first and last |               |
+|               |                |name is        |               |
+|               |                |displayed.     |               |
+|               |                |               |               |
+|               |                |Step 6: Verify |               |
+|               |                |that the user's|               |
+|               |                |address is     |               |
+|               |                |displayed      |               |
+|               |                |               |               |
+|               |                |Step 7: Verify |               |
+|               |                |that the user's|               |
+|               |                |phone number is|               |
+|               |                |displayed      |               |
+|               |                |               |               |
+|               |                |Step 8: Verify |               |
+|               |                |that the user's|               |
+|               |                |profile picture|               |
+|               |                |is displayed   |               |
++---------------+----------------+---------------+---------------+
