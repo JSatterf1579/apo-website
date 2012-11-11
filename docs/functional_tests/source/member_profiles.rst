@@ -156,3 +156,162 @@ Member Profile Functional Tests
 |               |                |same           |               |
 +---------------+----------------+---------------+---------------+
 
++---------------------------------------------------------------+
+|Functional Tests for REQ-18: Exec members shall be able to     |
+|delete member accounts                                         |
++---------------+---------------+---------------+---------------+
+|ID             |Description    |Test Steps     |Expected       |
+|               |               |               |Outcome        |
++===============+===============+===============+===============+
+|6              |Determine if a |Step 1: If test|User created in|
+|               |user can be    |5 has not been |test 5 no      |
+|               |deleted        |completed then |longer shows up|
+|               |               |go and complete|on all members |
+|               |               |test 5         |page.          |
+|               |               |               |               |
+|               |               |Step 2: Go to  |               |
+|               |               |the all members|               |
+|               |               |page           |               |
+|               |               |               |               |
+|               |               |Step 3: Find   |               |
+|               |               |the user 'test'|               |
+|               |               |created in test|               |
+|               |               |5              |               |
+|               |               |               |               |
+|               |               |Step 4: Click  |               |
+|               |               |the delete     |               |
+|               |               |profile button |               |
+|               |               |               |               |
+|               |               |Step 5: Verify |               |
+|               |               |that the member|               |
+|               |               |'test' no      |               |
+|               |               |longer shows up|               |
+|               |               |on all members |               |
+|               |               |page           |               |
++---------------+---------------+---------------+---------------+
+
++---------------------------------------------------------------+
+|Functional Tests for REQ-19: Exec members shall be able to set |
+|member profiles to an existing profile type                    |
++---------------+---------------+---------------+---------------+
+|ID             |Description    |Test Steps     |Expected       |
+|               |               |               |Outcome        |
++===============+===============+===============+===============+
+|7              |Determine if a |Step 1: Go to  |The user roles |
+|               |new profile    |the roles page |page will show |
+|               |type can be    |and verify that|that the       |
+|               |assigned to an |the 'test' role|'admin' account|
+|               |existing       |exists. If the |has a role of  |
+|               |account        |role exists    |'test'         |
+|               |               |continue to    |               |
+|               |               |step           |               |
+|               |               |2. Otherwise   |               |
+|               |               |continue to    |               |
+|               |               |Step 1a        |               |
+|               |               |               |               |
+|               |               |Step 1a: Go to |               |
+|               |               |the create     |               |
+|               |               |roles page     |               |
+|               |               |               |               |
+|               |               |Step 1b: Create|               |
+|               |               |the role with  |               |
+|               |               |name 'test' and|               |
+|               |               |description    |               |
+|               |               |'role for      |               |
+|               |               |testing'       |               |
+|               |               |               |               |
+|               |               |Step 2: Go to  |               |
+|               |               |the user roles |               |
+|               |               |page           |               |
+|               |               |               |               |
+|               |               |Step 3: Find   |               |
+|               |               |the currently  |               |
+|               |               |logged in user |               |
+|               |               |'admin'        |               |
+|               |               |               |               |
+|               |               |Step 4: Add the|               |
+|               |               |test role to   |               |
+|               |               |the user       |               |
+|               |               |               |               |
+|               |               |Step 5: Verify |               |
+|               |               |that on the    |               |
+|               |               |user roles page|               |
+|               |               |the test role  |               |
+|               |               |is assigned to |               |
+|               |               |the admin      |               |
+|               |               |account        |               |
++---------------+---------------+---------------+---------------+
+
++-----------------------------------------------------------------+
+|Functional Tests REQ-20: Brothers and pledges shall be able to   |
+|update the information in their profiles                         |
++---------------+-----------------+---------------+---------------+
+|ID             |Description      |Test Steps     |Expected       |
+|               |                 |               |Outcome        |
++===============+=================+===============+===============+
+|8              |Test if the user |Step 1: Login  |The information|
+|               |can add and      |as 'test' with |on the member  |
+|               |update their own |password       |profile page   |
+|               |profile          |'password'     |should match   |
+|               |information. Also|               |the information|
+|               |tests all        |Step 1: Go to  |entered by the |
+|               |sub-requirements |the all members|tester.        |
+|               |of **REQ-20** and|page           |               |
+|               |**REQ-21**       |               |               |
+|               |                 |Step 2: Find   |               |
+|               |                 |the currently  |               |
+|               |                 |logged in      |               |
+|               |                 |member 'test'  |               |
+|               |                 |               |               |
+|               |                 |Step 3: Click  |               |
+|               |                 |on the edit    |               |
+|               |                 |profile link   |               |
+|               |                 |for the 'test' |               |
+|               |                 |account        |               |
+|               |                 |               |               |
+|               |                 |Step 4: Change |               |
+|               |                 |the first and  |               |
+|               |                 |last name of   |               |
+|               |                 |the user       |               |
+|               |                 |               |               |
+|               |                 |Step 5: Change |               |
+|               |                 |the address of |               |
+|               |                 |the user. If   |               |
+|               |                 |the address    |               |
+|               |                 |does not exist |               |
+|               |                 |then create one|               |
+|               |                 |               |               |
+|               |                 |Step 6: Change |               |
+|               |                 |the phone      |               |
+|               |                 |number of the  |               |
+|               |                 |user. If the   |               |
+|               |                 |phone number   |               |
+|               |                 |does not exist |               |
+|               |                 |then create one|               |
+|               |                 |               |               |
+|               |                 |Step 7: Click  |               |
+|               |                 |the save button|               |
+|               |                 |               |               |
+|               |                 |Step 8: Go back|               |
+|               |                 |to the all     |               |
+|               |                 |members        |               |
+|               |                 |               |               |
+|               |                 |Step 9: Find   |               |
+|               |                 |the 'test'     |               |
+|               |                 |member         |               |
+|               |                 |               |               |
+|               |                 |Step 10: Click |               |
+|               |                 |on the view    |               |
+|               |                 |link for the   |               |
+|               |                 |'admin' member |               |
+|               |                 |               |               |
+|               |                 |Step 11: Verify|               |
+|               |                 |that the       |               |
+|               |                 |information    |               |
+|               |                 |displayed      |               |
+|               |                 |matches the    |               |
+|               |                 |information    |               |
+|               |                 |entered        |               |
++---------------+-----------------+---------------+---------------+
+
+
