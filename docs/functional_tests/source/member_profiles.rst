@@ -16,6 +16,8 @@ Member Profile Functional Tests
 .. |9| replace:: 9
 .. |10| replace:: 10
 
+These tests deal with the Member Profiles feature of the website.
+
 +---------------------------------------------------------------+
 |Functional Test Requirements for REQ-16: Exec members shall be |
 |able to create member profile types                            |

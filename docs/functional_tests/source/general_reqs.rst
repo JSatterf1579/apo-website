@@ -12,6 +12,8 @@ General Requirements Functional Tests
 .. |9| replace:: 9
 .. |10| replace:: 10
 
+These tests deal with the general website requirements.
+
 +-----+-----------+--------------+-------------+
 |Functional Test Requirements for REQ-1: The   |
 |user shall be able to login with a username   |

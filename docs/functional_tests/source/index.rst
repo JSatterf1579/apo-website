@@ -10,18 +10,11 @@ Contents:
 
 .. toctree::
    :maxdepth: 2
-   
+
+   doc_overview
    general_reqs
+   calendar
    member_profiles
    photos
    statistics
-
-
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
 
