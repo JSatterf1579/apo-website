@@ -95,4 +95,64 @@ Member Profile Functional Tests
 +---------------+---------------+---------------+---------------+
 
 
++----------------------------------------------------------------+
+|Functional Tests for REQ-17: Exec members shall be able to      |
+|create new member accounts                                      |
++---------------+----------------+---------------+---------------+
+|ID             |Description     |Test Steps     |Expected       |
+|               |                |               |Outcome        |
++===============+================+===============+===============+
+|5              |Tests if REQ-17 |Step 1: Login  |All of the     |
+|               |and all         |with test      |information    |
+|               |sub-requirements|account        |entered on the |
+|               |are satisfied   |username       |member creation|
+|               |                |'admin' and    |page will be   |
+|               |                |password       |displayed on   |
+|               |                |'password'     |the new        |
+|               |                |               |member's page  |
+|               |                |Step 2: Go to  |               |
+|               |                |the member     |               |
+|               |                |creation page  |               |
+|               |                |               |               |
+|               |                |Step 3: Enter  |               |
+|               |                |'test' for the |               |
+|               |                |username       |               |
+|               |                |               |               |
+|               |                |Step 4: Enter a|               |
+|               |                |first and last |               |
+|               |                |name           |               |
+|               |                |               |               |
+|               |                |Step 5: Enter  |               |
+|               |                |an address     |               |
+|               |                |               |               |
+|               |                |Step 6: Enter a|               |
+|               |                |phone number   |               |
+|               |                |               |               |
+|               |                |Step 7: Enter a|               |
+|               |                |gravatar email |               |
+|               |                |in the profile |               |
+|               |                |box            |               |
+|               |                |               |               |
+|               |                |Step 8: Click  |               |
+|               |                |the create user|               |
+|               |                |button.        |               |
+|               |                |               |               |
+|               |                |Step 9: Go to  |               |
+|               |                |the all members|               |
+|               |                |page           |               |
+|               |                |               |               |
+|               |                |Step 10: Find  |               |
+|               |                |the newly      |               |
+|               |                |created member |               |
+|               |                |and click view |               |
+|               |                |profile        |               |
+|               |                |               |               |
+|               |                |Step 11: Verify|               |
+|               |                |that the       |               |
+|               |                |information    |               |
+|               |                |entered on the |               |
+|               |                |member creation|               |
+|               |                |page is the    |               |
+|               |                |same           |               |
++---------------+----------------+---------------+---------------+
 
