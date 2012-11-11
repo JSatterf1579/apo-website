@@ -61,14 +61,7 @@ def before_first_request():
         if not os.environ.get('SERVER_SOFTWARE','').startswith('Development'):
             raise e
 
-
-@app.route('/test')
-@require_roles
-def test():
-    return "testing"
-    
 @app.route('/')
-@require_roles(names=['president'])
 def home():
     """
     View for the homepage

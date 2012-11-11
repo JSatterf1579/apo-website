@@ -302,9 +302,14 @@ def require_roles(*fn, **options):
     the privileges required
     """
     from flask import flash, redirect, url_for, request
-    
-    names = options.pop('names', [])
-    redirect = options.pop('redirect', [])
+    from urlparse import urlparse
+
+    try:
+        names = options.pop('names')
+    except:
+        raise TypeError("names is required for this method")
+        
+    next_page = options.pop('next_page', '/')
     if options:
         raise TypeError("unsupported keyword arguments: %s" % ",".join(options.keys()))
 
@@ -330,11 +335,11 @@ def require_roles(*fn, **options):
                 if not match:
                     flash('You do not have the required privileges. Please login with an \
                           account with the proper permissions to continue', 'error')
+                    return redirect(url_for('login', next=next_page))
             else:
                 flash('You must be logged in to access this page', 'error')
+                return redirect(url_for('login', next=next_page))
                 
             return f(*args, **kwargs) # finally execute the view function and return the result
         return wrapper
     return decorator
-
-        
