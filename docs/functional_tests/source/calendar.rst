@@ -16,7 +16,7 @@ For these reasons Google Calendar will be used to meet all of the Calendar requi
 +---------------+---------------+-------------------------+---------------+
 |ID             |Description    |Test Steps               |Expected       |
 |               |               |                         |Outcome        |
-+---------------+---------------+-------------------------+---------------+
++===============+===============+=========================+===============+
 ||1|            |Test if an     |Step 1: Go to            |Viewing the    |
 |               |event can be   |www.google.com/ and click|calendar on the|
 |               |created via    |on sign in               |website        |

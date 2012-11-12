@@ -14,8 +14,10 @@ Contents:
    doc_overview
    general_reqs
    service_events
+   contracts
    calendar
    member_profiles
+   blog
    photos
    statistics
 
