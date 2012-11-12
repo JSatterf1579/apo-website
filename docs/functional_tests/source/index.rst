@@ -13,6 +13,7 @@ Contents:
 
    doc_overview
    general_reqs
+   service_events
    calendar
    member_profiles
    photos
