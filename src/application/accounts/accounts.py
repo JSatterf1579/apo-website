@@ -297,9 +297,8 @@ def require_roles(*fn, **options):
     of names and checks if the current user has any
     roles with a name matching a name in names.
 
-    If redirect is not specified then the user is redirected
-    to the login page with an error that they do not have
-    the privileges required
+    If next_page is not specified then the user is redirected
+    to the homepage after a successful login
     """
     from flask import flash, redirect, url_for, request
     from urlparse import urlparse
@@ -330,7 +329,6 @@ def require_roles(*fn, **options):
                 results = query.fetch(query.count())
                 for result in results:
                     if result.role.name in names:
-                        flash('You have the matching role of %s' % result.role.name, 'success')
                         match = True
                 if not match:
                     flash('You do not have the required privileges. Please login with an \
