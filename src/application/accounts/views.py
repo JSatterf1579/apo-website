@@ -51,7 +51,7 @@ def login():
         next = urllib.quote_plus(request.args['next'])
     except KeyError:
         next = urllib.quote_plus('/')
-    return render_template('login.html', loginForm=forms.LoginForm(), next=next)
+    return render_template('accounts/login.html', loginForm=forms.LoginForm(), next=next)
 
 @app.route('/logout')
 @login_required
@@ -66,3 +66,11 @@ def loginLink():
                     loginLink='<a href="/logout">Logout %s</a>' % current_user.cwruid)
     else:
         return dict(loginLink='<a href="/login">Login</a>')
+
+@app.route('/resetpassword', methods=['GET', 'POST'])
+def reset_password():
+    """
+    This view allows a user that has forgetten their password
+    to request a new one via their case email account
+    """
+    return "Reset password page"
