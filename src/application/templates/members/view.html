@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block title %}
-{{ user.firstName }} {{ user.lastName }}'s Profile
+{{ user.fname }} {{ user.lname }}'s Profile
 {% endblock title %}
 
 {% block content %}
@@ -12,39 +12,63 @@
 <h1>{{ user.fname }} {{ minitial }} {{ user.lname }}</h1>
 <br/>
 
+<table>
+
 {% if big %}
-<dt>Big:</dt>
-<dd><a href="/members/view/{{ big.cwruid }}">{{ big.fname }} {{ big.lname }}</a></dd>
+<tr>
+<td><h4><u>Big:</u></h4></td>
+<td><a href="/members/view/{{ big.cwruid }}">{{ big.fname }} {{ big.lname }}</a></td>
+</tr>
 {% endif %}
 
+{% if family %}
+<tr>
+<td><h4><u>Family:</u></h4></td>
+<td><a href="/members/family/{{ family }}">{{ family }}</a></td>
+</tr>
+
+{% endif %}
+
+
 {% if emails %}
-<h3><u>Email</u></h3>
-<dl>
+<tr>
+<td><h4><u>Email</u></h4></td>
+</tr>
 {% for address in emails %}
-  <dt>{{ address.name }}</dt> 
-  <dd><a href="mailto:{{address.email}}">{{ address.email }}</a></dd>
+<tr>
+  <td />
+  <td>{{ address.name }}</td> 
+  <td><a href="mailto:{{ address.email }}">{{ address.email }}</a></td>
+</tr>
 {% endfor %}
-</dl>
 {% endif %}
 
 {% if numbers %}
-<h3><u>Phone</u></h3>
-<dl>
+<tr>
+<td><h4><u>Phone</u></h4></td>
+</tr>
 {% for number in numbers %}
-  <dt>{{ number.name }}</dt>
-  <dd>{{ number.number }}</dd>
+<tr>
+  <td />
+  <td>{{ number.name }}</td>
+  <td>{{ number.number }}</td>
+</tr>
 {% endfor %}
-</dl>
 {% endif %}
 
 {% if addresses %}
-<h3>Address</h3>
-<dl>
+<tr>
+<td><h4>Address</h4></td>
+</tr>
 {% for address in addresses %}
-  <dt>{{ address.name }}</dt>
-  <dd>{{ address.address }}</dd>
+<tr>
+  <td />
+  <td>{{ address.name }}</td>
+  <td>{{ address.address }}</td>
+</tr>
 {% endfor %}
-</dl>
 {% endif %}
+
+</table>
 
 {% endblock content %}

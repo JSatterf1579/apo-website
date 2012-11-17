@@ -117,4 +117,25 @@ The APO Website
     return render_template('accounts/reset_password.html',
                             reset_password_form=form)
 
-    
+@app.route('/changepassword', methods=['GET', 'POST'])
+@login_required
+def update_password():
+    """
+    This view allows a user to reset their password.
+    A user also is forced to visit this page
+    when logging in for the first time or when
+    logging in after their password has been reset
+    """
+
+    form = forms.ChangePasswordForm(request.form)
+
+    if request.method == 'POST' and form.validate():
+        if current_user.valid_password(form.old_password.data):
+            current_user.set_new_password(form.new_password.data)
+
+            return redirect(url_for('edit_user', cwruid=current_user.cwruid))
+        else:
+            form.old_password.errors.append(u'Incorrect password')
+
+    return render_template('accounts/change_password.html',
+                           change_password_form=form)

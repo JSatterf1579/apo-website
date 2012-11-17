@@ -106,6 +106,7 @@ def create_user():
                     
                 flash('User created successfully', 'success')
 
+                form = None
                 form = forms.CreateUserForm()
                 form.family.choices = get_family_choices()
                 form.roles.choices = get_role_choices()
@@ -183,6 +184,7 @@ def view_user(cwruid):
         
     avatar = get_avatar_url(avatar_address, request.host_url, size=200)
 
+        
     # get the email addresses associated with this user
     query = models.AddressModel.all()
     query.filter('user =', user.key())
@@ -201,6 +203,8 @@ def view_user(cwruid):
                            user=user,
                            minitial=minitial,
                            avatar=avatar,
+                           family=user.family.name.title(),
+                           big=user.big,
                            emails=emails,
                            numbers=numbers,
                            addresses=addresses)
@@ -214,5 +218,6 @@ def edit_user(cwruid):
     This view allows the user and administrators
     to edit the profile of that user
     """
+    
     return "Editing user profile for %s" % cwruid
 

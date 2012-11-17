@@ -13,12 +13,14 @@ class LoginForm(wtf.Form):
     cwruid = wtf.TextField('Name', [validators.Required()])
     password = wtf.PasswordField('Password: ', [validators.Required()])
 
-class UpdatePasswordForm(wtf.Form):
+class ChangePasswordForm(wtf.Form):
 
     old_password = wtf.PasswordField('Old Password: ', [validators.Required()])
     new_password = wtf.PasswordField('New Password: ', [validators.Required()])
     confirm_password = wtf.PasswordField('Confirm New Password: ',
-                                         [validators.Required()])
+                                         [validators.Required(),
+                                          validators.EqualTo('new_password',
+                                                             message='Passwords must match!')])
 
 class ResetPasswordForm(wtf.Form):
     cwruid = wtf.TextField('CWRU ID: ', [validators.Required()])

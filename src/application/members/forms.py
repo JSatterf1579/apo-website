@@ -24,6 +24,11 @@ class EmailAddressForm(wtf.Form):
     emailName = wtf.TextField('Name', [validators.Optional()])
     emailAddress = wtf.TextField('Email', [validators.Email()])
 
+class UpdateUserForm(wtf.Form):
+    addresses = wtf.FieldList(wtf.FormField(AddressForm))
+    phone_numbers = wtf.FieldList(wtf.FormField(PhoneNumberForm))
+    emails = wtf.FieldList(wtf.FormField(EmailAddressForm))
+
 class SearchUserForm(wtf.Form):
     fname = wtf.TextField('First Name', [validators.Optional()])
     mname = wtf.TextField('Middle Name', [validators.Optional()])
