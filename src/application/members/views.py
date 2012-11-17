@@ -11,7 +11,7 @@ from application import app
 
 from application.accounts.accounts import require_roles
 
-#import forms
+import forms
 
 from flask import render_template, flash, url_for, redirect, request
 
@@ -68,10 +68,3 @@ def edit_user(cwruid):
     """
     return "Editing user profile for %s" % cwruid
 
-@app.route('/members/resetpassword', methods=['GET', 'POST'])
-def reset_password():
-    """
-    This view allows a user that has forgetten their password
-    to request a new one via their case email account
-    """
-    return "Reset password page"
