@@ -31,11 +31,20 @@ from accounts.accounts import require_roles
 @app.before_first_request
 def before_first_request():
     from accounts.models import UserRoleModel, RoleModel
+    from members.models import FamilyModel
     try:
+        boehms = FamilyModel(name='boehms')
+        boehms.put()
+        snm = FamilyModel(name='s & m')
+        snm.put()
+        newpham = FamilyModel(name='new pham')
+        newpham.put()
+
         accounts.accounts.create_user('Devin',
                                       'Schwab',
                                       'dts34',
                                       'default',
+                                      family=boehms.key(),
                                       avatar='digidevin@gmail.com')
         accounts.accounts.create_user('Jon',
                                       'Chan',

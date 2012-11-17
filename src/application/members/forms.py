@@ -25,18 +25,22 @@ class EmailAddressForm(wtf.Form):
     emailAddress = wtf.TextField('Email', [validators.Email()])
 
 class SearchUserForm(wtf.Form):
-    fName = wtf.TextField('First Name', [validators.Optional()])
-    mName = wtf.TextField('Middle Name', [validators.Optional()])
-    lName = wtf.TextField('Last Name', [validators.Optional()])
+    fname = wtf.TextField('First Name', [validators.Optional()])
+    mname = wtf.TextField('Middle Name', [validators.Optional()])
+    lname = wtf.TextField('Last Name', [validators.Optional()])
 
 class CreateUserForm(wtf.Form):
-    fName = wtf.TextField('First Name', [validators.Required()])
-    mName = wtf.TextField('Middle Name', [validators.Optional()])
-    lName = wtf.TextField('Last Name', [validators.Required()])
+    fname = wtf.TextField('First Name', [validators.Required()])
+    mname = wtf.TextField('Middle Name', [validators.Optional()])
+    lname = wtf.TextField('Last Name', [validators.Required()])
     cwruid = wtf.TextField('CWRU ID', [validators.Required()])
-    family = wtf.TextField('Family Name', [validators.Optional()])
+    family = wtf.SelectField('Family Name', [validators.Optional()])
     big = wtf.TextField('Big CWRU ID', [validators.Optional()])
-    avatar = wtf.TextField('Gravatar email', [validators.Email()])
-    roles = wtf.FieldList(wtf.SelectMultipleField('Role Name', [validators.Optional()]))
+    avatar = wtf.TextField('Gravatar email', [validators.Email(), validators.Optional()])
+    # need to make the role list change according to the roles in the database
+    roles = wtf.FieldList(wtf.SelectMultipleField('Role Name', [validators.Optional()],
+                                                  choices=[('brother', 'Brother'),
+                                                           ('pledge', 'Pledge'),
+                                                           ('webmaster', 'Webmaster')]))
 
 

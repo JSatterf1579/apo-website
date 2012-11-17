@@ -30,7 +30,7 @@ class AddressModel(db.Model):
 
     # Required attributes
     user = db.ReferenceProperty(UserModel, required=True)
-    address = db.PostAddressProperty(required=True)
+    address = db.PostalAddressProperty(required=True)
 
     # Optional attributes
     name = db.StringProperty()
@@ -84,3 +84,16 @@ class PhoneModel(db.Model):
 
     #Optional attributes
     name = db.StringProperty()
+
+class FamilyModel(db.Model):
+    """
+    Contains the various families
+
+    .. method:: FamilyModel(name)
+
+       Creates a new FamilyModel entity
+
+       :param name: Name of the family - e.g. Boehms
+       :type name: unicode
+    """
+    name = db.StringProperty(required=True)

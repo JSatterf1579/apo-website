@@ -10,6 +10,8 @@ It utilizes the methods found in the accounts package.
 
 import urllib, hashlib
 
+from models import FamilyModel
+
 def get_avatar_url(email, size=100, default='/static/img/avatar.png'):
     """
     This function takes a Gravatar email address
@@ -30,3 +32,23 @@ def get_avatar_url(email, size=100, default='/static/img/avatar.png'):
     gravatar_url += urllib.urlencode({'d':default, 's':str(size)})
 
     return gravatar_url
+
+def get_family_names():
+    """
+    Returns the list of family names in the database
+    """
+
+    query = FamilyModel.all()
+
+    count = query.count()
+
+    results = query.fetch(count)
+
+    names = []
+    for family in results:
+        names.append(family.name)
+
+    names.sort()
+
+    return names
+    

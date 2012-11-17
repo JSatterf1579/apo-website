@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block title %}
+Create User
+{% endblock title %}
+
+{% block content %}
+
+<h1>Create a User</h1>
+{% from "_formhelpers.html" import render_field %}
+{% from "_formhelpers.html" import render_select_field %}
+{% from "_formhelpers.html" import render_multiselect_field %}
+<form method="post" action="/members/create">
+  <dl>
+    {{ render_field(create_user_form.fname) }}
+    {{ render_field(create_user_form.lname) }}
+    {{ render_field(create_user_form.cwruid) }}
+    {{ render_field(create_user_form.family) }}
+    {{ render_field(create_user_form.big) }}
+    {{ render_field(create_user_form.avatar) }}
+    {{ render_field(create_user_form.roles) }}
+    {{ create_user_form.csrf_token }}
+  </dl>
+  <p><input type=submit value=Create>
+</form>
+{% endblock content %}
