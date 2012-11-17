@@ -8,9 +8,6 @@
 from flaskext import wtf
 from flaskext.wtf import validators
 
-class RoleForm(wtf.Form):
-    name = wtf.TextField('Role Name', [validators.Required()])
-
 class AddressForm(wtf.Form):
     addrName = wtf.TextField('Name', [validators.Optional()])
     street1 = wtf.TextField('Street', [validators.Required()])
