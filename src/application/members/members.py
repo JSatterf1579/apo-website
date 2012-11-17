@@ -8,12 +8,12 @@ It utilizes the methods found in the accounts package.
 .. moduleauthor:: Devin Schwab <dts34@case.edu>
 """
 
-import urllib, hashlib
+import urllib, hashlib, urlparse
 
 from models import FamilyModel
 from application.accounts.models import RoleModel
 
-def get_avatar_url(email, size=100, default='/static/img/avatar.png'):
+def get_avatar_url(email, host, size=100, default='/static/img/avatar.png'):
     """
     This function takes a Gravatar email address
     and returns the gravatar image url
@@ -30,7 +30,8 @@ def get_avatar_url(email, size=100, default='/static/img/avatar.png'):
 
     gravatar_url = "http://www.gravatar.com/avatar/"
     gravatar_url += hashlib.md5(email.lower()).hexdigest() + "?"
-    gravatar_url += urllib.urlencode({'d':default, 's':str(size)})
+    gravatar_url += urllib.urlencode({'d':urlparse.urljoin(host,default)
+                                      , 's':str(size)})
 
     return gravatar_url
 

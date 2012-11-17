@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block title %}
+{{ user.firstName }} {{ user.lastName }}'s Profile
+{% endblock title %}
+
+{% block content %}
+
+<img src="{{ avatar }}"/> <br/>
+
+<br/>
+<h1>{{ user.fname }} {{ minitial }} {{ user.lname }}</h1>
+<br/>
+
+{% if big %}
+<dt>Big:</dt>
+<dd><a href="/members/view/{{ big.cwruid }}">{{ big.fname }} {{ big.lname }}</a></dd>
+{% endif %}
+
+{% if emails %}
+<h3><u>Email</u></h3>
+<dl>
+{% for address in emails %}
+  <dt>{{ address.name }}</dt> 
+  <dd><a href="mailto:{{address.email}}">{{ address.email }}</a></dd>
+{% endfor %}
+</dl>
+{% endif %}
+
+{% if numbers %}
+<h3><u>Phone</u></h3>
+<dl>
+{% for number in numbers %}
+  <dt>{{ number.name }}</dt>
+  <dd>{{ number.number }}</dd>
+{% endfor %}
+</dl>
+{% endif %}
+
+{% if addresses %}
+<h3>Address</h3>
+<dl>
+{% for address in addresses %}
+  <dt>{{ address.name }}</dt>
+  <dd>{{ address.address }}</dd>
+{% endfor %}
+</dl>
+{% endif %}
+
+{% endblock content %}

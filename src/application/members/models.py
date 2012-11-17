@@ -80,7 +80,7 @@ class PhoneModel(db.Model):
 
     # Required attributes
     user = db.ReferenceProperty(UserModel, required=True)
-    email = db.PhoneNumberProperty(required=True)
+    number = db.PhoneNumberProperty(required=True)
 
     #Optional attributes
     name = db.StringProperty()

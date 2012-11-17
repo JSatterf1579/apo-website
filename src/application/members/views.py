@@ -18,6 +18,7 @@ import forms
 import models
 from members import get_family_choices, get_role_choices
 from members import send_new_user_mail
+from members import get_avatar_url
 
 from flask import render_template, flash, url_for, redirect, request
 
@@ -82,6 +83,12 @@ def create_user():
                 new_user = accounts.create_user(fname, lname, cwruid, password, **optional_attr)
                 if new_user is None:
                     raise AttributeError('Something went wrong with user creation')
+
+                # add the case email address to the user
+                email = models.EmailModel(user=new_user.key(),
+                                          email='%s@case.edu' % new_user.cwruid,
+                                          name='Case Email')
+                email.put()
 
                 # add the roles to the user
                 for role in form.roles.data:
@@ -161,7 +168,44 @@ def view_user(cwruid):
     This view displays the profile information
     for the request cwruid
     """
-    return "User profile for %s" % cwruid
+    try:
+        user = find_users(limit=1, cwruid=('=',cwruid))[0]
+    except IndexError:
+        return render_template('404.html'), 404
+
+    minitial = ''
+    if user.mname is not None and user.mname != '':
+        minitial = user.mname[0].capitalize() + '.'
+
+    avatar_address = ''
+    if user.avatar is not None:
+        avatar_address = user.avatar
+        
+    avatar = get_avatar_url(avatar_address, request.host_url, size=200)
+
+    # get the email addresses associated with this user
+    query = models.AddressModel.all()
+    query.filter('user =', user.key())
+    addresses = query.fetch(query.count())
+
+    query = models.EmailModel.all()
+    query.filter('user =', user.key())
+    emails = query.fetch(query.count())
+
+    query = models.PhoneModel.all()
+    query.filter('user =', user.key())
+    numbers = query.fetch(query.count())
+    
+
+    return render_template('members/view.html',
+                           user=user,
+                           minitial=minitial,
+                           avatar=avatar,
+                           emails=emails,
+                           numbers=numbers,
+                           addresses=addresses)
+                           
+                           
 
 @app.route('/members/edit/<cwruid>', methods=['GET'])
 @login_required
