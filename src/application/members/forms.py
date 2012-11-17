@@ -30,11 +30,11 @@ class SearchUserForm(wtf.Form):
     lname = wtf.TextField('Last Name', [validators.Optional()])
 
 class CreateUserForm(wtf.Form):
-    fname = wtf.TextField('First Name', [validators.Required()])
+    fname = wtf.TextField('First Name*', [validators.Required()])
     mname = wtf.TextField('Middle Name', [validators.Optional()])
-    lname = wtf.TextField('Last Name', [validators.Required()])
-    cwruid = wtf.TextField('CWRU ID', [validators.Required()])
-    family = wtf.SelectField('Family Name', [validators.Optional()])
+    lname = wtf.TextField('Last Name*', [validators.Required()])
+    cwruid = wtf.TextField('CWRU ID*', [validators.Required()])
+    family = wtf.SelectField('Family', [validators.Optional()])
     big = wtf.TextField('Big CWRU ID', [validators.Optional()])
     avatar = wtf.TextField('Gravatar email', [validators.Email(), validators.Optional()])
     # need to make the role list change according to the roles in the database

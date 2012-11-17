@@ -40,6 +40,8 @@ def create_user():
     for name in family_names:
         family_choices.append((name, name.title()))
 
+    family_choices.insert(0, ('none', 'None'))
+
     # get the choices for the CreateUserForm role field
     role_names = get_role_names()
 
@@ -86,7 +88,7 @@ def create_user():
                 optional_attr['avatar'] = form.avatar.data
 
             try:
-                accounts.create_user(fname, lname, cwruid, password)#, **optional_attr)
+                accounts.create_user(fname, lname, cwruid, password, **optional_attr)
                 flash('User created successfully', 'success')
 
                 # check if this the test server
