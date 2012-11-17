@@ -42,19 +42,15 @@ def before_first_request():
                                       'jtc77',
                                       'default')
 
-        admin_role = RoleModel(name='admin', desc='administrator')
+        admin_role = RoleModel(name='webmaster', desc='administrator for the website')
         admin_role.put()
-        exec_role = RoleModel(name='exec', desc='exec member')
-        exec_role.put()
     
         default_users = accounts.accounts.find_users()
         urole1 = UserRoleModel(user=default_users[0].key(), role=admin_role.key())
         urole2 = UserRoleModel(user=default_users[1].key(), role=admin_role.key())
-        urole3 = UserRoleModel(user=default_users[0].key(), role=exec_role.key())
 
         urole1.put()
         urole2.put()
-        urole3.put()
     
     except AttributeError,e:
         import os
