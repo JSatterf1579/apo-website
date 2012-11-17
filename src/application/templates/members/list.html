@@ -8,7 +8,7 @@ List Users
 
 <h1>All Members</h1>
 
-<a href="/exec/members/create">Create new member</a>
+<a href="/members/create">Create new member</a>
 
 <table>
 <tr>
@@ -20,11 +20,12 @@ List Users
 </tr>
 {% for user in users %}
 <tr>
-<td>{{ user.firstName }}</td>
-<td>{{ user.lastName }}</td>
-<td>{{ user.cwruID }}</td>
-<td><a href="/members/{{ user.cwruID }}">View</a></td>
-<td><a href="/exec/members/delete/{{ user.cwruID }}">Delete</a></td>
+<td>{{ user.fname }}</td>
+<td>{{ user.lname }}</td>
+<td>{{ user.cwruid }}</td>
+<td><a href="/members/view/{{ user.cwruid }}">View</a></td>
+<td><a href="/members/edit/{{ user.cwruid }}">Edit</a></td>
+<td><a href="/members/delete/{{ user.cwruid }}">Delete</a></td>
 </tr>
 {% endfor %}
 </table>

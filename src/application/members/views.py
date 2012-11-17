@@ -118,7 +118,10 @@ def list_users():
     If membership role or webmaster role is present
     then the user will also see edit links for the user
     """
-    return "List Users Page"
+
+    users = find_users()
+    return render_template('members/list.html',
+                           users=users)
 
 @app.route('/members/delete/<cwruid>', methods=['GET'])
 @login_required
