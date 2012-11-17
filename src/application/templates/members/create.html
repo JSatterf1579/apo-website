@@ -8,8 +8,6 @@ Create User
 
 <h1>Create a User</h1>
 {% from "_formhelpers.html" import render_field %}
-{% from "_formhelpers.html" import render_select_field %}
-{% from "_formhelpers.html" import render_multiselect_field %}
 <form method="post" action="/members/create">
   <dl>
     {{ render_field(create_user_form.fname) }}

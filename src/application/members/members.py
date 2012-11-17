@@ -11,6 +11,7 @@ It utilizes the methods found in the accounts package.
 import urllib, hashlib
 
 from models import FamilyModel
+from application.accounts.models import RoleModel
 
 def get_avatar_url(email, size=100, default='/static/img/avatar.png'):
     """
@@ -51,4 +52,50 @@ def get_family_names():
     names.sort()
 
     return names
-    
+
+def get_role_names():
+    """
+    Returns the list of role names in the database
+    """
+
+    query = RoleModel.all()
+    count = query.count()
+    results = query.fetch(count)
+
+    names = []
+    for role in results:
+        names.append(role.name)
+
+    names.sort()
+    return names
+
+def send_new_user_mail(fname, lname, cwruid, password):
+    """
+    Sends an account creation email to the user specified
+    """
+    from google.appengine.api import mail
+
+    body = """
+Hello %s,
+   
+Your new APO website account has been created.
+You can visit http://apo-cwru.appspot.com/ and sign in using the following
+username and password.
+
+    username: %s
+    password: %s
+
+If you have any problems or questions please contact the webmasters at
+webmaster@apo.case.edu
+
+Thanks,
+
+The APO Website
+"""
+    body %= (fname, cwruid, password)
+
+
+    mail.send_mail(sender='APO Theta Upsilon Website <webmaster@apo.case.edu>',
+                   to='%s %s <%s@case.edu>' % (fname, lname, cwruid),
+                   subject='Your new account has been created',
+                   body=body)

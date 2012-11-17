@@ -14,7 +14,7 @@ from application.accounts import accounts
 
 import forms
 import models
-from members import get_family_names
+from members import get_family_names, get_role_names, send_new_user_mail
 
 from flask import render_template, flash, url_for, redirect, request
 
@@ -32,6 +32,23 @@ def create_user():
     from application.generate_keys import generate_randomkey
     
     form = forms.CreateUserForm(request.form)
+
+    # get the choices for the CreateUserForm family field
+    family_names = get_family_names()
+
+    family_choices = []
+    for name in family_names:
+        family_choices.append((name, name.title()))
+
+    # get the choices for the CreateUserForm role field
+    role_names = get_role_names()
+
+    role_choices = []
+    for name in role_names:
+        role_choices.append((name, name.title()))
+    
+    form.family.choices = family_choices
+    form.roles.choices = role_choices
 
     if request.method == 'POST':
         if form.validate():
@@ -51,45 +68,43 @@ def create_user():
                 # look up family instance
                 query = models.FamilyModel.all()
                 query.filter('name =', form.family.data)
-                results = query.fetch(1)
-                if len(results) != 1:
+                families = query.fetch(1)
+                if len(families) != 1:
                     flash('Error: Family %s does not exist' % form.family.data,
                           'error')
                     return render_template('members/create.html',
                                            create_user_form=form)
+                optional_attr['family'] = families[0].key()
             if form.big.data != '':
                 # look up big instance
-                pass
+                users = find_users(cwruid=('=', form.big.data))
+                if len(users) != 1:
+                    flash('Error: User %s does not exist so cannot be assigned as big' %
+                          form.big.data, 'error')
+                    return render_template('members/create.html',
+                                           create_user_form=form)
+                optional_attr['big'] = users[0].key()
             if form.avatar.data != '':
                 optional_attr['avatar'] = form.avatar.data
 
             try:
                 accounts.create_user(fname, lname, cwruid, password)#, **optional_attr)
                 flash('User created successfully', 'success')
-                # remove next line when working
-                flash('Password: %s' % password)
+
+                # check if this the test server
+                # if it is the test server don't send an email
+                import os
+                if os.environ['SERVER_SOFTWARE'].startswith('Development'):
+                    flash('Password: %s' % password)
+                else:
+                    send_new_user_mail(fname, lname, cwruid, password)
             except AttributeError, e:
                 flash(str(e), 'error')
-
-            
-        else:
-            # flash an error message
-            flash('Invalid data entered', 'error')
-            flash(form.errors, 'error')
     
     # render the template
-    create_user_form = forms.CreateUserForm()
-
-    # get the choices for the CreateUserForm family field
-    family_names = get_family_names()
-
-    family_choices = []
-    for name in family_names:
-        family_choices.append((name, name.title()))
     
-    create_user_form.family.choices = family_choices
     return render_template('members/create.html',
-                           create_user_form=create_user_form)
+                           create_user_form=form)
 
 
 @app.route('/members/list/', methods=['GET', 'POST'])

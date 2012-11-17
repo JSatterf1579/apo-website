@@ -38,9 +38,6 @@ class CreateUserForm(wtf.Form):
     big = wtf.TextField('Big CWRU ID', [validators.Optional()])
     avatar = wtf.TextField('Gravatar email', [validators.Email(), validators.Optional()])
     # need to make the role list change according to the roles in the database
-    roles = wtf.FieldList(wtf.SelectMultipleField('Role Name', [validators.Optional()],
-                                                  choices=[('brother', 'Brother'),
-                                                           ('pledge', 'Pledge'),
-                                                           ('webmaster', 'Webmaster')]))
+    roles = wtf.SelectMultipleField('Role Name', [validators.Optional()])
 
 

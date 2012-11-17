@@ -51,15 +51,27 @@ def before_first_request():
                                       'jtc77',
                                       'default')
 
-        admin_role = RoleModel(name='webmaster', desc='administrator for the website')
-        admin_role.put()
+        
+        webmaster_role = RoleModel(name='webmaster', desc='administrator for the website')
+        webmaster_role.put()
+        brother_role = RoleModel(name='brother', desc='general brother in the chapter')
+        brother_role.put()
+        pledge_role = RoleModel(name='pledge', desc='pledge in the chapter')
+        pledge_role.put()
+        neophyte_role = RoleModel(name='neophyte', desc='neophyte in the chapter')
+        neophyte_role.put()
+        
     
         default_users = accounts.accounts.find_users()
-        urole1 = UserRoleModel(user=default_users[0].key(), role=admin_role.key())
-        urole2 = UserRoleModel(user=default_users[1].key(), role=admin_role.key())
+        urole1 = UserRoleModel(user=default_users[0].key(), role=webmaster_role.key())
+        urole2 = UserRoleModel(user=default_users[0].key(), role=brother_role.key())
+        urole3 = UserRoleModel(user=default_users[1].key(), role=webmaster_role.key())
+        urole4 = UserRoleModel(user=default_users[1].key(), role=webmaster_role.key())
 
         urole1.put()
         urole2.put()
+        urole3.put()
+        urole4.put()
     
     except AttributeError,e:
         import os
