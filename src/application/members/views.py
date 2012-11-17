@@ -70,8 +70,7 @@ def create_user():
                 query.filter('name =', form.family.data)
                 families = query.fetch(1)
                 if len(families) != 1:
-                    flash('Error: Family %s does not exist' % form.family.data,
-                          'error')
+                    form.family.errors.append(u'Family %s does not exist' % form.family.data)
                     return render_template('members/create.html',
                                            create_user_form=form)
                 optional_attr['family'] = families[0].key()
@@ -79,8 +78,7 @@ def create_user():
                 # look up big instance
                 users = find_users(cwruid=('=', form.big.data))
                 if len(users) != 1:
-                    flash('Error: User %s does not exist so cannot be assigned as big' %
-                          form.big.data, 'error')
+                    form.big.errors.append(u'User %s does not exist' % form.big.data)
                     return render_template('members/create.html',
                                            create_user_form=form)
                 optional_attr['big'] = users[0].key()
