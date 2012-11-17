@@ -73,4 +73,48 @@ def reset_password():
     This view allows a user that has forgetten their password
     to request a new one via their case email account
     """
-    return "Reset password page"
+    from application.generate_keys import generate_randomkey
+    from google.appengine.api import mail
+    
+    form = forms.ResetPasswordForm(request.form)
+
+    if request.method == 'POST' and form.validate():
+        try:
+            user = accounts.find_users(1, cwruid=('=', form.cwruid.data))[0]
+
+            new_password = generate_randomkey(16)
+
+            user.set_new_password(new_password)
+
+            body = """
+Hi %s,
+
+Somebody requested a new password for you. You can now use
+
+%s
+
+when logging in.  If you did not request this password change
+please contact the webmasters immediately.
+
+Thanks,
+The APO Website
+"""
+            body %= (user.fname, new_password)
+            
+            mail.send_mail(sender="APO Website <website@apo.case.edu>",
+                           to="%s %s <%s@case.edu>" % (user.fname, user.lname, user.cwruid),
+                           subject='Your new password',
+                           body=body)
+            
+        except IndexError:
+            pass
+
+        flash('If an account with the specified cwru id exists then it should\
+              receive an email with a new password shortly', 'success')
+
+        form = forms.ResetPasswordForm()
+        
+    return render_template('accounts/reset_password.html',
+                            reset_password_form=form)
+
+    

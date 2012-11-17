@@ -19,3 +19,6 @@ class UpdatePasswordForm(wtf.Form):
     new_password = wtf.PasswordField('New Password: ', [validators.Required()])
     confirm_password = wtf.PasswordField('Confirm New Password: ',
                                          [validators.Required()])
+
+class ResetPasswordForm(wtf.Form):
+    cwruid = wtf.TextField('CWRU ID: ', [validators.Required()])

@@ -357,6 +357,3 @@ def delete_user(cwruid):
         db.delete(user.key())
     except IndexError:
         raise Exception("User with '%s' as cwruid does not exist" % cwruid)
-
-    
-        

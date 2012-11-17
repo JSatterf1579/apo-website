@@ -103,13 +103,7 @@ def create_user():
                 form.family.choices = get_family_choices()
                 form.roles.choices = get_role_choices()
 
-                # check if this the test server
-                # if it is the test server don't send an email
-                import os
-                if os.environ['SERVER_SOFTWARE'].startswith('Development'):
-                    flash('Password: %s' % password)
-                else:
-                    send_new_user_mail(fname, lname, cwruid, password)
+                send_new_user_mail(fname, lname, cwruid, password)
             except AttributeError, e:
                 flash(str(e), 'error')
     
