@@ -34,40 +34,56 @@ def get_avatar_url(email, size=100, default='/static/img/avatar.png'):
 
     return gravatar_url
 
-def get_family_names():
+def get_families():
     """
-    Returns the list of family names in the database
+    Returns a list of all Family entities in the db
     """
+
 
     query = FamilyModel.all()
 
     count = query.count()
 
-    results = query.fetch(count)
+    return query.fetch(count)
+    
 
-    names = []
-    for family in results:
-        names.append(family.name)
+def get_family_choices():
+    """
+    Returns the list of family names in the database
+    """
 
-    names.sort()
+    families = get_families()
 
-    return names
+    choices = []
+    for family in families:
+        choices.append((family.name, family.name.title()))
 
-def get_role_names():
+    choices.sort()
+
+    choices.insert(0, ('none', 'None'))
+    return choices
+
+def get_roles():
+    """
+    Returns list of RoleModel Entities from the db
+    """
+    
+    query = RoleModel.all()
+    count = query.count()
+    return query.fetch(count)
+    
+    
+def get_role_choices():
     """
     Returns the list of role names in the database
     """
-
-    query = RoleModel.all()
-    count = query.count()
-    results = query.fetch(count)
-
-    names = []
-    for role in results:
-        names.append(role.name)
-
-    names.sort()
-    return names
+    roles = get_roles()
+    
+    choices = []
+    for role in roles:
+        choices.append((role.name, role.name.title()))
+    
+    return choices
 
 def send_new_user_mail(fname, lname, cwruid, password):
     """

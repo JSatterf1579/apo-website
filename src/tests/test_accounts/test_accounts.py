@@ -503,7 +503,7 @@ class UserTestCase(TestCase): # pylint: disable=R0904
         user = accounts.find_users(cwruid=('=', testid))[0]
 
         self.assertEqual(user.get_id(), user.cwruid)
-        
+
 
 if __name__ == '__main__':
     unittest.main()

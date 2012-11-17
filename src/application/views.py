@@ -87,50 +87,6 @@ def home():
     """
     return render_template('index.html')
 
-@app.route('/exec/members/create', methods=['GET', 'POST'])
-@login_required
-def createUser():
-    """
-    View for creating a user
-    """
-
-    form = forms.CreateUpdateProfileForm(request.form)
-    
-    if request.method == 'POST' and form.validate():
-        if form.password.data == '':
-            password = generate_keys.generate_randomkey(10)
-        else:
-            password = form.password.data
-            
-        newUser = accounts.createUser(form.fname.data,
-                                      form.lname.data,
-                                      form.caseid.data,
-                                      password)
-
-        if(form.avatar.data != ''):
-           newUser.avatar = form.avatar.data
-           newUser.put()
-        
-        if newUser is not None:
-            flash("User '%s' created with password '%s'" % (newUser.cwruID,password))
-            if(not current_user.is_authenticated):
-                login_user(newUser)
-        else:
-            flash("Error: User was not created")
-        return redirect(url_for('createUser'))
-        
-    return render_template('createUser.html', userForm=forms.CreateUpdateProfileForm())
-
-@app.route('/exec/members')
-@login_required
-def listUsers():
-    """
-    View for listing users
-    """
-
-    users = accounts.getUsers()
-    return render_template('listMembers.html', users=users)
-
 @app.route('/exec/members/delete/<cwruID>')
 @login_required
 def deleteUser(cwruID):

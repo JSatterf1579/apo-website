@@ -16,6 +16,7 @@ from Crypto.Hash import SHA # used with the passwords
 from application.generate_keys import generate_randomkey
 
 from google.appengine.ext.db import BadValueError
+from google.appengine.ext import db
 
 from application import login_manager
 
@@ -341,3 +342,21 @@ def require_roles(*fn, **options):
             return f(*args, **kwargs) # finally execute the view function and return the result
         return wrapper
     return decorator
+
+def delete_user(cwruid):
+    """
+    Deletes the user specified by the cwruid.
+
+    Return 'success' when successful and an error message
+    otherwise
+    """
+
+    try:
+        user = find_users(limit=1,cwruid=('=', cwruid))[0]
+
+        db.delete(user.key())
+    except IndexError:
+        raise Exception("User with '%s' as cwruid does not exist" % cwruid)
+
+    
+        

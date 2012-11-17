@@ -9,12 +9,15 @@ from flaskext.flask_login import current_user, login_required
 
 from application import app
 
-from application.accounts.accounts import require_roles, create_user, find_users
+from application.accounts.accounts import require_roles, find_users
 from application.accounts import accounts
+
+from application.accounts.models import RoleModel, UserRoleModel
 
 import forms
 import models
-from members import get_family_names, get_role_names, send_new_user_mail
+from members import get_family_choices, get_role_choices
+from members import send_new_user_mail
 
 from flask import render_template, flash, url_for, redirect, request
 
@@ -33,24 +36,9 @@ def create_user():
     
     form = forms.CreateUserForm(request.form)
 
-    # get the choices for the CreateUserForm family field
-    family_names = get_family_names()
-
-    family_choices = []
-    for name in family_names:
-        family_choices.append((name, name.title()))
-
-    family_choices.insert(0, ('none', 'None'))
-
-    # get the choices for the CreateUserForm role field
-    role_names = get_role_names()
-
-    role_choices = []
-    for name in role_names:
-        role_choices.append((name, name.title()))
+    form.family.choices = get_family_choices()
     
-    form.family.choices = family_choices
-    form.roles.choices = role_choices
+    form.roles.choices = get_role_choices()
 
     if request.method == 'POST':
         if form.validate():
@@ -66,7 +54,8 @@ def create_user():
             optional_attr = {}
             if form.mname.data != '':
                 optional_attr['mname'] = form.mname.data
-            if form.family.data != '':
+                
+            if form.family.data != 'none':
                 # look up family instance
                 query = models.FamilyModel.all()
                 query.filter('name =', form.family.data)
@@ -76,6 +65,7 @@ def create_user():
                     return render_template('members/create.html',
                                            create_user_form=form)
                 optional_attr['family'] = families[0].key()
+                
             if form.big.data != '':
                 # look up big instance
                 users = find_users(cwruid=('=', form.big.data))
@@ -84,12 +74,34 @@ def create_user():
                     return render_template('members/create.html',
                                            create_user_form=form)
                 optional_attr['big'] = users[0].key()
+                
             if form.avatar.data != '':
                 optional_attr['avatar'] = form.avatar.data
-
+            
             try:
-                accounts.create_user(fname, lname, cwruid, password, **optional_attr)
+                new_user = accounts.create_user(fname, lname, cwruid, password, **optional_attr)
+                if new_user is None:
+                    raise AttributeError('Something went wrong with user creation')
+
+                # add the roles to the user
+                for role in form.roles.data:
+                    query = RoleModel.all()
+                    query.filter('name =', role)
+
+                    if query.count() != 1:
+                        flash('Role %s does not exist' % role, 'error')
+                        continue
+
+                    desired_role = query.fetch(1)[0]
+
+                    new_urole = UserRoleModel(user=new_user.key(), role=desired_role.key())
+                    new_urole.put()
+                    
                 flash('User created successfully', 'success')
+
+                form = forms.CreateUserForm()
+                form.family.choices = get_family_choices()
+                form.roles.choices = get_role_choices()
 
                 # check if this the test server
                 # if it is the test server don't send an email
@@ -132,7 +144,21 @@ def delete_user(cwruid):
     user has the correct role then the user will
     be deleted
     """
-    return "Deleting %s" % cwruid
+
+    next_page = 'list_users'
+    
+    if current_user.cwruid == cwruid:
+        flash('Cannot delete account that is currently logged in', 'error')
+        return redirect(url_for(next_page))
+
+    try:
+        accounts.delete_user(cwruid)
+        flash("Successfully deleted account '%s'" % cwruid, 'success')
+    except Exception, e:
+        flash('Error: %s' % str(e), 'error')
+
+    return redirect(url_for('list_users'))
+
 
 @app.route('/members/view/<cwruid>', methods=['GET'])
 @login_required
