@@ -2,3 +2,7 @@
 /* Main stylesheet */
 
 /* Your customizations here */
+.formval-error{
+    color: #D63301;
+}
+
