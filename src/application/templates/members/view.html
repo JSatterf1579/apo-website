@@ -21,14 +21,14 @@
 
 {% if big %}
 <tr>
-<td><h4><u>Big:</u></h4></td>
+<td><h4>Big:</h4></td>
 <td><a href="/members/view/{{ big.cwruid }}">{{ big.fname }} {{ big.lname }}</a></td>
 </tr>
 {% endif %}
 
 {% if family %}
 <tr>
-<td><h4><u>Family:</u></h4></td>
+<td><h4>Family:</h4></td>
 <td><a href="/members/family/{{ family }}">{{ family }}</a></td>
 </tr>
 
@@ -37,12 +37,12 @@
 
 {% if emails %}
 <tr>
-<td><h4><u>Email</u></h4></td>
+<td><h4>Email</h4></td>
 </tr>
 {% for address in emails %}
 <tr>
   <td />
-  <td>{{ address.name }}</td> 
+  <td><u>{{ address.name }}</u></td> 
   <td><a href="mailto:{{ address.email }}">{{ address.email }}</a></td>
 </tr>
 {% endfor %}
@@ -50,12 +50,12 @@
 
 {% if numbers %}
 <tr>
-<td><h4><u>Phone</u></h4></td>
+<td><h4>Phone</h4></td>
 </tr>
 {% for number in numbers %}
 <tr>
   <td />
-  <td>{{ number.name }}</td>
+  <td><u>{{ number.name }}</u></td>
   <td>{{ number.number }}</td>
 </tr>
 {% endfor %}
@@ -64,12 +64,26 @@
 {% if addresses %}
 <tr>
 <td><h4>Address</h4></td>
+<td/>
 </tr>
 {% for address in addresses %}
 <tr>
   <td />
-  <td>{{ address.name }}</td>
-  <td>{{ address.address }}</td>
+  <td><u>{{ address.name }}</u></td>
+</tr>
+<tr>
+  <td />
+  <td>{{ address.street1 }}</td>
+</tr>
+{% if address.street2 %}
+<tr>
+  <td />
+  <td>{{ address.street2 }}</td>
+</tr>
+{% endif %}
+<tr>
+  <td/>
+  <td>{{ address.city }}, {{ address.state }} {{ address.zip_code }}</td>
 </tr>
 {% endfor %}
 {% endif %}

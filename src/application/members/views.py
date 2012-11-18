@@ -223,7 +223,6 @@ def edit_user(cwruid):
     to edit the profile of that user
     """
     from flaskext import wtf
-    from google.appengine.ext import db
     
     import urlparse, urllib
     admin_roles = ['webmaster', 'membership']
@@ -279,7 +278,7 @@ def edit_user(cwruid):
                 if email_form.key.data == '':
                     # create new email
                     name = email_form.emailName.data
-                    if email_form.emailName.data == '':
+                    if name == '':
                         name = None
                     email = models.EmailModel(user=user.key(),
                                               email=email_form.emailAddress.data,
@@ -288,7 +287,7 @@ def edit_user(cwruid):
                 else:
                     # try and see what email was updated
                     index = None
-                    for i,email in enumerate(emails):
+                    for i, email in enumerate(emails):
                         if email.key() == email_form.key.data:
                             email.name = email_form.emailName.data
                             email.email = email_form.emailAddress.data
@@ -304,11 +303,76 @@ def edit_user(cwruid):
 
             # clear out the emails list
             #emails_form = forms.EmailUpdateForm()
+                
         elif 'phones' in request.args and phones_form.validate():
-            flash('phones validated!', 'success')
+            query = models.PhoneModel.all()
+            query.filter('user =', user.key())
+            phones = query.fetch(query.count())
+            flash(phones)
+            for phone_form in phones_form.phones:
+                name = phone_form.phoneName.data
+                if name == '':
+                    name = None
+                if phone_form.key.data == '':
+                    # create new phone
+                    phone = models.PhoneModel(user=user.key(),
+                                              number=phone_form.phoneNumber.data,
+                                              name=name)
+                    phone.put()
+                else:
+                    # try and see what phone was updated
+                    index = None
+                    for i, phone in enumerate(phones):
+                        if phone.key() == phone_form.key.data:
+                            phone.name = name
+                            phone.number = phone_form.phoneNumber.data
+                            phone.put()
+                            index = i
+                            break
+                    del phones[index]
+            for phone in phones:
+                phone.delete()
+            
         elif 'addresses in request.args' and addresses_form.validate():
-            flash('addresses validated!', 'success')
-        
+            query = models.AddressModel.all()
+            query.filter('user =', user.key())
+            addresses = query.fetch(query.count())
+            for address_form in addresses_form.addresses:
+                name = address_form.addrName.data
+                if name == '':
+                    name = None
+                street2 = address_form.street2.data
+                if street2 == '':
+                    street2 = None
+                if address_form.key.data == '':
+                    # create new address
+                    address = models.AddressModel(user=user.key(),
+                                                 street1=address_form.street1.data,
+                                                 street2=street2,
+                                                 city=address_form.city.data,
+                                                 state=address_form.state.data,
+                                                 zip_code=str(address_form.zip_code.data),
+                                                 name=name)
+                    address.put()
+                else:
+                    # try and see what address was updated
+                    index = None
+                    for i, address in enumerate(addresses):
+                        if address.key() == address_form.key.data:
+                            address.name = name
+                            address.street1 = address_form.street1.data
+                            address.city = address_form.city.data
+                            address.state = address_form.state.data
+                            address.zip_code = address_form.zip_code.data
+                            address.street2 = street2
+                            address.put()
+                            index = i
+                            break
+                    del addresses[index]
+            for address in addresses:
+                address.delete()
+
+    flash(phones_form.errors,'error')
 
 
     main_form.fname.data = user.fname

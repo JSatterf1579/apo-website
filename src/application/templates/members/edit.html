@@ -101,6 +101,7 @@ Editing {{ user.fname }} {{ user.lname }}'s Profile
   </div>
   <button id="phone-addbutton" type="button">Add Phone Number</button>
   {{ phones_form.update }}
+  {{ phones_form.csrf_token }}
 </form>
 
 
@@ -131,6 +132,7 @@ Editing {{ user.fname }} {{ user.lname }}'s Profile
   </div>
   <button id="address-addbutton" type="button">Add Address</button>
   {{ addresses_form.update }}
+  {{ addresses_form.csrf_token }}
 </form>
 
 
