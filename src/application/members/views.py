@@ -222,6 +222,9 @@ def edit_user(cwruid):
     This view allows the user and administrators
     to edit the profile of that user
     """
+    from flaskext import wtf
+    from google.appengine.ext import db
+    
     import urlparse, urllib
     admin_roles = ['webmaster', 'membership']
 
@@ -255,12 +258,50 @@ def edit_user(cwruid):
         return render_template('404.html'), 404
 
 
+    # if true then an empty address, phone and email form will be added
+    add_empty = True
+    
     # populate the form
-    form = forms.UpdateUserForm()
+    form = forms.UpdateUserForm(request.form)
 
     # set the choices
     form.admin_form.family.choices = get_family_choices()
     form.admin_form.roles.choices = get_role_choices()
+
+    # process the data
+    if request.method == 'POST' and form.validate():
+        add_empty = False
+        if form.update:
+            # data was updated so save everything from the forms
+            flash('Updating')
+        
+            for emailForm in form.emails:
+                if emailForm.delete.data:
+                    # delete the email from the db
+                    if emailForm.key.data != '':
+                        email = db.get(emailForm.key.data)
+                        flash('Deleting %s' % email.email)
+                    break
+
+            for numberForm in form.phone_numbers:
+                if numberForm.delete.data:
+                    # delete the phone number from the db
+                    if numberForm.key.data != '':
+                        number = db.get(numberForm.key.data)
+                        flash('Deleting %s' % number.number)
+                    break
+
+            for addressForm in form.addresses:
+                if addressForm.delete.data:
+                    # delete the address from the db
+                    if addressForm.key.data != '':
+                        address = db.get(addressForm.key)
+                        flash('Deleting %s' % address.street1)
+                    break
+
+        
+            
+
 
     form.fname.data = user.fname
     form.mname.data = user.mname
@@ -288,18 +329,17 @@ def edit_user(cwruid):
     emails = query.fetch(query.count())
 
     # create the email forms
-    emailForms = []
     for email in emails:
         email_data = {}
+        email_data['key'] = email.key()
         if email.name is not None:
             email_data['emailName'] = email.name
         if email.email is not None:
             email_data['emailAddress'] = email.email
-        emailForms.append(forms.EmailAddressForm(**email_data))
+        form.emails.append_entry(wtf.FormField(forms.EmailAddressForm(**email_data)))
 
-    emailForms.append(forms.EmailAddressForm())
-
-    form.emails = emailForms
+    if add_empty:
+        form.emails.append_entry(wtf.FormField(forms.EmailAddressForm()))
 
     # get the phone numbers
     query = models.PhoneModel.all()
@@ -307,18 +347,17 @@ def edit_user(cwruid):
     numbers = query.fetch(query.count())
 
     # create the phone numbers forms
-    numberForms = []
     for number in numbers:
         number_data = {}
+        number_data['key'] = number.key()
         if number.name is not None:
             number_data['phoneName'] = number.name
         if number.number is not None:
             number_data['phoneNumber'] = number.number
-        numberForms.append(forms.PhoneNumberForm(**number_data))
+        form.phone_numbers.append_entry(wtf.FormField(forms.PhoneNumberForm(**number_data)))
 
-    numberForms.append(forms.PhoneNumberForm())
-
-    form.phone_numbers = numberForms
+    if add_empty:
+        form.phone_numbers.append_entry(wtf.FormField(forms.PhoneNumberForm()))
 
     # get the address
     query = models.AddressModel.all()
@@ -326,7 +365,6 @@ def edit_user(cwruid):
     addresses = query.fetch(query.count())
 
     # create the address forms
-    addressForms = []
     for address in addresses:
         address_data = {}
         address_data['key'] = address.key()
@@ -340,11 +378,10 @@ def edit_user(cwruid):
             address_data['city'] = address.city
         if address.zip_code is not None:
             address_data['zip_code'] = address.zip_code
-        addressForms.append(forms.AddressForm(**address_data))
+        form.addresses.append_entry(wtf.FormField(forms.AddressForm(**address_data)))
 
-    addressForms.append(forms.AddressForm())
-
-    form.addresses = addressForms
+    if add_empty:
+        form.addresses.append_entry(wtf.FormField(forms.AddressForm()))
         
     # if this is a post process the data
 
