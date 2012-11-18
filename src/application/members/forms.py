@@ -45,15 +45,15 @@ class MainUpdateUserForm(wtf.Form):
 
 class EmailUpdateForm(wtf.Form):
     emails = wtf.FieldList(wtf.FormField(EmailAddressForm))
-    update = wtf.SubmitField('Update', [validators.Optional()])
+    update = wtf.SubmitField('Update Email Addresses', [validators.Optional()])
 
 class AddressUpdateForm(wtf.Form):
     addresses = wtf.FieldList(wtf.FormField(AddressForm))
-    update = wtf.SubmitField('Update', [validators.Optional()])
+    update = wtf.SubmitField('Update Addresses', [validators.Optional()])
 
 class PhoneUpdateForm(wtf.Form):
     phones = wtf.FieldList(wtf.FormField(PhoneNumberForm))
-    update = wtf.SubmitField('Update', [validators.Optional()])    
+    update = wtf.SubmitField('Update Phone Numbers', [validators.Optional()])    
 
 class SearchUserForm(wtf.Form):
     fname = wtf.TextField('First Name', [validators.Optional()])

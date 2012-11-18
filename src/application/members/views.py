@@ -276,6 +276,7 @@ def edit_user(cwruid):
             emails = query.fetch(query.count())
             for email_form in emails_form.emails:
                 if email_form.key.data == '':
+                    flash('Creating new entry %s' % email_form.emailAddress.data)
                     # create new email
                     name = email_form.emailName.data
                     if name == '':
@@ -286,6 +287,7 @@ def edit_user(cwruid):
                     email.put()
                 else:
                     # try and see what email was updated
+                    flash('Updating %s' % email_form.emailAddress.data)
                     index = None
                     for i, email in enumerate(emails):
                         if str(email.key()) == email_form.key.data:
@@ -300,11 +302,9 @@ def edit_user(cwruid):
                     if index is not None:
                         del emails[index]
             for email in emails:
+                flash('Deleting %s' % email.email)
                 email.delete()
 
-            # clear out the emails list
-            #emails_form = forms.EmailUpdateForm()
-                
         elif 'phones' in request.args and phones_form.validate():
             query = models.PhoneModel.all()
             query.filter('user =', user.key())
@@ -334,7 +334,6 @@ def edit_user(cwruid):
                         del phones[index]
             for phone in phones:
                 phone.delete()
-            
         elif 'addresses in request.args' and addresses_form.validate():
             query = models.AddressModel.all()
             query.filter('user =', user.key())
@@ -365,7 +364,7 @@ def edit_user(cwruid):
                             address.street1 = address_form.street1.data
                             address.city = address_form.city.data
                             address.state = address_form.state.data
-                            address.zip_code = address_form.zip_code.data
+                            address.zip_code = str(address_form.zip_code.data)
                             address.street2 = street2
                             address.put()
                             index = i
@@ -374,13 +373,14 @@ def edit_user(cwruid):
                         del addresses[index]
             for address in addresses:
                 address.delete()
+            # clear out the old address form
 
     # populate the form
-    main_form = forms.MainUpdateUserForm()
-    admin_form = forms.AdminUpdateUserForm()
-    emails_form = forms.EmailUpdateForm()
-    addresses_form = forms.AddressUpdateForm()
-    phones_form = forms.PhoneUpdateForm()
+    main_form = forms.MainUpdateUserForm(None)
+    admin_form = forms.AdminUpdateUserForm(None)
+    emails_form = forms.EmailUpdateForm(None)
+    addresses_form = forms.AddressUpdateForm(None)
+    phones_form = forms.PhoneUpdateForm(None)
 
     # set the choices
     admin_form.family.choices = get_family_choices()

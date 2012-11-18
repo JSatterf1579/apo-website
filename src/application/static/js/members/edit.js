@@ -19,13 +19,14 @@ function addForm(selector){
 
     var inputs = $('input', lastnode);
 
-    console.log(inputs.length)
-
     for(var i=0; i < inputs.length; i++)
     {
 	inputs[i].setAttribute("id", plusone(inputs[i].getAttribute("id")));
 	inputs[i].setAttribute("name", plusone(inputs[i].getAttribute("name")));
-	console.log(inputs[i]);
+	if(fieldName(inputs[i].getAttribute("id")) != 'csrf_token')
+	{
+	    inputs[i].setAttribute("value", "");
+	}
     }
     
     var id = inputs[0].getAttribute("id");
@@ -50,6 +51,10 @@ function plusone(str){
 	    return "-" + i + "-";
 	}
     );
+}
+
+function fieldName(name){
+    return new RegExp("(\\w+)-(\\d+)-(\\w+)", "gi").exec(name)[3];
 }
 
 function removeForm(obj){
