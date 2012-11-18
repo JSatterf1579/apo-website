@@ -10,7 +10,24 @@ $(document).ready(function(){
     $('#phone-addbutton').click(function() {
 	addForm('#phones');
     });
+
+    $('#save-button-top').click(function() {
+	saveAll();
+    });
+
+    $('#save-button-bttm').click(function() {
+	saveAll();
+    });
 });
+
+function saveAll() {
+    $('form').each(function() {
+	$.post(this.action+'&json', $(this).serialize(),
+	       function(data){
+		   console.log(data);
+	       });
+    });
+}
 
 function addForm(selector){
     // clone the form list
@@ -65,4 +82,5 @@ function hideForm(obj){
     var id = obj.parent().parent().parent().attr('id');
     $('#hiddenForms').append('<div id="' + id +'"></div>');
     $('#hiddenForms #'+id).append(obj.parent());
+    
 }

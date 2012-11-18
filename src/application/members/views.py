@@ -225,6 +225,7 @@ def edit_user(cwruid):
     from flaskext import wtf
     
     import urlparse, urllib
+    import json
     admin_roles = ['webmaster', 'membership']
 
     # see if user is admin
@@ -270,6 +271,7 @@ def edit_user(cwruid):
 
     # process the data
     if request.method == 'POST':
+        result = 'success'
         if 'emails' in request.args:
             if emails_form.validate():
                 query = models.EmailModel.all()
@@ -304,7 +306,10 @@ def edit_user(cwruid):
                     email.delete()
 
                 emails_form = forms.EmailUpdateForm(None)
-                
+        else:
+            result = 'false'
+            if 'json' in request.args:
+                return json.dumps(result)
         if 'phones' in request.args and phones_form.validate():
             query = models.PhoneModel.all()
             query.filter('user =', user.key())
@@ -336,6 +341,10 @@ def edit_user(cwruid):
                 phone.delete()
 
             phones_form = forms.PhoneUpdateForm(None)
+        else:
+            result = 'false'
+            if 'json' in request.args:
+                return json.dumps(result)
             
         if 'addresses in request.args' and addresses_form.validate():
             query = models.AddressModel.all()
@@ -378,6 +387,13 @@ def edit_user(cwruid):
                 address.delete()
             # clear out the old address form
             addresses_form = forms.AddressUpdateForm(None)
+        else:
+            result = 'false'
+            if 'json' in request.args:
+                return json.dumps(result)
+
+    if 'json' in request.args:
+        return json.dumps(result)
                 
     # populate the form
     main_form = forms.MainUpdateUserForm(None)
