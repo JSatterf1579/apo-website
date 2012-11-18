@@ -12,6 +12,12 @@ Editing {{ user.fname }} {{ user.lname }}'s Profile
 
 {% from "_formhelpers.html" import render_field %}
 
+<div id="hiddenForms" style="display: none;">
+
+  
+
+</div>
+
 
 <h1>Editing {{ user.fname }} {{ user.lname }}'s Profile</h1>
 
@@ -69,6 +75,8 @@ Editing {{ user.fname }} {{ user.lname }}'s Profile
     {{ email_form.csrf_token }}
   {% if counter > 1 %}
   <button type="button" class="removeForm" onClick="removeForm($(this));">Delete</button>
+  {% else %}
+  <button type="button" class="hideForm" onClick="hideForm($(this));">Delete</button>
   {% endif %}
   </dl>
   {% endfor %}
@@ -95,6 +103,8 @@ Editing {{ user.fname }} {{ user.lname }}'s Profile
     {{ phone_form.csrf_token }}
   {% if counter > 1 %}
   <button type="button" class="removeForm" onClick="removeForm($(this));">Delete</button>
+  {% else %}
+  <button type="button" class="hideForm" onClick="hideForm($(this));">Delete</button>
   {% endif %}
   </dl>
   {% endfor %}
@@ -126,6 +136,8 @@ Editing {{ user.fname }} {{ user.lname }}'s Profile
     {{ address_form.csrf_token }}
   {% if counter > 1 %}
   <button type="button" class="removeForm" onClick="removeForm($(this));">Delete</button>
+  {% else %}
+  <button type="button" class="hideForm" onClick="hideForm($(this));">Delete</button>
   {% endif %}
   </dl>
   {% endfor %}

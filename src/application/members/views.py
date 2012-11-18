@@ -270,42 +270,42 @@ def edit_user(cwruid):
 
     # process the data
     if request.method == 'POST':
-        if 'emails' in request.args and emails_form.validate():
-            query = models.EmailModel.all()
-            query.filter('user =', user.key())
-            emails = query.fetch(query.count())
-            for email_form in emails_form.emails:
-                if email_form.key.data == '':
-                    flash('Creating new entry %s' % email_form.emailAddress.data)
-                    # create new email
-                    name = email_form.emailName.data
-                    if name == '':
-                        name = None
-                    email = models.EmailModel(user=user.key(),
-                                              email=email_form.emailAddress.data,
-                                              name=name)
-                    email.put()
-                else:
-                    # try and see what email was updated
-                    flash('Updating %s' % email_form.emailAddress.data)
-                    index = None
-                    for i, email in enumerate(emails):
-                        if str(email.key()) == email_form.key.data:
-                            email.name = email_form.emailName.data
-                            email.email = email_form.emailAddress.data
-                            email.put()
-                            index = i
-                            break
-                    # remove from the list so that
-                    # only emails with no associated
-                    # forms get deleted at the end
-                    if index is not None:
-                        del emails[index]
-            for email in emails:
-                flash('Deleting %s' % email.email)
-                email.delete()
+        if 'emails' in request.args:
+            if emails_form.validate():
+                query = models.EmailModel.all()
+                query.filter('user =', user.key())
+                emails = query.fetch(query.count())
+                for email_form in emails_form.emails:
+                    if email_form.key.data == '':
+                        # create new email
+                        name = email_form.emailName.data
+                        if name == '':
+                            name = None
+                        email = models.EmailModel(user=user.key(),
+                                                  email=email_form.emailAddress.data,
+                                                  name=name)
+                        email.put()
+                    else:
+                        # try and see what email was updated
+                        index = None
+                        for i, email in enumerate(emails):
+                            if str(email.key()) == email_form.key.data:
+                                email.name = email_form.emailName.data
+                                email.email = email_form.emailAddress.data
+                                email.put()
+                                index = i
+                                break
+                        # remove from the list so that
+                        # only emails with no associated
+                        # forms get deleted at the end
+                        if index is not None:
+                            del emails[index]
+                for email in emails:
+                    email.delete()
 
-        elif 'phones' in request.args and phones_form.validate():
+                emails_form = forms.EmailUpdateForm(None)
+                
+        if 'phones' in request.args and phones_form.validate():
             query = models.PhoneModel.all()
             query.filter('user =', user.key())
             phones = query.fetch(query.count())
@@ -334,7 +334,10 @@ def edit_user(cwruid):
                         del phones[index]
             for phone in phones:
                 phone.delete()
-        elif 'addresses in request.args' and addresses_form.validate():
+
+            phones_form = forms.PhoneUpdateForm(None)
+            
+        if 'addresses in request.args' and addresses_form.validate():
             query = models.AddressModel.all()
             query.filter('user =', user.key())
             addresses = query.fetch(query.count())
@@ -374,13 +377,11 @@ def edit_user(cwruid):
             for address in addresses:
                 address.delete()
             # clear out the old address form
-
+            addresses_form = forms.AddressUpdateForm(None)
+                
     # populate the form
     main_form = forms.MainUpdateUserForm(None)
     admin_form = forms.AdminUpdateUserForm(None)
-    emails_form = forms.EmailUpdateForm(None)
-    addresses_form = forms.AddressUpdateForm(None)
-    phones_form = forms.PhoneUpdateForm(None)
 
     # set the choices
     admin_form.family.choices = get_family_choices()
@@ -409,67 +410,67 @@ def edit_user(cwruid):
 
     admin_form.roles.data = selected_roles
 
-    # get the emails
-    query = models.EmailModel.all()
-    query.filter('user =', user.key())
-    emails = query.fetch(query.count())
-
-    # create the email forms
-    offset = len(emails_form.emails)
-    for i, email in enumerate(emails):
-        emails_form.emails.append_entry(wtf.FormField(forms.EmailAddressForm()))
-        emails_form.emails[i+offset].key.data = str(email.key())
-        if email.name is not None:
-            emails_form.emails[i+offset].emailName.data = email.name
-        if email.email is not None:
-            emails_form.emails[i+offset].emailAddress.data = email.email
-
     if len(emails_form.emails) <= 0:
-        emails_form.emails.append_entry(wtf.FormField(forms.EmailAddressForm()))
+        # get the emails
+        query = models.EmailModel.all()
+        query.filter('user =', user.key())
+        emails = query.fetch(query.count())
 
-    # get the phone numbers
-    query = models.PhoneModel.all()
-    query.filter('user =', user.key())
-    numbers = query.fetch(query.count())
+        # create the email forms
+        for i, email in enumerate(emails):
+            emails_form.emails.append_entry(wtf.FormField(forms.EmailAddressForm()))
+            emails_form.emails[i].key.data = str(email.key())
+            if email.name is not None:
+                emails_form.emails[i].emailName.data = email.name
+            if email.email is not None:
+                emails_form.emails[i].emailAddress.data = email.email
 
-    # create the phone numbers forms
-    offset = len(phones_form.phones)
-    for i, number in enumerate(numbers):
-        phones_form.phones.append_entry(wtf.FormField(forms.PhoneNumberForm()))
-        phones_form.phones[i+offset].key.data = str(number.key())
-        if number.name is not None:
-            phones_form.phones[i+offset].phoneName.data = number.name
-        if number.number is not None:
-            phones_form.phones[i+offset].phoneNumber.data = number.number
+        if len(emails_form.emails) <= 0:
+            emails_form.emails.append_entry(wtf.FormField(forms.EmailAddressForm()))
 
     if len(phones_form.phones) <= 0:
-        phones_form.phones.append_entry(wtf.FormField(forms.PhoneNumberForm()))
+        # get the phone numbers
+        query = models.PhoneModel.all()
+        query.filter('user =', user.key())
+        numbers = query.fetch(query.count())
 
-    # get the address
-    query = models.AddressModel.all()
-    query.filter('user =', user.key())
-    addresses = query.fetch(query.count())
+        # create the phone numbers forms
+        for i, number in enumerate(numbers):
+            phones_form.phones.append_entry(wtf.FormField(forms.PhoneNumberForm()))
+            phones_form.phones[i].key.data = str(number.key())
+            if number.name is not None:
+                phones_form.phones[i].phoneName.data = number.name
+            if number.number is not None:
+                phones_form.phones[i].phoneNumber.data = number.number
 
-    # create the address forms
-    offset = len(addresses_form.addresses)
-    for i, address in enumerate(addresses):
-        addresses_form.addresses.append_entry(wtf.FormField(forms.AddressForm()))
-        addresses_form.addresses[i+offset].key.data = str(address.key())
-        if address.name is not None:
-             addresses_form.addresses[i+offset].addrName.data = address.name
-        if address.street1 is not None:
-            addresses_form.addresses[i+offset].street1.data = address.street1
-        if address.street2 is not None:
-            addresses_form.addresses[i+offset].street2.data = address.street2
-        if address.city is not None:
-            addresses_form.addresses[i+offset].city.data = address.city
-        if address.state is not None:
-            addresses_form.addresses[i+offset].state.data = address.state
-        if address.zip_code is not None:
-            addresses_form.addresses[i+offset].zip_code.data = address.zip_code
+        if len(phones_form.phones) <= 0:
+            phones_form.phones.append_entry(wtf.FormField(forms.PhoneNumberForm()))
 
     if len(addresses_form.addresses) <= 0:
-        addresses_form.addresses.append_entry(wtf.FormField(forms.AddressForm()))
+        # get the address
+        query = models.AddressModel.all()
+        query.filter('user =', user.key())
+        addresses = query.fetch(query.count())
+
+        # create the address forms
+        for i, address in enumerate(addresses):
+            addresses_form.addresses.append_entry(wtf.FormField(forms.AddressForm()))
+            addresses_form.addresses[i].key.data = str(address.key())
+            if address.name is not None:
+                 addresses_form.addresses[i].addrName.data = address.name
+            if address.street1 is not None:
+                addresses_form.addresses[i].street1.data = address.street1
+            if address.street2 is not None:
+                addresses_form.addresses[i].street2.data = address.street2
+            if address.city is not None:
+                addresses_form.addresses[i].city.data = address.city
+            if address.state is not None:
+                addresses_form.addresses[i].state.data = address.state
+            if address.zip_code is not None:
+                addresses_form.addresses[i].zip_code.data = address.zip_code
+
+        if len(addresses_form.addresses) <= 0:
+            addresses_form.addresses.append_entry(wtf.FormField(forms.AddressForm()))
         
     # if this is a post process the data
 

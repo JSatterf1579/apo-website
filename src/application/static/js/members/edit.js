@@ -60,3 +60,9 @@ function fieldName(name){
 function removeForm(obj){
     obj.parent().remove();
 }
+
+function hideForm(obj){
+    var id = obj.parent().parent().parent().attr('id');
+    $('#hiddenForms').append('<div id="' + id +'"></div>');
+    $('#hiddenForms #'+id).append(obj.parent());
+}
