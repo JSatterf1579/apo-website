@@ -174,6 +174,9 @@ def view_user(cwruid):
     except IndexError:
         return render_template('404.html'), 404
 
+    if current_user.cwruid == cwruid:
+        show_edit_link = True
+
     minitial = ''
     if user.mname is not None and user.mname != '':
         minitial = user.mname[0].capitalize() + '.'
@@ -200,6 +203,7 @@ def view_user(cwruid):
     
 
     return render_template('members/view.html',
+                           show_edit_link=show_edit_link,
                            user=user,
                            minitial=minitial,
                            avatar=avatar,
@@ -211,13 +215,147 @@ def view_user(cwruid):
                            
                            
 
-@app.route('/members/edit/<cwruid>', methods=['GET'])
+@app.route('/members/edit/<cwruid>', methods=['GET', 'POST'])
 @login_required
 def edit_user(cwruid):
     """
     This view allows the user and administrators
     to edit the profile of that user
     """
+    import urlparse, urllib
+    admin_roles = ['webmaster', 'membership']
+
+    # see if user is admin
+    admin = False
+    query = UserRoleModel.all()
+    query.filter('user =', current_user.key())
+    uroles = query.fetch(query.count())
+    for urole in uroles:
+        if urole.role.name in admin_roles:
+            admin = True
+            break
     
-    return "Editing user profile for %s" % cwruid
+    # determine if the user can edit this page
+    if current_user.cwruid != cwruid and not admin:
+        flash("You don't have permission to access this page", 'error')
+        params = '?%s=%s' % ('next', urllib.quote_plus(url_for('edit_user', cwruid=cwruid)))
+        return redirect(urlparse.urljoin(request.host_url, url_for('login')) + params)
+
+    if current_user.cwruid == cwruid:
+        change_pass_link = True
+    else:
+        change_pass_link = False
+
+    # if the program has made it this far then the user has permissions to edit this user
+
+    # get the user object and all associated objects
+    try:
+        user = find_users(1, cwruid=('=', cwruid))[0]
+    except IndexError:
+        return render_template('404.html'), 404
+
+
+    # populate the form
+    form = forms.UpdateUserForm()
+
+    # set the choices
+    form.admin_form.family.choices = get_family_choices()
+    form.admin_form.roles.choices = get_role_choices()
+
+    form.fname.data = user.fname
+    form.mname.data = user.mname
+    form.lname.data = user.lname
+    form.avatar.data = user.avatar
+    form.admin_form.cwruid.data = user.cwruid
+    if user.big is not None:
+        form.admin_form.big.data = user.big.cwruid
+    if user.family is not None:
+        form.admin_form.family.data = user.family.name
+
+    # get the roles
+    query = UserRoleModel.all()
+    query.filter('user =', user.key())
+    uroles = query.fetch(query.count())
+    selected_roles = []
+    for urole in uroles:
+        selected_roles.append(urole.role.name)
+
+    form.admin_form.roles.data = selected_roles
+
+    # get the emails
+    query = models.EmailModel.all()
+    query.filter('user =', user.key())
+    emails = query.fetch(query.count())
+
+    # create the email forms
+    emailForms = []
+    for email in emails:
+        email_data = {}
+        if email.name is not None:
+            email_data['emailName'] = email.name
+        if email.email is not None:
+            email_data['emailAddress'] = email.email
+        emailForms.append(forms.EmailAddressForm(**email_data))
+
+    emailForms.append(forms.EmailAddressForm())
+
+    form.emails = emailForms
+
+    # get the phone numbers
+    query = models.PhoneModel.all()
+    query.filter('user =', user.key())
+    numbers = query.fetch(query.count())
+
+    # create the phone numbers forms
+    numberForms = []
+    for number in numbers:
+        number_data = {}
+        if number.name is not None:
+            number_data['phoneName'] = number.name
+        if number.number is not None:
+            number_data['phoneNumber'] = number.number
+        numberForms.append(forms.PhoneNumberForm(**number_data))
+
+    numberForms.append(forms.PhoneNumberForm())
+
+    form.phone_numbers = numberForms
+
+    # get the address
+    query = models.AddressModel.all()
+    query.filter('user =', user.key())
+    addresses = query.fetch(query.count())
+
+    # create the address forms
+    addressForms = []
+    for address in addresses:
+        address_data = {}
+        if address.name is not None:
+            address_data['addrName'] = address.name
+        if address.street1 is not None:
+            address_data['street1'] = address.street1
+        if address.street2 is not None:
+            address_data['street2'] = address.street2
+        if address.city is not None:
+            address_data['city'] = address.city
+        if address.zip_code is not None:
+            address_data['zip_code'] = address.zip_code
+        addressForms.append(forms.AddressForm(**address_data))
+
+    addressForms.append(forms.AddressForm())
+
+    form.addresses = addressForms
+        
+    # if this is a post process the data
+
+       # process data!!
+    
+    # see if change password link should be visible
+
+    # render the edit template
+    return render_template('members/edit.html',
+                           update_user_form=form,
+                           change_pass_link=change_pass_link,
+                           show_admin=admin,
+                           current_user=current_user,
+                           user=user)
 

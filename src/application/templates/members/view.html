@@ -12,6 +12,11 @@
 <h1>{{ user.fname }} {{ minitial }} {{ user.lname }}</h1>
 <br/>
 
+{% if show_edit_link is sameas True %}
+  <a href="/members/edit/{{ user.cwruid }}">Edit Profile</a>
+  <br/><br/>
+{% endif %}
+
 <table>
 
 {% if big %}

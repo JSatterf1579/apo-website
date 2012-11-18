@@ -14,17 +14,34 @@ class AddressForm(wtf.Form):
     street2 = wtf.TextField('', [validators.Optional()])
     city = wtf.TextField('City', [validators.Required()])
     state = wtf.TextField('State', [validators.Required()])
-    zip = wtf.IntegerField('Zip', [validators.Required()])
+    zip_code = wtf.IntegerField('Zip', [validators.Required()])
+    delete = wtf.SubmitField('Delete', [validators.Optional()])
 
 class PhoneNumberForm(wtf.Form):
     phoneName = wtf.TextField('Name', [validators.Optional()])
     phoneNumber = wtf.TextField('Phone Number', [validators.Required()])
+    delete = wtf.SubmitField('Delete', [validators.Optional()])
 
 class EmailAddressForm(wtf.Form):
     emailName = wtf.TextField('Name', [validators.Optional()])
-    emailAddress = wtf.TextField('Email', [validators.Email()])
+    emailAddress = wtf.TextField('Email', [validators.Email(),
+                                           validators.Required()])
+    delete = wtf.SubmitField('Delete', [validators.Optional()])
 
+class UpdateUserAdminForm(wtf.Form):
+    cwruid = wtf.TextField('CWRU ID*', [validators.Required()])
+    big = wtf.TextField('Big CWRU ID', [validators.Optional()])
+    family = wtf.SelectField('Family', [validators.Optional()])
+    roles = wtf.SelectMultipleField('Roles', [validators.Optional()])    
+
+    
 class UpdateUserForm(wtf.Form):
+    fname = wtf.TextField('First Name*', [validators.Required()])
+    mname = wtf.TextField('Middle Name', [validators.Optional()])
+    lname = wtf.TextField('Last Name*', [validators.Optional()])
+    avatar = wtf.TextField('Gravatar Email', [validators.Optional(),
+                                              validators.Email()])
+    admin_form = wtf.FormField(UpdateUserAdminForm)
     addresses = wtf.FieldList(wtf.FormField(AddressForm))
     phone_numbers = wtf.FieldList(wtf.FormField(PhoneNumberForm))
     emails = wtf.FieldList(wtf.FormField(EmailAddressForm))

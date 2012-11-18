@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+
+{% block title %}
+Editing {{ user.fname }} {{ user.lname }}'s Profile
+{% endblock title %}
+
+{% block content %}
+
+{% from "_formhelpers.html" import render_field %}
+
+<h1>Editing {{ user.fname }} {{ user.lname }}'s Profile</h1>
+
+
+{% if change_pass_link is sameas True  %}
+<br/>
+<h4><a href="/changepassword">Change Password</a></h4>
+<br/>
+{% endif %}
+
+<h3>Main Information</h3>
+<br/>
+<form method="post" action="/members/edit/{{ user.cwruid }}">
+  <dl>
+    {{ render_field(update_user_form.fname) }}
+    {{ render_field(update_user_form.mname) }}
+    {{ render_field(update_user_form.lname) }}
+    {{ render_field(update_user_form.avatar) }}
+    {% if show_admin is sameas False %}
+    <div style="display: none;">
+    {% endif %}
+    <br/>
+    <h3>Admin Information</h3>
+    <br/>
+    {{ render_field(update_user_form.admin_form.cwruid) }}
+    {{ render_field(update_user_form.admin_form.big) }}
+    {{ render_field(update_user_form.admin_form.family) }}
+    {{ render_field(update_user_form.admin_form.roles) }}
+    {% if show_admin is sameas False %}
+    </div>
+    {% endif %}
+    <br/>
+    <h3>Email Addresses</h3>
+    <br/>
+    {% for emailForm in update_user_form.emails %}
+      {{ render_field(emailForm.emailName) }}
+      {{ render_field(emailForm.emailAddress) }}
+      {{ emailForm.delete }}
+    {% endfor %}
+
+    <br/>
+    <h3>Phone Numbers</h3>
+    <br/>
+
+    {% for phoneForm in update_user_form.phone_numbers %}
+      {{ render_field(phoneForm.phoneName) }}
+      {{ render_field(phoneForm.phoneNumber) }}
+      {{ phoneForm.delete }}
+    {% endfor %}
+
+    <br/>
+    <h3>Addresses</h3>
+    <br/>
+    
+    {% for addressForm in update_user_form.addresses %}
+      {{ render_field(addressForm.addrName) }}
+      {{ render_field(addressForm.street1) }}
+      <dd>{{ addressForm.street2 }}</dd>
+      {{ render_field(addressForm.city) }}
+      {{ render_field(addressForm.state) }}
+      {{ render_field(addressForm.zip_code) }}
+      {{ addressForm.delete }}
+    {% endfor %}
+    {{ update_user_form.csrf_token }}
+  </dl>
+  <p><input type=submit value=Update>
+  <p>* required field</p>
+</form>
+
+{% endblock content %}

@@ -30,10 +30,14 @@ class AddressModel(db.Model):
 
     # Required attributes
     user = db.ReferenceProperty(UserModel, required=True)
-    address = db.PostalAddressProperty(required=True)
+    street1 = db.StringProperty(required=True)
+    city = db.StringProperty(required=True)
+    state = db.StringProperty(required=True)
+    zip_code = db.StringProperty(required=True)
 
     # Optional attributes
     name = db.StringProperty()
+    street2 = db.StringProperty()    
 
 class EmailModel(db.Model):
     """
