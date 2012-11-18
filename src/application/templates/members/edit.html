@@ -44,6 +44,7 @@ Editing {{ user.fname }} {{ user.lname }}'s Profile
     {% for emailForm in update_user_form.emails %}
       {{ render_field(emailForm.emailName) }}
       {{ render_field(emailForm.emailAddress) }}
+      {{ emailForm.key }}
       {{ emailForm.delete }}
     {% endfor %}
 
@@ -54,6 +55,7 @@ Editing {{ user.fname }} {{ user.lname }}'s Profile
     {% for phoneForm in update_user_form.phone_numbers %}
       {{ render_field(phoneForm.phoneName) }}
       {{ render_field(phoneForm.phoneNumber) }}
+      {{ phoneForm.key }}
       {{ phoneForm.delete }}
     {% endfor %}
 
@@ -68,6 +70,7 @@ Editing {{ user.fname }} {{ user.lname }}'s Profile
       {{ render_field(addressForm.city) }}
       {{ render_field(addressForm.state) }}
       {{ render_field(addressForm.zip_code) }}
+      {{ addressForm.key }}
       {{ addressForm.delete }}
     {% endfor %}
     {{ update_user_form.csrf_token }}

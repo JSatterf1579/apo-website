@@ -329,6 +329,7 @@ def edit_user(cwruid):
     addressForms = []
     for address in addresses:
         address_data = {}
+        address_data['key'] = address.key()
         if address.name is not None:
             address_data['addrName'] = address.name
         if address.street1 is not None:

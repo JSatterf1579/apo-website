@@ -15,17 +15,20 @@ class AddressForm(wtf.Form):
     city = wtf.TextField('City', [validators.Required()])
     state = wtf.TextField('State', [validators.Required()])
     zip_code = wtf.IntegerField('Zip', [validators.Required()])
+    key = wtf.HiddenField([validators.Required()])
     delete = wtf.SubmitField('Delete', [validators.Optional()])
 
 class PhoneNumberForm(wtf.Form):
     phoneName = wtf.TextField('Name', [validators.Optional()])
     phoneNumber = wtf.TextField('Phone Number', [validators.Required()])
+    key = wtf.HiddenField([validators.Required()])
     delete = wtf.SubmitField('Delete', [validators.Optional()])
 
 class EmailAddressForm(wtf.Form):
     emailName = wtf.TextField('Name', [validators.Optional()])
     emailAddress = wtf.TextField('Email', [validators.Email(),
                                            validators.Required()])
+    key = wtf.HiddenField([validators.Required()])
     delete = wtf.SubmitField('Delete', [validators.Optional()])
 
 class UpdateUserAdminForm(wtf.Form):
