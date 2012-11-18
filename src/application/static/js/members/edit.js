@@ -4,11 +4,11 @@ $(document).ready(function(){
     });
     
     $('#address-addbutton').click(function() {
-
+	addForm('#addresses');
     });
     
     $('#phone-addbutton').click(function() {
-
+	addForm('#phones');
     });
 });
 
@@ -24,6 +24,7 @@ function addForm(selector){
     for(var i=0; i < inputs.length; i++)
     {
 	inputs[i].setAttribute("id", plusone(inputs[i].getAttribute("id")));
+	inputs[i].setAttribute("name", plusone(inputs[i].getAttribute("name")));
 	console.log(inputs[i]);
     }
     

@@ -270,8 +270,45 @@ def edit_user(cwruid):
     admin_form.roles.choices = get_role_choices()
 
     # process the data
-    if request.method == 'POST' and main_form.validate():
-        pass
+    if request.method == 'POST':
+        if 'emails' in request.args and emails_form.validate():
+            query = models.EmailModel.all()
+            query.filter('user =', user.key())
+            emails = query.fetch(query.count())
+            for email_form in emails_form.emails:
+                if email_form.key.data == '':
+                    # create new email
+                    name = email_form.emailName.data
+                    if email_form.emailName.data == '':
+                        name = None
+                    email = models.EmailModel(user=user.key(),
+                                              email=email_form.emailAddress.data,
+                                              name=name)
+                    email.put()
+                else:
+                    # try and see what email was updated
+                    index = None
+                    for i,email in enumerate(emails):
+                        if email.key() == email_form.key.data:
+                            email.name = email_form.emailName.data
+                            email.email = email_form.emailAddress.data
+                            email.put()
+                            index = i
+                            break
+                    # remove from the list so that
+                    # only emails with no associated
+                    # forms get deleted at the end
+                    del emails[index]
+            for email in emails:
+                email.delete()
+
+            # clear out the emails list
+            #emails_form = forms.EmailUpdateForm()
+        elif 'phones' in request.args and phones_form.validate():
+            flash('phones validated!', 'success')
+        elif 'addresses in request.args' and addresses_form.validate():
+            flash('addresses validated!', 'success')
+        
 
 
     main_form.fname.data = user.fname
@@ -352,7 +389,7 @@ def edit_user(cwruid):
             address_data['zip_code'] = address.zip_code
         addresses_form.addresses.append_entry(wtf.FormField(forms.AddressForm(**address_data)))
 
-    if len(addresses_form.addresses):
+    if len(addresses_form.addresses) <= 0:
         addresses_form.addresses.append_entry(wtf.FormField(forms.AddressForm()))
         
     # if this is a post process the data

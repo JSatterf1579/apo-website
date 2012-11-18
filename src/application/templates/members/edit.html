@@ -57,19 +57,25 @@ Editing {{ user.fname }} {{ user.lname }}'s Profile
 <h3>Email Address</h3>
 <br/>
 
-<form id="emails">
+<form id="emails" method="post" action="/members/edit/{{ user.cwruid}}?emails">
+  <div class="fields">
+  {% set counter = 0 %}
   {% for email_form in emails_form.emails %}
-  <div id="fields">
+  {% set counter = counter + 1 %}
   <dl>
     {{ render_field(email_form.emailName) }}
     {{ render_field(email_form.emailAddress) }}
     {{ email_form.key }}
     {{ email_form.csrf_token }}
+  {% if counter > 1 %}
+  <button type="button" class="removeForm" onClick="removeForm($(this));">Delete</button>
+  {% endif %}
   </dl>
-  </div>
   {% endfor %}
+  </div>
   <button id="email-addbutton" type="button">Add Email</button>
   {{ emails_form.update }}
+  {{ emails_form.csrf_token }}
 </form>
 
 
@@ -77,17 +83,23 @@ Editing {{ user.fname }} {{ user.lname }}'s Profile
 <h3>Phone Numbers</h3>
 <br/>
 
-<form id="phones">
+<form id="phones" method="post" action="/members/edit/{{ user.cwruid}}?phones">
+  <div class="fields">
+  {% set counter = 0 %}
   {% for phone_form in phones_form.phones %}
+  {% set counter = counter + 1 %}
   <dl>
     {{ render_field(phone_form.phoneName) }}
     {{ render_field(phone_form.phoneNumber) }}
-    {{ phone_form.delete }}
     {{ phone_form.key }}
     {{ phone_form.csrf_token }}
+  {% if counter > 1 %}
+  <button type="button" class="removeForm" onClick="removeForm($(this));">Delete</button>
+  {% endif %}
   </dl>
   {% endfor %}
-  <input id="phone-addbutton" type="submit" value="Add Phone Number"/>
+  </div>
+  <button id="phone-addbutton" type="button">Add Phone Number</button>
   {{ phones_form.update }}
 </form>
 
@@ -97,8 +109,11 @@ Editing {{ user.fname }} {{ user.lname }}'s Profile
 <h3>Addresses</h3>
 <br/>
 
-<form id="addresses">
+<form id="addresses" method="post" action="/members/edit/{{ user.cwruid}}?addresses">
+  <div class="fields">
+  {% set counter = 0 %}
   {% for address_form in addresses_form.addresses %}
+  {% set counter = counter + 1 %}
   <dl>
     {{ render_field(address_form.addrName) }}
     {{ render_field(address_form.street1) }}
@@ -106,12 +121,15 @@ Editing {{ user.fname }} {{ user.lname }}'s Profile
     {{ render_field(address_form.city) }}
     {{ render_field(address_form.state) }}
     {{ render_field(address_form.zip_code) }}
-    {{ address_form.delete }}
     {{ address_form.key }}
     {{ address_form.csrf_token }}
+  {% if counter > 1 %}
+  <button type="button" class="removeForm" onClick="removeForm($(this));">Delete</button>
+  {% endif %}
   </dl>
   {% endfor %}
-  <input id="address-addbutton" type="submit" value="Add Address"/>
+  </div>
+  <button id="address-addbutton" type="button">Add Address</button>
   {{ addresses_form.update }}
 </form>
 
