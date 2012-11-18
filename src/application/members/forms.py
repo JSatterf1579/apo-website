@@ -10,44 +10,53 @@ from flaskext.wtf import validators
 
 class AddressForm(wtf.Form):
     addrName = wtf.TextField('Name', [validators.Optional()])
-    street1 = wtf.TextField('Street', [validators.Optional()])
+    street1 = wtf.TextField('Street', [validators.Required()])
     street2 = wtf.TextField('', [validators.Optional()])
-    city = wtf.TextField('City', [validators.Optional()])
-    state = wtf.TextField('State', [validators.Optional()])
-    zip_code = wtf.IntegerField('Zip', [validators.Optional()])
+    city = wtf.TextField('City', [validators.Required()])
+    state = wtf.TextField('State', [validators.Required()])
+    zip_code = wtf.IntegerField('Zip', [validators.Required()])
     key = wtf.HiddenField([validators.Optional()])
     delete = wtf.SubmitField('Delete', [validators.Optional()])
 
 class PhoneNumberForm(wtf.Form):
     phoneName = wtf.TextField('Name', [validators.Optional()])
-    phoneNumber = wtf.TextField('Phone Number', [validators.Optional()])
+    phoneNumber = wtf.TextField('Phone Number', [validators.Required()])
     key = wtf.HiddenField([validators.Optional()])
     delete = wtf.SubmitField('Delete', [validators.Optional()])
 
 class EmailAddressForm(wtf.Form):
     emailName = wtf.TextField('Name', [validators.Optional()])
-    emailAddress = wtf.TextField('Email', [validators.Optional()])
+    emailAddress = wtf.TextField('Email', [validators.Required(),
+                                           validators.Email()])
     key = wtf.HiddenField([validators.Optional()])
     delete = wtf.SubmitField('Delete', [validators.Optional()])
 
-class UpdateUserAdminForm(wtf.Form):
+class AdminUpdateUserForm(wtf.Form):
     cwruid = wtf.TextField('CWRU ID*', [validators.Required()])
     big = wtf.TextField('Big CWRU ID', [validators.Optional()])
     family = wtf.SelectField('Family', [validators.Optional()])
     roles = wtf.SelectMultipleField('Roles', [validators.Optional()])    
-
+    update = wtf.SubmitField('Update', [validators.Optional()])
     
-class UpdateUserForm(wtf.Form):
+class MainUpdateUserForm(wtf.Form):
     fname = wtf.TextField('First Name*', [validators.Required()])
     mname = wtf.TextField('Middle Name', [validators.Optional()])
     lname = wtf.TextField('Last Name*', [validators.Required()])
     avatar = wtf.TextField('Gravatar Email', [validators.Optional(),
                                               validators.Email()])
-    admin_form = wtf.FormField(UpdateUserAdminForm)
-    addresses = wtf.FieldList(wtf.FormField(AddressForm))
-    phone_numbers = wtf.FieldList(wtf.FormField(PhoneNumberForm))
+    update = wtf.SubmitField('Update', [validators.Optional()])
+
+class EmailUpdateForm(wtf.Form):
     emails = wtf.FieldList(wtf.FormField(EmailAddressForm))
     update = wtf.SubmitField('Update', [validators.Optional()])
+
+class AddressUpdateForm(wtf.Form):
+    addresses = wtf.FieldList(wtf.FormField(AddressForm))
+    update = wtf.SubmitField('Update', [validators.Optional()])
+
+class PhoneUpdateForm(wtf.Form):
+    phones = wtf.FieldList(wtf.FormField(PhoneNumberForm))
+    update = wtf.SubmitField('Update', [validators.Optional()])    
 
 class SearchUserForm(wtf.Form):
     fname = wtf.TextField('First Name', [validators.Optional()])

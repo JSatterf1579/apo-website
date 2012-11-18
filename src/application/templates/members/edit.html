@@ -1,5 +1,9 @@
 {% extends "base.html" %}
 
+{% block head_script %}
+<script src="/static/js/members/edit.js"></script>
+{% endblock head_script %}
+
 {% block title %}
 Editing {{ user.fname }} {{ user.lname }}'s Profile
 {% endblock title %}
@@ -7,6 +11,7 @@ Editing {{ user.fname }} {{ user.lname }}'s Profile
 {% block content %}
 
 {% from "_formhelpers.html" import render_field %}
+
 
 <h1>Editing {{ user.fname }} {{ user.lname }}'s Profile</h1>
 
@@ -17,70 +22,100 @@ Editing {{ user.fname }} {{ user.lname }}'s Profile
 <br/>
 {% endif %}
 
+{% if main_user_form %}
 <h3>Main Information</h3>
 <br/>
 <form method="post" action="/members/edit/{{ user.cwruid }}">
   <dl>
-    {{ render_field(update_user_form.fname) }}
-    {{ render_field(update_user_form.mname) }}
-    {{ render_field(update_user_form.lname) }}
-    {{ render_field(update_user_form.avatar) }}
-    {% if show_admin is sameas False %}
-    <div style="display: none;">
-    {% endif %}
-    <br/>
-    <h3>Admin Information</h3>
-    <br/>
-    {{ render_field(update_user_form.admin_form.cwruid) }}
-    {{ render_field(update_user_form.admin_form.big) }}
-    {{ render_field(update_user_form.admin_form.family) }}
-    {{ render_field(update_user_form.admin_form.roles) }}
-    {{ update_user_form.admin_form.csrf_token }}
-    {% if show_admin is sameas False %}
-    </div>
-    {% endif %}
-    <br/>
-    <h3>Email Addresses</h3>
-    <br/>
-    {% for emailForm in update_user_form.emails %}
-      {{ render_field(emailForm.emailName) }}
-      {{ render_field(emailForm.emailAddress) }}
-      {{ emailForm.key }}
-      {{ emailForm.delete }}
-      {{ emailForm.csrf_token }}
-    {% endfor %}
-
-    <br/>
-    <h3>Phone Numbers</h3>
-    <br/>
-
-    {% for phoneForm in update_user_form.phone_numbers %}
-      {{ render_field(phoneForm.phoneName) }}
-      {{ render_field(phoneForm.phoneNumber) }}
-      {{ phoneForm.key }}
-      {{ phoneForm.delete }}
-      {{ phoneForm.csrf_token }}
-    {% endfor %}
-
-    <br/>
-    <h3>Addresses</h3>
-    <br/>
-    
-    {% for addressForm in update_user_form.addresses %}
-      {{ render_field(addressForm.addrName) }}
-      {{ render_field(addressForm.street1) }}
-      <dd>{{ addressForm.street2 }}</dd>
-      {{ render_field(addressForm.city) }}
-      {{ render_field(addressForm.state) }}
-      {{ render_field(addressForm.zip_code) }}
-      {{ addressForm.key }}
-      {{ addressForm.delete }}
-      {{ addressForm.csrf_token }}
-    {% endfor %}
-    {{ update_user_form.csrf_token }}
+    {{ render_field(main_user_form.fname) }}
+    {{ render_field(main_user_form.mname) }}
+    {{ render_field(main_user_form.lname) }}
+    {{ render_field(main_user_form.avatar) }}
+    {{ main_user_form.csrf_token }}
+    {{ main_user_form.update }}
   </dl>
-  <p>{{ update_user_form.update }}</p>
-  <p>* required field</p>
 </form>
+{% endif %}
+
+{% if admin_user_form %}
+<br/>
+<h3>Admin Information</h3>
+<br/>
+<form method="post" action="/members/edit/{{ user.cwruid }}">
+  <dl>
+    {{ render_field(admin_user_form.admin_form.cwruid) }}
+    {{ render_field(admin_user_form.admin_form.big) }}
+    {{ render_field(admin_user_form.admin_form.family) }}
+    {{ render_field(admin_user_form.admin_form.roles) }}
+    {{ admin_user_form.csrf_token }}
+    {{ admin_user_form.update }}
+  </dl>
+</form>
+{% endif %}
+
+<br/>
+<h3>Email Address</h3>
+<br/>
+
+<form id="emails">
+  {% for email_form in emails_form.emails %}
+  <div id="fields">
+  <dl>
+    {{ render_field(email_form.emailName) }}
+    {{ render_field(email_form.emailAddress) }}
+    {{ email_form.key }}
+    {{ email_form.csrf_token }}
+  </dl>
+  </div>
+  {% endfor %}
+  <button id="email-addbutton" type="button">Add Email</button>
+  {{ emails_form.update }}
+</form>
+
+
+<br/>
+<h3>Phone Numbers</h3>
+<br/>
+
+<form id="phones">
+  {% for phone_form in phones_form.phones %}
+  <dl>
+    {{ render_field(phone_form.phoneName) }}
+    {{ render_field(phone_form.phoneNumber) }}
+    {{ phone_form.delete }}
+    {{ phone_form.key }}
+    {{ phone_form.csrf_token }}
+  </dl>
+  {% endfor %}
+  <input id="phone-addbutton" type="submit" value="Add Phone Number"/>
+  {{ phones_form.update }}
+</form>
+
+
+
+<br/>
+<h3>Addresses</h3>
+<br/>
+
+<form id="addresses">
+  {% for address_form in addresses_form.addresses %}
+  <dl>
+    {{ render_field(address_form.addrName) }}
+    {{ render_field(address_form.street1) }}
+    {{ render_field(address_form.street2) }}
+    {{ render_field(address_form.city) }}
+    {{ render_field(address_form.state) }}
+    {{ render_field(address_form.zip_code) }}
+    {{ address_form.delete }}
+    {{ address_form.key }}
+    {{ address_form.csrf_token }}
+  </dl>
+  {% endfor %}
+  <input id="address-addbutton" type="submit" value="Add Address"/>
+  {{ addresses_form.update }}
+</form>
+
+
+
 
 {% endblock content %}

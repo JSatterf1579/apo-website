@@ -258,60 +258,32 @@ def edit_user(cwruid):
         return render_template('404.html'), 404
 
 
-    # if true then an empty address, phone and email form will be added
-    add_empty = True
-    
     # populate the form
-    form = forms.UpdateUserForm(request.form)
+    main_form = forms.MainUpdateUserForm(request.form)
+    admin_form = forms.AdminUpdateUserForm(request.form)
+    emails_form = forms.EmailUpdateForm(request.form)
+    addresses_form = forms.AddressUpdateForm(request.form)
+    phones_form = forms.PhoneUpdateForm(request.form)
 
     # set the choices
-    form.admin_form.family.choices = get_family_choices()
-    form.admin_form.roles.choices = get_role_choices()
+    admin_form.family.choices = get_family_choices()
+    admin_form.roles.choices = get_role_choices()
 
     # process the data
-    if request.method == 'POST' and form.validate():
-        add_empty = False
-        if form.update:
-            # data was updated so save everything from the forms
-            flash('Updating')
-        
-            for emailForm in form.emails:
-                if emailForm.delete.data:
-                    # delete the email from the db
-                    if emailForm.key.data != '':
-                        email = db.get(emailForm.key.data)
-                        flash('Deleting %s' % email.email)
-                    break
-
-            for numberForm in form.phone_numbers:
-                if numberForm.delete.data:
-                    # delete the phone number from the db
-                    if numberForm.key.data != '':
-                        number = db.get(numberForm.key.data)
-                        flash('Deleting %s' % number.number)
-                    break
-
-            for addressForm in form.addresses:
-                if addressForm.delete.data:
-                    # delete the address from the db
-                    if addressForm.key.data != '':
-                        address = db.get(addressForm.key)
-                        flash('Deleting %s' % address.street1)
-                    break
-
-        
-            
+    if request.method == 'POST' and main_form.validate():
+        pass
 
 
-    form.fname.data = user.fname
-    form.mname.data = user.mname
-    form.lname.data = user.lname
-    form.avatar.data = user.avatar
-    form.admin_form.cwruid.data = user.cwruid
+    main_form.fname.data = user.fname
+    main_form.mname.data = user.mname
+    main_form.lname.data = user.lname
+    main_form.avatar.data = user.avatar
+
+    admin_form.cwruid.data = user.cwruid
     if user.big is not None:
-        form.admin_form.big.data = user.big.cwruid
+        admin_form.big.data = user.big.cwruid
     if user.family is not None:
-        form.admin_form.family.data = user.family.name
+        admin_form.family.data = user.family.name
 
     # get the roles
     query = UserRoleModel.all()
@@ -321,7 +293,7 @@ def edit_user(cwruid):
     for urole in uroles:
         selected_roles.append(urole.role.name)
 
-    form.admin_form.roles.data = selected_roles
+    admin_form.roles.data = selected_roles
 
     # get the emails
     query = models.EmailModel.all()
@@ -336,10 +308,10 @@ def edit_user(cwruid):
             email_data['emailName'] = email.name
         if email.email is not None:
             email_data['emailAddress'] = email.email
-        form.emails.append_entry(wtf.FormField(forms.EmailAddressForm(**email_data)))
+        emails_form.emails.append_entry(wtf.FormField(forms.EmailAddressForm(**email_data)))
 
-    if add_empty:
-        form.emails.append_entry(wtf.FormField(forms.EmailAddressForm()))
+    if len(emails_form.emails) <= 0:
+        emails_form.emails.append_entry(wtf.FormField(forms.EmailAddressForm()))
 
     # get the phone numbers
     query = models.PhoneModel.all()
@@ -354,10 +326,10 @@ def edit_user(cwruid):
             number_data['phoneName'] = number.name
         if number.number is not None:
             number_data['phoneNumber'] = number.number
-        form.phone_numbers.append_entry(wtf.FormField(forms.PhoneNumberForm(**number_data)))
+        phones_form.phones.append_entry(wtf.FormField(forms.PhoneNumberForm(**number_data)))
 
-    if add_empty:
-        form.phone_numbers.append_entry(wtf.FormField(forms.PhoneNumberForm()))
+    if len(phones_form.phones) <= 0:
+        phones_form.phones.append_entry(wtf.FormField(forms.PhoneNumberForm()))
 
     # get the address
     query = models.AddressModel.all()
@@ -378,10 +350,10 @@ def edit_user(cwruid):
             address_data['city'] = address.city
         if address.zip_code is not None:
             address_data['zip_code'] = address.zip_code
-        form.addresses.append_entry(wtf.FormField(forms.AddressForm(**address_data)))
+        addresses_form.addresses.append_entry(wtf.FormField(forms.AddressForm(**address_data)))
 
-    if add_empty:
-        form.addresses.append_entry(wtf.FormField(forms.AddressForm()))
+    if len(addresses_form.addresses):
+        addresses_form.addresses.append_entry(wtf.FormField(forms.AddressForm()))
         
     # if this is a post process the data
 
@@ -391,7 +363,9 @@ def edit_user(cwruid):
 
     # render the edit template
     return render_template('members/edit.html',
-                           update_user_form=form,
+                           emails_form=emails_form,
+                           phones_form=phones_form,
+                           addresses_form=addresses_form,
                            change_pass_link=change_pass_link,
                            show_admin=admin,
                            current_user=current_user,
