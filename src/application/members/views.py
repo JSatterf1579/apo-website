@@ -288,7 +288,7 @@ def edit_user(cwruid):
                     # try and see what email was updated
                     index = None
                     for i, email in enumerate(emails):
-                        if email.key() == email_form.key.data:
+                        if str(email.key()) == email_form.key.data:
                             email.name = email_form.emailName.data
                             email.email = email_form.emailAddress.data
                             email.put()
@@ -297,7 +297,8 @@ def edit_user(cwruid):
                     # remove from the list so that
                     # only emails with no associated
                     # forms get deleted at the end
-                    del emails[index]
+                    if index is not None:
+                        del emails[index]
             for email in emails:
                 email.delete()
 
@@ -323,13 +324,14 @@ def edit_user(cwruid):
                     # try and see what phone was updated
                     index = None
                     for i, phone in enumerate(phones):
-                        if phone.key() == phone_form.key.data:
+                        if str(phone.key()) == phone_form.key.data:
                             phone.name = name
                             phone.number = phone_form.phoneNumber.data
                             phone.put()
                             index = i
                             break
-                    del phones[index]
+                    if index is not None:
+                        del phones[index]
             for phone in phones:
                 phone.delete()
             
@@ -358,7 +360,7 @@ def edit_user(cwruid):
                     # try and see what address was updated
                     index = None
                     for i, address in enumerate(addresses):
-                        if address.key() == address_form.key.data:
+                        if str(address.key()) == address_form.key.data:
                             address.name = name
                             address.street1 = address_form.street1.data
                             address.city = address_form.city.data
@@ -368,11 +370,22 @@ def edit_user(cwruid):
                             address.put()
                             index = i
                             break
-                    del addresses[index]
+                    if index is not None:
+                        del addresses[index]
             for address in addresses:
                 address.delete()
 
-    flash(phones_form.errors,'error')
+    # populate the form
+    main_form = forms.MainUpdateUserForm()
+    admin_form = forms.AdminUpdateUserForm()
+    emails_form = forms.EmailUpdateForm()
+    addresses_form = forms.AddressUpdateForm()
+    phones_form = forms.PhoneUpdateForm()
+
+    # set the choices
+    admin_form.family.choices = get_family_choices()
+    admin_form.roles.choices = get_role_choices()
+
 
 
     main_form.fname.data = user.fname
@@ -402,14 +415,14 @@ def edit_user(cwruid):
     emails = query.fetch(query.count())
 
     # create the email forms
-    for email in emails:
-        email_data = {}
-        email_data['key'] = email.key()
+    offset = len(emails_form.emails)
+    for i, email in enumerate(emails):
+        emails_form.emails.append_entry(wtf.FormField(forms.EmailAddressForm()))
+        emails_form.emails[i+offset].key.data = str(email.key())
         if email.name is not None:
-            email_data['emailName'] = email.name
+            emails_form.emails[i+offset].emailName.data = email.name
         if email.email is not None:
-            email_data['emailAddress'] = email.email
-        emails_form.emails.append_entry(wtf.FormField(forms.EmailAddressForm(**email_data)))
+            emails_form.emails[i+offset].emailAddress.data = email.email
 
     if len(emails_form.emails) <= 0:
         emails_form.emails.append_entry(wtf.FormField(forms.EmailAddressForm()))
@@ -420,14 +433,14 @@ def edit_user(cwruid):
     numbers = query.fetch(query.count())
 
     # create the phone numbers forms
-    for number in numbers:
-        number_data = {}
-        number_data['key'] = number.key()
+    offset = len(phones_form.phones)
+    for i, number in enumerate(numbers):
+        phones_form.phones.append_entry(wtf.FormField(forms.PhoneNumberForm()))
+        phones_form.phones[i+offset].key.data = str(number.key())
         if number.name is not None:
-            number_data['phoneName'] = number.name
+            phones_form.phones[i+offset].phoneName.data = number.name
         if number.number is not None:
-            number_data['phoneNumber'] = number.number
-        phones_form.phones.append_entry(wtf.FormField(forms.PhoneNumberForm(**number_data)))
+            phones_form.phones[i+offset].phoneNumber.data = number.number
 
     if len(phones_form.phones) <= 0:
         phones_form.phones.append_entry(wtf.FormField(forms.PhoneNumberForm()))
@@ -438,20 +451,22 @@ def edit_user(cwruid):
     addresses = query.fetch(query.count())
 
     # create the address forms
-    for address in addresses:
-        address_data = {}
-        address_data['key'] = address.key()
+    offset = len(addresses_form.addresses)
+    for i, address in enumerate(addresses):
+        addresses_form.addresses.append_entry(wtf.FormField(forms.AddressForm()))
+        addresses_form.addresses[i+offset].key.data = str(address.key())
         if address.name is not None:
-            address_data['addrName'] = address.name
+             addresses_form.addresses[i+offset].addrName.data = address.name
         if address.street1 is not None:
-            address_data['street1'] = address.street1
+            addresses_form.addresses[i+offset].street1.data = address.street1
         if address.street2 is not None:
-            address_data['street2'] = address.street2
+            addresses_form.addresses[i+offset].street2.data = address.street2
         if address.city is not None:
-            address_data['city'] = address.city
+            addresses_form.addresses[i+offset].city.data = address.city
+        if address.state is not None:
+            addresses_form.addresses[i+offset].state.data = address.state
         if address.zip_code is not None:
-            address_data['zip_code'] = address.zip_code
-        addresses_form.addresses.append_entry(wtf.FormField(forms.AddressForm(**address_data)))
+            addresses_form.addresses[i+offset].zip_code.data = address.zip_code
 
     if len(addresses_form.addresses) <= 0:
         addresses_form.addresses.append_entry(wtf.FormField(forms.AddressForm()))
