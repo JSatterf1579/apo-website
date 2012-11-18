@@ -33,7 +33,6 @@ class AdminUpdateUserForm(wtf.Form):
     big = wtf.TextField('Big CWRU ID', [validators.Optional()])
     family = wtf.SelectField('Family', [validators.Optional()])
     roles = wtf.SelectMultipleField('Roles', [validators.Optional()])    
-    update = wtf.SubmitField('Update', [validators.Optional()])
     
 class MainUpdateUserForm(wtf.Form):
     fname = wtf.TextField('First Name*', [validators.Required()])
@@ -41,19 +40,15 @@ class MainUpdateUserForm(wtf.Form):
     lname = wtf.TextField('Last Name*', [validators.Required()])
     avatar = wtf.TextField('Gravatar Email', [validators.Optional(),
                                               validators.Email()])
-    update = wtf.SubmitField('Update', [validators.Optional()])
 
 class EmailUpdateForm(wtf.Form):
     emails = wtf.FieldList(wtf.FormField(EmailAddressForm))
-    update = wtf.SubmitField('Update Email Addresses', [validators.Optional()])
 
 class AddressUpdateForm(wtf.Form):
     addresses = wtf.FieldList(wtf.FormField(AddressForm))
-    update = wtf.SubmitField('Update Addresses', [validators.Optional()])
 
 class PhoneUpdateForm(wtf.Form):
     phones = wtf.FieldList(wtf.FormField(PhoneNumberForm))
-    update = wtf.SubmitField('Update Phone Numbers', [validators.Optional()])    
 
 class SearchUserForm(wtf.Form):
     fname = wtf.TextField('First Name', [validators.Optional()])

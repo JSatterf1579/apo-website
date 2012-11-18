@@ -20,7 +20,7 @@ from members import get_family_choices, get_role_choices
 from members import send_new_user_mail
 from members import get_avatar_url
 
-from flask import render_template, flash, url_for, redirect, request
+from flask import render_template, flash, url_for, redirect, request, jsonify
 
 from google.appengine.api import mail
 
@@ -213,14 +213,148 @@ def view_user(cwruid):
                            numbers=numbers,
                            addresses=addresses)
                            
-                           
+def check_permissions(cwruid):
+    """
+    Returns a permissions tuple.
 
+    The first element in the tuple is whether the current
+    account is the account being accessed.
+
+    The second element in the tuple is whether the current
+    user is a webmaster
+    """
+
+    # see if the user is the current user
+    same_user = False
+    if current_user.cwruid == cwruid:
+        same_user = True
+
+    # see if the user is an admin
+    admin_user = False
+
+    query = UserRoleModel.all()
+    query.filter('user =', current_user.key())
+    uroles = query.fetch(query.count())
+    for urole in uroles:
+        if urole.role.name == 'webmaster':
+            admin_user = True
+            break
+
+    return (same_user, admin_user)
+
+def permission_denied(cwruid):
+    """
+    If the user does not have the permissions required by the page
+    then the user is redirected to the login page
+    with a message stating that they do not have the permissions
+    """
+    import urllib, urlparse
+
+    flash("You don't have permssion to access this page", 'error')
+    params = '?%s=%s' % ('next', urllib.quote_plus(url_for('display_edit_user_account', cwruid=cwruid)))
+    return redirect(urlparse.urljoin(request.host_url, url_for('login'))+params)
+    
+
+@app.route('/members/edit/<cwruid>/account', methods=['GET', 'POST'])
 @app.route('/members/edit/<cwruid>', methods=['GET', 'POST'])
 @login_required
-def edit_user(cwruid):
+def display_edit_user_account(cwruid):
     """
     This view allows the user and administrators
-    to edit the profile of that user
+    to edit the account information of that user
+    """
+    import urllib, urlparse
+
+    permissions = check_permissions(cwruid)
+    if not permissions[0] and not permissions[1]:
+        return permission_denied(cwruid)
+
+    # get the user object for this page
+    try:
+        user = find_users(1,cwruid=('=', cwruid))[0]
+    except IndexError:
+        return render_template('400.html'), 404
+
+    main_form = forms.MainUpdateUserForm(None)
+
+    # initialize admin form if this user has
+    # admin privileges
+    admin_form = None
+    if permissions[1]:
+        admin_form = forms.AdminUpdateUserForm(None)
+
+        # set the choices
+        admin_form.family.choices = get_family_choices()
+        admin_form.roles.choices = get_role_choices()
+
+    # populate the main form
+    main_form.fname.data = user.fname
+    main_form.mname.data = user.mname
+    main_form.lname.data = user.lname
+    main_form.avatar.data = user.avatar
+
+    # initialize the admin_form if needed
+    if admin_form is not None:
+        admin_form.cwruid.data = user.cwruid
+        if user.big is not None:
+            admin_form.big.data = user.big.cwruid
+        if user.family is not None:
+            admin_form.family.data = user.family.name
+
+        query = UserRoleModel.all()
+        query.filter('user =', user.key())
+        uroles = query.fetch(query.count())
+
+        roles = []
+        for urole in uroles:
+            roles.append(urole.role.name)
+
+        admin_form.roles.data = roles
+
+    return render_template('members/edit_account.html',
+                           user=user,
+                           permissions=permissions,
+                           main_form=main_form,
+                           admin_form=admin_form)
+
+@app.route('/members/edit/<cwruid>/account/mainform/json', methods=['POST'])
+@login_required
+def handle_edit_account_main_json(cwruid):
+    """
+    This view allows the user and administrators
+    to submit an ajax update request
+    """
+    main_form = forms.MainUpdateUserForm()
+
+    if main_form.validate():
+        return jsonify({'result':'success'})
+    else:
+        return jsonify({'result':'failure', 'name':'main', 'errors': main_form.errors})
+
+@app.route('/members/edit/<cwruid>/account/adminform/json', methods=['POST'])
+def handle_edit_account_admin_json(cwruid):
+    """
+    This view handles the AJAX request
+    for the AdminUpdateUserForm submission
+    from the display_edit_account(cwruid) view
+    """
+    admin_form = forms.AdminUpdateUserForm()
+
+    # set the choices
+    admin_form.family.choices = get_family_choices()
+    admin_form.roles.choices = get_role_choices()
+
+    if admin_form.validate():
+        return jsonify({'result':'success'})
+    else:
+        return jsonify({'result':'failure', 'name':'admin', 'errors': admin_form.errors})
+    
+@app.route('/members/edit/<cwruid>/contacts', methods=['GET', 'POST'])
+@login_required
+def display_edit_user_contact(cwruid):
+    """
+    This view allows the user and administrators
+    to edit the contact information of that user
     """
     from flaskext import wtf
     
@@ -504,3 +638,41 @@ def edit_user(cwruid):
                            current_user=current_user,
                            user=user)
 
+@app.route('/members/edit/<cwruid>/contacts/emails/json', methods=['POST'])
+@login_required
+def handle_edit_contacts_emails_json(cwruid):
+    """
+    This method handles the submission
+    of the EmailUpdateForm submitted from the
+    display_edit_contacts view
+    """
+    pass
+
+@app.route('/members/edit/<cwruid>/contacts/phones/json', methods=['POST'])
+@login_required
+def handle_edit_contacts_phones_json(cwruid):
+    """
+    This method handles the submission
+    of the PhoneUpdateForm submitted from the
+    display_edit_contacts view
+    """
+    pass
+
+@app.route('/members/edit/<cwruid>/contacts/addresses/json', methods=['POST'])
+@login_required
+def handle_edit_contacts_addresses_json(cwruid):
+    """
+    This method handles the submission of the
+    AddressUpdateForm. It is submitted from the
+    display_edit_contacts view
+    """
+    pass
+
+@app.route('/members/edit/<cwruid>/profile', methods=['GET', 'POST'])
+@login_required
+def display_edit_user_profile(cwruid):
+    """
+    This view allows the user and administrators to
+    edit the profile of that user
+    """
+    return "Not yet implemented!"
