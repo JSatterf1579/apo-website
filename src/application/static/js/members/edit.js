@@ -58,7 +58,6 @@ function processData(data)
 	if(data.result != 'success') // an error has occurred
 	{
 	    window.requestErrors = true;
-	
 
 	    var form = $('#'+data.name);
 	    for(var key in data.errors)
@@ -76,4 +75,5 @@ function processData(data)
 	}
     }
 }
+	    
 

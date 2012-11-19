@@ -323,6 +323,11 @@ def handle_edit_account_main_json(cwruid):
     This view allows the user and administrators
     to submit an ajax update request
     """
+
+    permissions = check_permissions(cwruid)
+    if not permissions[0] and not permissions[1]:
+        return jsonify({'result':'failure', 'msg':'Permission denied'})
+
     main_form = forms.MainUpdateUserForm()
 
     if main_form.validate():
@@ -347,6 +352,11 @@ def handle_edit_account_admin_json(cwruid):
     for the AdminUpdateUserForm submission
     from the display_edit_account(cwruid) view
     """
+    
+    permissions = check_permissions(cwruid)
+    if not permissions[0] and not permissions[1]:
+        return jsonify({'result':'failure', 'msg':'Permission denied'})
+
     admin_form = forms.AdminUpdateUserForm()
 
     # set the choices
@@ -500,164 +510,6 @@ def display_edit_user_contact(cwruid):
                            current_user=current_user,
                            user=user)
 
-# move me to new functions    
-    # process the data
-    if request.method == 'POST':
-        result = 'success'
-        if 'emails' in request.args:
-            if emails_form.validate():
-                query = models.EmailModel.all()
-                query.filter('user =', user.key())
-                emails = query.fetch(query.count())
-                for email_form in emails_form.emails:
-                    if email_form.key.data == '':
-                        # create new email
-                        name = email_form.emailName.data
-                        if name == '':
-                            name = None
-                        email = models.EmailModel(user=user.key(),
-                                                  email=email_form.emailAddress.data,
-                                                  name=name)
-                        email.put()
-                    else:
-                        # try and see what email was updated
-                        index = None
-                        for i, email in enumerate(emails):
-                            if str(email.key()) == email_form.key.data:
-                                email.name = email_form.emailName.data
-                                email.email = email_form.emailAddress.data
-                                email.put()
-                                index = i
-                                break
-                        # remove from the list so that
-                        # only emails with no associated
-                        # forms get deleted at the end
-                        if index is not None:
-                            del emails[index]
-                for email in emails:
-                    email.delete()
-
-                emails_form = forms.EmailUpdateForm(None)
-        else:
-            result = 'false'
-            if 'json' in request.args:
-                return json.dumps(result)
-        if 'phones' in request.args and phones_form.validate():
-            query = models.PhoneModel.all()
-            query.filter('user =', user.key())
-            phones = query.fetch(query.count())
-            flash(phones)
-            for phone_form in phones_form.phones:
-                name = phone_form.phoneName.data
-                if name == '':
-                    name = None
-                if phone_form.key.data == '':
-                    # create new phone
-                    phone = models.PhoneModel(user=user.key(),
-                                              number=phone_form.phoneNumber.data,
-                                              name=name)
-                    phone.put()
-                else:
-                    # try and see what phone was updated
-                    index = None
-                    for i, phone in enumerate(phones):
-                        if str(phone.key()) == phone_form.key.data:
-                            phone.name = name
-                            phone.number = phone_form.phoneNumber.data
-                            phone.put()
-                            index = i
-                            break
-                    if index is not None:
-                        del phones[index]
-            for phone in phones:
-                phone.delete()
-
-            phones_form = forms.PhoneUpdateForm(None)
-        else:
-            result = 'false'
-            if 'json' in request.args:
-                return json.dumps(result)
-            
-        if 'addresses in request.args' and addresses_form.validate():
-            query = models.AddressModel.all()
-            query.filter('user =', user.key())
-            addresses = query.fetch(query.count())
-            for address_form in addresses_form.addresses:
-                name = address_form.addrName.data
-                if name == '':
-                    name = None
-                street2 = address_form.street2.data
-                if street2 == '':
-                    street2 = None
-                if address_form.key.data == '':
-                    # create new address
-                    address = models.AddressModel(user=user.key(),
-                                                 street1=address_form.street1.data,
-                                                 street2=street2,
-                                                 city=address_form.city.data,
-                                                 state=address_form.state.data,
-                                                 zip_code=str(address_form.zip_code.data),
-                                                 name=name)
-                    address.put()
-                else:
-                    # try and see what address was updated
-                    index = None
-                    for i, address in enumerate(addresses):
-                        if str(address.key()) == address_form.key.data:
-                            address.name = name
-                            address.street1 = address_form.street1.data
-                            address.city = address_form.city.data
-                            address.state = address_form.state.data
-                            address.zip_code = str(address_form.zip_code.data)
-                            address.street2 = street2
-                            address.put()
-                            index = i
-                            break
-                    if index is not None:
-                        del addresses[index]
-            for address in addresses:
-                address.delete()
-            # clear out the old address form
-            addresses_form = forms.AddressUpdateForm(None)
-        else:
-            result = 'false'
-            if 'json' in request.args:
-                return json.dumps(result)
-
-    if 'json' in request.args:
-        return json.dumps(result)
-                
-    # populate the form
-    main_form = forms.MainUpdateUserForm(None)
-    admin_form = forms.AdminUpdateUserForm(None)
-
-    # set the choices
-    admin_form.family.choices = get_family_choices()
-    admin_form.roles.choices = get_role_choices()
-
-
-
-    main_form.fname.data = user.fname
-    main_form.mname.data = user.mname
-    main_form.lname.data = user.lname
-    main_form.avatar.data = user.avatar
-
-    admin_form.cwruid.data = user.cwruid
-    if user.big is not None:
-        admin_form.big.data = user.big.cwruid
-    if user.family is not None:
-        admin_form.family.data = user.family.name
-
-    # get the roles
-    query = UserRoleModel.all()
-    query.filter('user =', user.key())
-    uroles = query.fetch(query.count())
-    selected_roles = []
-    for urole in uroles:
-        selected_roles.append(urole.role.name)
-
-    admin_form.roles.data = selected_roles
-
 
 @app.route('/members/edit/<cwruid>/contacts/emails/json', methods=['POST'])
 @login_required
@@ -667,6 +519,56 @@ def handle_edit_contacts_emails_json(cwruid):
     of the EmailUpdateForm submitted from the
     display_edit_contacts view
     """
+    permissions = check_permissions(cwruid)
+    if not permissions[0] and not permissions[1]:
+        return jsonify({'result':'failure', 'msg':'Permission denied'})
+
+    emails_form = forms.EmailUpdateForm()
+    
+    if emails_form.validate():
+        try:
+            user = find_users(1, cwruid=('=', cwruid))[0]
+        except IndexError:
+            return jsonify({'result':'failure', 'name':'main', 'errors': {}})
+
+        query = models.EmailModel.all()
+        query.filter('user =', user.key())
+        emails = query.fetch(query.count())
+        for email_form in emails_form.emails:
+            if email_form.key.data == '':
+                # create new email
+                name = email_form.emailName.data
+                if name == '':
+                    name = None
+                email = models.EmailModel(user=user.key(),
+                                          email=email_form.emailAddress.data,
+                                          name=name)
+                email.put()
+            else:
+                # try and see what email was updated
+                index = None
+                for i, email in enumerate(emails):
+                    if str(email.key()) == email_form.key.data:
+                        email.name = email_form.emailName.data
+                        email.email = email_form.emailAddress.data
+                        email.put()
+                        index = i
+                        break
+                # remove from the list so that
+                # only emails with no associated
+                # forms get deleted at the end
+                if index is not None:
+                    del emails[index]
+        for email in emails:
+            email.delete()
+    else:
+        # process errors
+        errors = {}
+        for i, email_form in enumerate(emails_form.emails):
+            for error in email_form.errors:
+                errors['emails-%i-%s' % (i, error)] =  email_form[str(error)].errors
+        return jsonify({'result':'failure', 'name':'emails', 'errors': errors})
+    
     return jsonify({'result':'success'})
 
 @app.route('/members/edit/<cwruid>/contacts/phones/json', methods=['POST'])
@@ -677,6 +579,54 @@ def handle_edit_contacts_phones_json(cwruid):
     of the PhoneUpdateForm submitted from the
     display_edit_contacts view
     """
+    permissions = check_permissions(cwruid)
+    if not permissions[0] and not permissions[1]:
+        return jsonify({'result':'failure', 'msg':'Permission denied'})
+
+    try:
+        user = find_users(1, cwruid=('=', cwruid))[0]
+    except IndexError:
+        return jsonify({'result':'failure', 'name':'main', 'errors': {}})
+        
+    phones_form = forms.PhoneUpdateForm()
+        
+    if phones_form.validate():
+        query = models.PhoneModel.all()
+        query.filter('user =', user.key())
+        phones = query.fetch(query.count())
+        flash(phones)
+        for phone_form in phones_form.phones:
+            name = phone_form.phoneName.data
+            if name == '':
+                name = None
+            if phone_form.key.data == '':
+                # create new phone
+                phone = models.PhoneModel(user=user.key(),
+                                          number=phone_form.phoneNumber.data,
+                                          name=name)
+                phone.put()
+            else:
+                # try and see what phone was updated
+                index = None
+                for i, phone in enumerate(phones):
+                    if str(phone.key()) == phone_form.key.data:
+                        phone.name = name
+                        phone.number = phone_form.phoneNumber.data
+                        phone.put()
+                        index = i
+                        break
+                if index is not None:
+                    del phones[index]
+        for phone in phones:
+            phone.delete()
+    else:
+        # process errors
+        errors = {}
+        for i, phone_form in enumerate(phones_form.phones):
+            for error in phone_form.errors:
+                errors['phones-%i-%s' % (i, error)] =  phone_form[str(error)].errors
+        return jsonify({'result':'failure', 'name':'phones', 'errors': errors})
+        
     return jsonify({'result':'success'})
 
 @app.route('/members/edit/<cwruid>/contacts/addresses/json', methods=['POST'])
@@ -687,6 +637,63 @@ def handle_edit_contacts_addresses_json(cwruid):
     AddressUpdateForm. It is submitted from the
     display_edit_contacts view
     """
+    permissions = check_permissions(cwruid)
+    if not permissions[0] and not permissions[1]:
+        return jsonify({'result':'failure', 'msg':'Permission denied'})
+
+    try:
+        user = find_users(1, cwruid=('=', cwruid))[0]
+    except IndexError:
+        return jsonify({'result':'failure', 'name':'main', 'errors': {}})
+        
+    addresses_form = forms.AddressUpdateForm()
+        
+    if addresses_form.validate():
+        query = models.AddressModel.all()
+        query.filter('user =', user.key())
+        addresses = query.fetch(query.count())
+        for address_form in addresses_form.addresses:
+            name = address_form.addrName.data
+            if name == '':
+                name = None
+            street2 = address_form.street2.data
+            if street2 == '':
+                street2 = None
+            if address_form.key.data == '':
+                # create new address
+                address = models.AddressModel(user=user.key(),
+                                             street1=address_form.street1.data,
+                                             street2=street2,
+                                             city=address_form.city.data,
+                                             state=address_form.state.data,
+                                             zip_code=str(address_form.zip_code.data),
+                                             name=name)
+                address.put()
+            else:
+                # try and see what address was updated
+                index = None
+                for i, address in enumerate(addresses):
+                    if str(address.key()) == address_form.key.data:
+                        address.name = name
+                        address.street1 = address_form.street1.data
+                        address.city = address_form.city.data
+                        address.state = address_form.state.data
+                        address.zip_code = str(address_form.zip_code.data)
+                        address.street2 = street2
+                        address.put()
+                        index = i
+                        break
+                if index is not None:
+                    del addresses[index]
+        for address in addresses:
+            address.delete()
+    else:
+        errors = {}
+        for i, address_form in enumerate(addresses_form.addresses):
+            for error in address_form.errors:
+                errors['addresses-%i-%s' % (i, error)] =  address_form[str(error)].errors
+        return jsonify({'result':'failure', 'name':'addresses', 'errors': errors})
+        
     return jsonify({'result':'success'})
 
 @app.route('/members/edit/<cwruid>/profile', methods=['GET', 'POST'])
@@ -696,4 +703,9 @@ def display_edit_user_profile(cwruid):
     This view allows the user and administrators to
     edit the profile of that user
     """
+
+    permissions = check_permissions(cwruid)
+    if not permissions[0] and not permissions[1]:
+        return jsonify({'result':'failure', 'msg':'Permission denied'})
+    
     return "Not yet implemented!"
