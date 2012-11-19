@@ -19,6 +19,8 @@ import models
 from members import get_family_choices, get_role_choices
 from members import send_new_user_mail
 from members import get_avatar_url
+from members import check_permissions
+from members import permission_denied
 
 from flask import render_template, flash, url_for, redirect, request, jsonify
 
@@ -174,7 +176,9 @@ def view_user(cwruid):
     except IndexError:
         return render_template('404.html'), 404
 
-    if current_user.cwruid == cwruid:
+    show_edit_link = False
+    permissions = check_permissions(cwruid)
+    if permissions[0] or permissions[1]:
         show_edit_link = True
 
     minitial = ''
@@ -212,48 +216,6 @@ def view_user(cwruid):
                            emails=emails,
                            numbers=numbers,
                            addresses=addresses)
-                           
-def check_permissions(cwruid):
-    """
-    Returns a permissions tuple.
-
-    The first element in the tuple is whether the current
-    account is the account being accessed.
-
-    The second element in the tuple is whether the current
-    user is a webmaster
-    """
-
-    # see if the user is the current user
-    same_user = False
-    if current_user.cwruid == cwruid:
-        same_user = True
-
-    # see if the user is an admin
-    admin_user = False
-
-    query = UserRoleModel.all()
-    query.filter('user =', current_user.key())
-    uroles = query.fetch(query.count())
-    for urole in uroles:
-        if urole.role.name == 'webmaster':
-            admin_user = True
-            break
-
-    return (same_user, admin_user)
-
-def permission_denied(cwruid):
-    """
-    If the user does not have the permissions required by the page
-    then the user is redirected to the login page
-    with a message stating that they do not have the permissions
-    """
-    import urllib, urlparse
-
-    flash("You don't have permssion to access this page", 'error')
-    params = '?%s=%s' % ('next', urllib.quote_plus(url_for('display_edit_user_account', cwruid=cwruid)))
-    return redirect(urlparse.urljoin(request.host_url, url_for('login'))+params)
-    
 
 @app.route('/members/edit/<cwruid>/account', methods=['GET', 'POST'])
 @app.route('/members/edit/<cwruid>', methods=['GET', 'POST'])
