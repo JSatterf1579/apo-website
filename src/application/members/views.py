@@ -295,11 +295,10 @@ def display_edit_user_account(cwruid):
 
     # initialize the admin_form if needed
     if admin_form is not None:
-        admin_form.cwruid.data = user.cwruid
-        if user.big is not None:
-            admin_form.big.data = user.big.cwruid
         if user.family is not None:
             admin_form.family.data = user.family.name
+        if user.big is not None:
+            admin_form.big.data = user.big.cwruid
 
         query = UserRoleModel.all()
         query.filter('user =', user.key())
@@ -327,6 +326,16 @@ def handle_edit_account_main_json(cwruid):
     main_form = forms.MainUpdateUserForm()
 
     if main_form.validate():
+        try:
+            user = find_users(1, cwruid=('=', cwruid))[0]
+        except IndexError:
+            return jsonify({'result':'failure', 'name':'main', 'errors': {}})
+
+        user.fname = main_form.fname.data
+        user.mname = main_form.mname.data
+        user.lname = main_form.lname.data
+        user.avatar = main_form.avatar.data
+        user.save()
         return jsonify({'result':'success'})
     else:
         return jsonify({'result':'failure', 'name':'main', 'errors': main_form.errors})
@@ -345,6 +354,54 @@ def handle_edit_account_admin_json(cwruid):
     admin_form.roles.choices = get_role_choices()
 
     if admin_form.validate():
+        try:
+            user = find_users(1, cwruid=('=', cwruid))[0]
+        except IndexError:
+            return jsonify({'result':'failure', 'name':'main', 'errors': {}})
+
+        try:
+            big = find_users(1, cwruid=('=', cwruid))[0]
+        except IndexError:
+            return jsonify({'result':'failure', 'name':'main', 'errors': {}})
+        user.big = big.key()
+
+        query = models.FamilyModel.all()
+        query.filter('name =', admin_form.family.data)
+        try:
+            family = query.fetch(query.count())[0]
+        except IndexError:
+            return jsonify({'result':'failure', 'name':'main', 'errors': {}})
+        user.family = family.key()
+
+        query = UserRoleModel.all()
+        query.filter('user =', user.key())
+        uroles = query.fetch(query.count())
+        for role in admin_form.roles.data:
+
+            index = None
+            for i, urole in enumerate(uroles):
+                if role == urole.role.name:
+                    index = i
+                    break
+                    
+            if index is None:
+                # add it
+                role_query = RoleModel.all()
+                role_query.filter('name =', role)
+                try:
+                    new_role = role_query.fetch(query.count())[0]
+                except IndexError:
+                    return jsonify({'result':'failure', 'name':'main', 'errors': {}})
+                new_urole = UserRoleModel(user=user.key(),
+                                          role=new_role.key())
+                new_urole.put()
+            else:
+                del uroles[index]
+        for urole in uroles:
+            urole.delete()
+
+        user.save()
+        
         return jsonify({'result':'success'})
     else:
         return jsonify({'result':'failure', 'name':'admin', 'errors': admin_form.errors})

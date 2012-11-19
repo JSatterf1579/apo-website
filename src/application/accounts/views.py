@@ -133,7 +133,7 @@ def update_password():
         if current_user.valid_password(form.old_password.data):
             current_user.set_new_password(form.new_password.data)
 
-            return redirect(url_for('edit_user', cwruid=current_user.cwruid))
+            return redirect(url_for('display_edit_user_account', cwruid=current_user.cwruid))
         else:
             form.old_password.errors.append(u'Incorrect password')
 

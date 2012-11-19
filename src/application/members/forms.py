@@ -29,7 +29,6 @@ class EmailAddressForm(wtf.Form):
     key = wtf.HiddenField([validators.Optional()])
 
 class AdminUpdateUserForm(wtf.Form):
-    cwruid = wtf.TextField('CWRU ID*', [validators.Required()])
     big = wtf.TextField('Big CWRU ID', [validators.Optional()])
     family = wtf.SelectField('Family', [validators.Optional()])
     roles = wtf.SelectMultipleField('Roles', [validators.Optional()])    
