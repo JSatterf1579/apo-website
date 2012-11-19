@@ -13,12 +13,13 @@ update the facebook accounts associated with the site.
 
 .. moduleauthor:: Devin Schwab <dts34@case.edu>
 """
+import pdb
 
 from flaskext.flask_login import current_user, login_required
 
 from application import app
 
-from flask import render_template, flash, url_for, redirect, request, make_response
+from flask import render_template, flash, url_for, redirect, request, make_response, jsonify
 
 import json, urlparse, urllib
 
@@ -29,6 +30,7 @@ import models
 from application.accounts.accounts import require_roles
 
 from google.appengine.api import urlfetch
+from google.appengine.ext import db
 
 from secret_keys import FACEBOOK_APP_ID, FACEBOOK_APP_SECRET
 from application.generate_keys import generate_randomkey
@@ -40,15 +42,25 @@ def fb_admin_main():
     UI for managing facebook related settings
     """
     
-    query = models.AccessTokenModel.all()
+    query = models.UserAccessTokenModel.all()
 
-    tokens = query.fetch(query.count())
+    user_tokens = query.fetch(query.count())
 
-    for token in tokens:
+    for token in user_tokens:
         token.time_left = str(token.expiration - dt.datetime.now())
+
+    query = models.PageAccessTokenModel.all()
+
+    page_tokens = query.fetch(query.count())
+
+    query = models.AppAccessTokenModel.all()
+
+    app_tokens = query.fetch(query.count())
         
     return render_template('facebook/admin.html',
-                           tokens=tokens)
+                           user_tokens=user_tokens,
+                           page_tokens=page_tokens,
+                           app_tokens=app_tokens)
 
 @app.route('/facebook/admin/delete-user-access/<username>')
 @require_roles(names=['webmaster'])
@@ -56,13 +68,27 @@ def fb_admin_del_user_access(username):
     """
     Removes all tokens for a given user from the datastore
     """
-    query = models.AccessTokenModel.all()
+    query = models.UserAccessTokenModel.all()
     query.filter('username =', username)
 
     tokens = query.fetch(query.count())
 
+    # find all tokens associated with that user
+    assoc_tokens = []
     for token in tokens:
-        token.delete()
+        query = models.PageAccessTokenModel.all()
+        query.filter('user_token =', token.key())
+
+        assoc_tokens += query.fetch(query.count())
+
+        query = models.AppAccessTokenModel.all()
+        query.filter('user_token =', token.key())
+
+        assoc_tokens += query.fetch(query.count())
+
+    # delete user token and all assoicated tokens
+    db.delete(assoc_tokens)
+    db.delete(tokens)
 
     return redirect(url_for('fb_admin_main'))
 
@@ -81,7 +107,7 @@ def fb_admin_get_user_access():
         login_params['client_id'] = FACEBOOK_APP_ID
         login_params['redirect_uri'] = request.base_url
         login_params['state'] = generate_randomkey(32)
-        login_params['scope'] = 'user_birthday,read_stream'
+        login_params['scope'] = 'manage_pages,user_groups'
 
         resp = make_response(redirect(login_url + '?' + urllib.urlencode(login_params)))
         resp.set_cookie('state', login_params['state'])
@@ -112,9 +138,12 @@ def fb_admin_get_user_access():
             response = urlfetch.fetch(access_url + '?' + urllib.urlencode(extension_params))
 
             response_data = urlparse.parse_qs(response.content)
-
+            
             access_token = response_data['access_token'][0]
-            expires = int(response_data['expires'][0])
+            try:
+                expires = int(response_data['expires'][0])
+            except KeyError:
+                expires = 60*24*60*60
             expiration_date = dt.datetime.now() + dt.timedelta(0,expires)
 
 
@@ -132,13 +161,59 @@ def fb_admin_get_user_access():
             for token in tokens:
                 token.delete()
             
-            token = models.AccessTokenModel(username=username,
+            token = models.UserAccessTokenModel(username=username,
                                             access_token=access_token,
                                             expiration=expiration_date)
 
             token.put()
 
-            return redirect(url_for('fb_admin_main'))
+            return redirect(url_for('fb_admin_get_assoc_tokens'))
                                                    
     else:
         return str(request.arg)
+
+@app.route('/facebook/admin/get-assoc-tokens')
+@require_roles(names=['webmaster'])
+def fb_admin_get_assoc_tokens():
+    """
+    Returns the list of pages associated with each of the tokens
+    in the datastore
+    """
+
+    base_url = 'https://graph.facebook.com/me/accounts'
+    
+    query = models.UserAccessTokenModel.all()
+
+    tokens = query.fetch(query.count())
+
+
+    for token in tokens:
+        params = {'access_token': token.access_token}
+
+        response = urlfetch.fetch(base_url + '?' + urllib.urlencode(params))
+
+        response_data = json.loads(response.content)
+
+        for token_data in response_data['data']:
+
+            if token_data['category'].lower() == 'application':
+                app_token = models.AppAccessTokenModel(name=token_data['name'],
+                                                       user_token=token.key(),
+                                                       app_id=token_data['id'],
+                                                       category=token_data['category'],
+                                                       access_token=token_data['access_token'],
+                                                       expiration=token.expiration)
+                app_token.put()
+            else:
+                page_token = models.PageAccessTokenModel(name=token_data['name'],
+                                                         user_token=token.key(),
+                                                         page_id=token_data['id'],
+                                                         perms=token_data['perms'],
+                                                         category=token_data['category'],
+                                                         access_token=token_data['access_token'],
+                                                         expiration=token.expiration)
+                page_token.put()
+
+        flash('Successfully retrieved access %s along with associated pages and apps permissions' %
+              token.username, 'success')
+    return redirect(url_for('fb_admin_main'))
