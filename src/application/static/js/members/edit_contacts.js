@@ -1,56 +1,43 @@
 $(document).ready(function(){
     $('#email-addbutton').click(function() {
-	addForm('#emails');
+	addForm('emails');
     });
     
     $('#address-addbutton').click(function() {
-	addForm('#addresses');
+	addForm('addresses');
     });
     
     $('#phone-addbutton').click(function() {
-	addForm('#phones');
+	addForm('phones');
     });
 
-    $('.save-button').click(function() {
-	saveAll();
-    });
+
 });
 
-function saveAll() {
-    $('form').each(function() {
-	$.post(this.action, $(this).serialize(),
-	       function(data){
-		   console.log(data);
-	       });
-    });
-}
 
 function addForm(selector){
     // clone the form list
-    var lastnode = $(selector+' dl:last').clone(true);
-
-    var inputs = $('input', lastnode);
-
-    for(var i=0; i < inputs.length; i++)
+    var nodes = $('#'+selector+' dl:first');
+    if(nodes.length == 1 && nodes.parent()[0].getAttribute('id') == selector)
     {
-	inputs[i].setAttribute("id", plusone(inputs[i].getAttribute("id")));
-	inputs[i].setAttribute("name", plusone(inputs[i].getAttribute("name")));
-	if(fieldName(inputs[i].getAttribute("id")) != 'csrf_token')
+	var lastnode = $('#'+selector+' dl:last');
+	var clonednode = lastnode.clone(true);
+	lastnode.parent().remove();
+    }
+    else
+    {
+	var clonednode = $('#'+selector+' dl:last').clone(true);
+	$('.hideForm', clonednode).remove();
+	
+	if($('.removeForm', clonednode).length == 0)
 	{
-	    inputs[i].setAttribute("value", "");
+	    clonednode.append('<button type="button" class="removeForm" onClick="removeForm($(this));">Delete</button>');
 	}
     }
-    
-    var id = inputs[0].getAttribute("id");
 
-    var minusbutton = '<button type="button" class="removeForm" onClick="removeForm($(this));">Delete</button>';
+    $('#'+selector+' div').append(clonednode);
 
-    $(selector+' div').append(lastnode);
-    
-    if($(selector+' div dl .removeForm').length == 0)
-    {
-	$(selector+' div dl:last').append(minusbutton);
-    }
+    renumber(clonednode.parent());
     
 }
 
@@ -64,17 +51,45 @@ function plusone(str){
     );
 }
 
+function setIdNum(str, i){
+    return str.replace(
+	new RegExp("-(\\d+)-", "gi"),
+	function($0, $1){
+	    return "-" + i + "-";
+	}
+    );
+}
+
 function fieldName(name){
     return new RegExp("(\\w+)-(\\d+)-(\\w+)", "gi").exec(name)[3];
 }
 
 function removeForm(obj){
+    // redo the numbering
+    var div = obj.parent().parent();
     obj.parent().remove();
+    renumber(div);
 }
 
 function hideForm(obj){
+    var div = obj.parent().parent();
     var id = obj.parent().parent().parent().attr('id');
     $('#hiddenForms').append('<div id="' + id +'"></div>');
     $('#hiddenForms #'+id).append(obj.parent());
+    renumber(div);
     
+}
+
+function renumber(obj){
+    // redo the numbering of all of the children of the obj passed in
+    var children = obj.children();
+    for( var i=0; i<children.length; i++)
+    {
+	var inputs = $('input', children[i]);
+	for(var j=0; j < inputs.length; j++)
+	{
+	    inputs[j].setAttribute("id", setIdNum(inputs[j].getAttribute("id"), i));
+	    inputs[j].setAttribute("name", setIdNum(inputs[j].getAttribute("name"), i));
+	}
+    }
 }
