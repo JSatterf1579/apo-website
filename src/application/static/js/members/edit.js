@@ -1,86 +1,79 @@
-$(document).ready(function(){
-    $('#email-addbutton').click(function() {
-	addForm('#emails');
-    });
-    
-    $('#address-addbutton').click(function() {
-	addForm('#addresses');
-    });
-    
-    $('#phone-addbutton').click(function() {
-	addForm('#phones');
-    });
+$(document).ready(function() {
+    window.pendingRequests = 0;
+    window.requestErrors = false;
 
-    $('#save-button-top').click(function() {
-	saveAll();
-    });
-
-    $('#save-button-bttm').click(function() {
-	saveAll();
+    $('.save-button').click(function() {
+	$('form').each(function() {
+	    window.pendingRequests++;
+	    window.requestErrors = false;
+	    $('.formval-error').remove()
+	    $.post(this.action, $(this).serialize(),
+		   processData);
+	});
     });
 });
 
-function saveAll() {
-    $('form').each(function() {
-	$.post(this.action+'&json', $(this).serialize(),
-	       function(data){
-		   console.log(data);
-	       });
-    });
-}
-
-function addForm(selector){
-    // clone the form list
-
-    var lastnode = $(selector+' dl:last').clone(true);
-
-    var inputs = $('input', lastnode);
-
-    for(var i=0; i < inputs.length; i++)
+function processData(data)
+{
+    window.pendingRequests--; // decrement the request counter
+    if(window.pendingRequests <= 0) // if this is the last request
     {
-	inputs[i].setAttribute("id", plusone(inputs[i].getAttribute("id")));
-	inputs[i].setAttribute("name", plusone(inputs[i].getAttribute("name")));
-	if(fieldName(inputs[i].getAttribute("id")) != 'csrf_token')
+	if(!window.requestErrors) // if there were no errors display success message
 	{
-	    inputs[i].setAttribute("value", "");
+	    var lastAlert = $('.alert:last');
+	    var newAlert = $('<div></div>', {'class': 'alert alert-success'});
+	    newAlert.append('<i class="icon-ok-sign"></i>&nbsp;');
+	    newAlert.append('<a class="close" data-dismiss="alert">x</a>');
+	    newAlert.append('Successfully saved');
+
+	    if(lastAlert.length <= 0)
+	    {
+		$('#maincontent').prepend(newAlert);
+	    }
+	    else
+	    {
+		lastAlert.after(newAlert);
+	    }
+	}
+	else // if there were errors display error message
+	{
+	    var lastAlert = $('.alert:last');
+	    var newAlert = $('<div></div>', {'class': 'alert alert-error'});
+	    newAlert.append('<i class="icon-exclamation-sign"></i>&nbsp;');
+	    newAlert.append('<a class="close" data-dismiss="alert">x</a>');
+	    newAlert.append('Error saving data see below');
+
+	    if(lastAlert.length <= 0)
+	    {
+		$('#maincontent').prepend(newAlert);
+	    }
+	    else
+	    {
+		lastAlert.after(newAlert);
+	    }
 	}
     }
-    
-    var id = inputs[0].getAttribute("id");
-
-    var minusbutton = '<button type="button" class="removeForm" onClick="removeForm($(this));">Delete</button>';
-
-    $(selector+' div').append(lastnode);
-    
-    console.log($(selector+' div dl .removeForm').length);
-    if($(selector+' div dl .removeForm').length == 0)
+    else // more requests to process
     {
-	$(selector+' div dl:last').append(minusbutton);
-    }
-    
-}
+	if(data.result != 'success') // an error has occurred
+	{
+	    window.requestErrors = true;
+	
 
-function plusone(str){
-    return str.replace(
-	new RegExp("-(\\d+)-", "gi"),
-	function($0, $1){
-	    var i = parseInt($1) + 1;
-	    return "-" + i + "-";
+	    var form = $('#'+data.name);
+	    for(var key in data.errors)
+	    {
+		if (data.errors.hasOwnProperty(key))
+		{
+		    var dd = $('#'+key, form).parent();
+		    if( $('.formval-error', dd).length <= 0)
+		    {
+			dd.append('<ul class="formval-error"></ul>');
+		    }
+		    $('.formval-error', dd).append('<li>' + data.errors[key] + '</li>');
+		}
+	    }
 	}
-    );
+    }
 }
 
-function fieldName(name){
-    return new RegExp("(\\w+)-(\\d+)-(\\w+)", "gi").exec(name)[3];
-}
-
-function removeForm(obj){
-    obj.parent().remove();
-}
-
-function hideForm(obj){
-    var id = obj.parent().parent().parent().attr('id');
-    $('#hiddenForms').append('<div id="' + id +'"></div>');
-    $('#hiddenForms #'+id).append(obj.parent());
-    
-}

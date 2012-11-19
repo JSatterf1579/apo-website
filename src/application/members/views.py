@@ -273,7 +273,7 @@ def display_edit_user_account(cwruid):
     try:
         user = find_users(1,cwruid=('=', cwruid))[0]
     except IndexError:
-        return render_template('400.html'), 404
+        return render_template('404.html'), 404
 
     main_form = forms.MainUpdateUserForm(None)
 
@@ -413,34 +413,10 @@ def display_edit_user_contact(cwruid):
     This view allows the user and administrators
     to edit the contact information of that user
     """
-    from flaskext import wtf
-    
-    import urlparse, urllib
-    import json
-    admin_roles = ['webmaster', 'membership']
-
-    # see if user is admin
-    admin = False
-    query = UserRoleModel.all()
-    query.filter('user =', current_user.key())
-    uroles = query.fetch(query.count())
-    for urole in uroles:
-        if urole.role.name in admin_roles:
-            admin = True
-            break
-    
-    # determine if the user can edit this page
-    if current_user.cwruid != cwruid and not admin:
-        flash("You don't have permission to access this page", 'error')
-        params = '?%s=%s' % ('next', urllib.quote_plus(url_for('edit_user', cwruid=cwruid)))
-        return redirect(urlparse.urljoin(request.host_url, url_for('login')) + params)
-
-    if current_user.cwruid == cwruid:
-        change_pass_link = True
-    else:
-        change_pass_link = False
-
-    # if the program has made it this far then the user has permissions to edit this user
+    from flask.ext import wtf
+    permissions = check_permissions(cwruid)
+    if not permissions[0] and not permissions[1]:
+        return permission_denied(cwruid)
 
     # get the user object and all associated objects
     try:
@@ -449,17 +425,82 @@ def display_edit_user_contact(cwruid):
         return render_template('404.html'), 404
 
 
+    # create blank forms
+    emails_form = forms.EmailUpdateForm(None)
+    addresses_form = forms.AddressUpdateForm(None)
+    phones_form = forms.PhoneUpdateForm(None)
+
     # populate the form
-    main_form = forms.MainUpdateUserForm(request.form)
-    admin_form = forms.AdminUpdateUserForm(request.form)
-    emails_form = forms.EmailUpdateForm(request.form)
-    addresses_form = forms.AddressUpdateForm(request.form)
-    phones_form = forms.PhoneUpdateForm(request.form)
 
-    # set the choices
-    admin_form.family.choices = get_family_choices()
-    admin_form.roles.choices = get_role_choices()
+    # get the emails
+    query = models.EmailModel.all()
+    query.filter('user =', user.key())
+    emails = query.fetch(query.count())
 
+    # create the email forms
+    for i, email in enumerate(emails):
+        emails_form.emails.append_entry(wtf.FormField(forms.EmailAddressForm()))
+        emails_form.emails[i].key.data = str(email.key())
+        if email.name is not None:
+            emails_form.emails[i].emailName.data = email.name
+        if email.email is not None:
+            emails_form.emails[i].emailAddress.data = email.email
+
+    if len(emails_form.emails) <= 0:
+        emails_form.emails.append_entry(wtf.FormField(forms.EmailAddressForm()))
+
+
+    # get the phone numbers
+    query = models.PhoneModel.all()
+    query.filter('user =', user.key())
+    numbers = query.fetch(query.count())
+
+    # create the phone numbers forms
+    for i, number in enumerate(numbers):
+        phones_form.phones.append_entry(wtf.FormField(forms.PhoneNumberForm()))
+        phones_form.phones[i].key.data = str(number.key())
+        if number.name is not None:
+            phones_form.phones[i].phoneName.data = number.name
+        if number.number is not None:
+            phones_form.phones[i].phoneNumber.data = number.number
+
+    if len(phones_form.phones) <= 0:
+        phones_form.phones.append_entry(wtf.FormField(forms.PhoneNumberForm()))
+
+    # get the address
+    query = models.AddressModel.all()
+    query.filter('user =', user.key())
+    addresses = query.fetch(query.count())
+
+    # create the address forms
+    for i, address in enumerate(addresses):
+        addresses_form.addresses.append_entry(wtf.FormField(forms.AddressForm()))
+        addresses_form.addresses[i].key.data = str(address.key())
+        if address.name is not None:
+            addresses_form.addresses[i].addrName.data = address.name
+        if address.street1 is not None:
+            addresses_form.addresses[i].street1.data = address.street1
+        if address.street2 is not None:
+            addresses_form.addresses[i].street2.data = address.street2
+        if address.city is not None:
+            addresses_form.addresses[i].city.data = address.city
+        if address.state is not None:
+            addresses_form.addresses[i].state.data = address.state
+        if address.zip_code is not None:
+            addresses_form.addresses[i].zip_code.data = address.zip_code
+
+    if len(addresses_form.addresses) <= 0:
+        addresses_form.addresses.append_entry(wtf.FormField(forms.AddressForm()))
+        
+    # render the edit template
+    return render_template('members/edit_contacts.html',
+                           emails_form=emails_form,
+                           phones_form=phones_form,
+                           addresses_form=addresses_form,
+                           current_user=current_user,
+                           user=user)
+
+# move me to new functions    
     # process the data
     if request.method == 'POST':
         result = 'success'
@@ -617,83 +658,6 @@ def display_edit_user_contact(cwruid):
 
     admin_form.roles.data = selected_roles
 
-    if len(emails_form.emails) <= 0:
-        # get the emails
-        query = models.EmailModel.all()
-        query.filter('user =', user.key())
-        emails = query.fetch(query.count())
-
-        # create the email forms
-        for i, email in enumerate(emails):
-            emails_form.emails.append_entry(wtf.FormField(forms.EmailAddressForm()))
-            emails_form.emails[i].key.data = str(email.key())
-            if email.name is not None:
-                emails_form.emails[i].emailName.data = email.name
-            if email.email is not None:
-                emails_form.emails[i].emailAddress.data = email.email
-
-        if len(emails_form.emails) <= 0:
-            emails_form.emails.append_entry(wtf.FormField(forms.EmailAddressForm()))
-
-    if len(phones_form.phones) <= 0:
-        # get the phone numbers
-        query = models.PhoneModel.all()
-        query.filter('user =', user.key())
-        numbers = query.fetch(query.count())
-
-        # create the phone numbers forms
-        for i, number in enumerate(numbers):
-            phones_form.phones.append_entry(wtf.FormField(forms.PhoneNumberForm()))
-            phones_form.phones[i].key.data = str(number.key())
-            if number.name is not None:
-                phones_form.phones[i].phoneName.data = number.name
-            if number.number is not None:
-                phones_form.phones[i].phoneNumber.data = number.number
-
-        if len(phones_form.phones) <= 0:
-            phones_form.phones.append_entry(wtf.FormField(forms.PhoneNumberForm()))
-
-    if len(addresses_form.addresses) <= 0:
-        # get the address
-        query = models.AddressModel.all()
-        query.filter('user =', user.key())
-        addresses = query.fetch(query.count())
-
-        # create the address forms
-        for i, address in enumerate(addresses):
-            addresses_form.addresses.append_entry(wtf.FormField(forms.AddressForm()))
-            addresses_form.addresses[i].key.data = str(address.key())
-            if address.name is not None:
-                 addresses_form.addresses[i].addrName.data = address.name
-            if address.street1 is not None:
-                addresses_form.addresses[i].street1.data = address.street1
-            if address.street2 is not None:
-                addresses_form.addresses[i].street2.data = address.street2
-            if address.city is not None:
-                addresses_form.addresses[i].city.data = address.city
-            if address.state is not None:
-                addresses_form.addresses[i].state.data = address.state
-            if address.zip_code is not None:
-                addresses_form.addresses[i].zip_code.data = address.zip_code
-
-        if len(addresses_form.addresses) <= 0:
-            addresses_form.addresses.append_entry(wtf.FormField(forms.AddressForm()))
-        
-    # if this is a post process the data
-
-       # process data!!
-    
-    # see if change password link should be visible
-
-    # render the edit template
-    return render_template('members/edit.html',
-                           emails_form=emails_form,
-                           phones_form=phones_form,
-                           addresses_form=addresses_form,
-                           change_pass_link=change_pass_link,
-                           show_admin=admin,
-                           current_user=current_user,
-                           user=user)
 
 @app.route('/members/edit/<cwruid>/contacts/emails/json', methods=['POST'])
 @login_required
@@ -703,7 +667,7 @@ def handle_edit_contacts_emails_json(cwruid):
     of the EmailUpdateForm submitted from the
     display_edit_contacts view
     """
-    pass
+    return jsonify({'result':'success'})
 
 @app.route('/members/edit/<cwruid>/contacts/phones/json', methods=['POST'])
 @login_required
@@ -713,7 +677,7 @@ def handle_edit_contacts_phones_json(cwruid):
     of the PhoneUpdateForm submitted from the
     display_edit_contacts view
     """
-    pass
+    return jsonify({'result':'success'})
 
 @app.route('/members/edit/<cwruid>/contacts/addresses/json', methods=['POST'])
 @login_required
@@ -723,7 +687,7 @@ def handle_edit_contacts_addresses_json(cwruid):
     AddressUpdateForm. It is submitted from the
     display_edit_contacts view
     """
-    pass
+    return jsonify({'result':'success'})
 
 @app.route('/members/edit/<cwruid>/profile', methods=['GET', 'POST'])
 @login_required

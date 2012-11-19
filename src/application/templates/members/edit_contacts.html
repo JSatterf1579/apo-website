@@ -1,0 +1,180 @@
+{% extends "base.html" %}
+
+{% block head_script %}
+<script src="/static/js/members/edit.js"></script>
+<script src="/static/js/members/edit_contacts.js"></script>
+{% endblock head_script %}
+
+{% block title %}
+Editing {{ user.fname }} {{ user.lname }}'s Profile
+{% endblock title %}
+
+{% block content %}
+
+{% if emails_form.emails[1] %}
+  {% set no_emails = 0 %}
+{% else %}
+  {% set no_emails = 1 %}
+{% endif %}
+
+{% if phones_form.phones[1] %}
+  {% set no_phones = 0 %}
+{% else %}
+  {% set no_phones = 1 %}
+{% endif %}
+
+{% if addresses_form.addresses[1] %}
+  {% set no_addresses = 0 %}
+{% else %}
+  {% set no_addresses = 1 %}
+{% endif %}
+
+{% from "_formhelpers.html" import render_field %}
+
+<div id="hiddenForms" style="display: none;">
+  {% if no_emails == 1 %}
+    <div id="emails">
+    {% set email_form = emails_form.emails[0] %}
+    <dl>
+      {{ render_field(email_form.emailName) }}
+      {{ render_field(email_form.emailAddress) }}
+      {{ email_form.key }}
+      {{ email_form.csrf_token }}
+      <button type="button" class="hideForm" onClick="hideForm($(this));">Delete</button>
+    </dl>
+    </div>
+  {% endif %}
+
+  {% if no_phones == 1 %}
+    <div id="phones">
+    {% set phone_form = phones_form.phones[0] %}
+    <dl>
+      {{ render_field(phone_form.phoneName) }}
+      {{ render_field(phone_form.phoneNumber) }}
+      {{ phone_form.key }}
+      {{ phone_form.csrf_token }}
+      <button type="button" class="hideForm" onClick="hideForm($(this));">Delete</button>
+    </dl>
+    </div>
+  {% endif %}
+  
+  {% if no_addresses == 1 %}
+    <div id="addresses">
+    {% set address_form = addresses_form.addresses[0] %}
+    <dl>
+      {{ render_field(address_form.addrName) }}
+      {{ render_field(address_form.street1) }}
+      {{ render_field(address_form.street2) }}
+      {{ render_field(address_form.city) }}
+      {{ render_field(address_form.state) }}
+      {{ render_field(address_form.zip_code) }}
+      {{ address_form.key }}
+      {{ address_form.csrf_token }}
+      <button type="button" class="hideForm" onClick="hideForm($(this));">Delete</button>
+    </dl>
+    </div>
+  {% endif %}
+</div>
+
+<h1>Editing {{ user.fname }} {{ user.lname }}'s Profile</h1>
+
+
+<br/>
+<h3>Email Address</h3>
+<br/>
+
+<form id="emails" method="post" action="/members/edit/{{ user.cwruid}}/contacts/emails/json">
+  <div class="fields">
+  {% if no_emails == 0 %}
+    {% set counter = 0 %}
+    {% for email_form in emails_form.emails %}
+      {% set counter = counter + 1 %}
+        <dl>
+	  {{ render_field(email_form.emailName) }}
+	  {{ render_field(email_form.emailAddress) }}
+	  {{ email_form.key }}
+	  {{ email_form.csrf_token }}
+	  {% if counter > 1 %}
+	    <button type="button" class="removeForm" onClick="removeForm($(this));">Delete</button>
+	  {% else %}
+	    <button type="button" class="hideForm" onClick="hideForm($(this));">Delete</button>
+	  {% endif %}
+	</dl>
+    {% endfor %}
+  {% endif %}
+  </div>
+  <button id="email-addbutton" type="button">Add Email</button>
+  {{ emails_form.update }}
+  {{ emails_form.csrf_token }}
+</form>
+
+
+<br/>
+<h3>Phone Numbers</h3>
+<br/>
+
+<form id="phones" method="post" action="/members/edit/{{ user.cwruid}}/contacts/phones/json">
+  <div class="fields">
+    {% if no_phones == 0 %}
+      {% set counter = 0 %}
+      {% for phone_form in phones_form.phones %}
+        {% set count = count + 1 %}
+        <dl>
+	  {{ render_field(phone_form.phoneName) }}
+	  {{ render_field(phone_form.phoneNumber) }}
+	  {{ phone_form.key }}
+	  {{ phone_form.csrf_token }}
+	  {% if counter > 1 %}
+	    <button type="button" class="removeForm" onClick="removeForm($(this));">Delete</button>
+	  {% else %}
+	    <button type="button" class="hideForm" onClick="hideForm($(this));">Delete</button>
+	  {% endif %}
+	</dl>
+    {% endfor %}
+  {% endif %}
+  </div>
+  <button id="phone-addbutton" type="button">Add Phone Number</button>
+  {{ phones_form.update }}
+  {{ phones_form.csrf_token }}
+</form>
+
+
+
+<br/>
+<h3>Addresses</h3>
+<br/>
+
+<form id="addresses" method="post" action="/members/edit/{{ user.cwruid}}/contacts/addresses/json">
+  <div class="fields">
+  {% if no_addresses == 0 %}
+    {% set counter = 0 %}
+    {% for address_form in addresses_form.addresses %}
+      {% set counter = counter + 1 %}
+        <dl>
+	  {{ render_field(address_form.addrName) }}
+	  {{ render_field(address_form.street1) }}
+	  {{ render_field(address_form.street2) }}
+	  {{ render_field(address_form.city) }}
+	  {{ render_field(address_form.state) }}
+	  {{ render_field(address_form.zip_code) }}
+	  {{ address_form.key }}
+	  {{ address_form.csrf_token }}
+	  {% if counter > 1 %}
+	    <button type="button" class="removeForm" onClick="removeForm($(this));">Delete</button>
+	  {% else %}
+	    <button type="button" class="hideForm" onClick="hideForm($(this));">Delete</button>
+	  {% endif %}
+	</dl>
+     {% endfor %}
+  {% endif %}
+  </div>
+  <button id="address-addbutton" type="button">Add Address</button>
+  {{ addresses_form.update }}
+  {{ addresses_form.csrf_token }}
+</form>
+
+
+<button class="save-button" type="button">Save all info</button>
+
+
+{% endblock content %}

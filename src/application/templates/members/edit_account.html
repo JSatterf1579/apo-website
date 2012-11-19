@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block head_script %}
-<script src="/static/js/members/edit_account.js"></script>
+<script src="/static/js/members/edit.js"></script>
 
 {% endblock head_script %}
 
@@ -19,7 +19,6 @@ Editing {{ user.fname }} {{ user.lname }}'s Profile
 <ul>
 <li>Account Information</li>
 <li><a href="/members/edit/{{ user.cwruid }}/contacts">Contacts</a><br/></li>
-<li><a href="/members/edit/{{ user.cwruid }}/profile">Profile</a><br/></li>
 </ul>
 </h3>
 
