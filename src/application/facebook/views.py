@@ -14,7 +14,7 @@ update the facebook accounts associated with the site.
 .. moduleauthor:: Devin Schwab <dts34@case.edu>
 """
 
-from flaskext.flask_login import current_user
+from flaskext.flask_login import current_user, login_required
 
 from application import app
 
@@ -22,13 +22,53 @@ from flask import render_template, flash, url_for, redirect, request, make_respo
 
 import json, urlparse, urllib
 
+import datetime as dt
+
+import models
+
+from application.accounts.accounts import require_roles
+
 from google.appengine.api import urlfetch
 
 from secret_keys import FACEBOOK_APP_ID, FACEBOOK_APP_SECRET
 from application.generate_keys import generate_randomkey
 
 @app.route('/facebook/admin')
-def admin_main():
+@require_roles(names=['webmaster'])
+def fb_admin_main():
+    """
+    UI for managing facebook related settings
+    """
+    
+    query = models.AccessTokenModel.all()
+
+    tokens = query.fetch(query.count())
+
+    for token in tokens:
+        token.time_left = str(token.expiration - dt.datetime.now())
+        
+    return render_template('facebook/admin.html',
+                           tokens=tokens)
+
+@app.route('/facebook/admin/delete-user-access/<username>')
+@require_roles(names=['webmaster'])
+def fb_admin_del_user_access(username):
+    """
+    Removes all tokens for a given user from the datastore
+    """
+    query = models.AccessTokenModel.all()
+    query.filter('username =', username)
+
+    tokens = query.fetch(query.count())
+
+    for token in tokens:
+        token.delete()
+
+    return redirect(url_for('fb_admin_main'))
+
+@app.route('/facebook/admin/get-user-access')
+@require_roles(names=['webmaster'])
+def fb_admin_get_user_access():
     """
     Main admin view for Facebook settings
     """
@@ -71,6 +111,34 @@ def admin_main():
 
             response = urlfetch.fetch(access_url + '?' + urllib.urlencode(extension_params))
 
-            return response.content
+            response_data = urlparse.parse_qs(response.content)
+
+            access_token = response_data['access_token'][0]
+            expires = int(response_data['expires'][0])
+            expiration_date = dt.datetime.now() + dt.timedelta(0,expires)
+
+
+            response = urlfetch.fetch('https://graph.facebook.com/me?access_token='+access_token)
+
+            response_data = json.loads(response.content)
+
+            username = response_data['username']
+
+            # delete all existing tokens for this user
+            query = models.AccessTokenModel.all()
+            query.filter('username =', username)
+
+            tokens = query.fetch(query.count())
+            for token in tokens:
+                token.delete()
+            
+            token = models.AccessTokenModel(username=username,
+                                            access_token=access_token,
+                                            expiration=expiration_date)
+
+            token.put()
+
+            return redirect(url_for('fb_admin_main'))
+                                                   
     else:
         return str(request.arg)

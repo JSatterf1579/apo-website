@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block title %}
+Facebook Settings
+{% endblock title %}
+
+{% block head_script %}
+<script src="/static/js/facebook/admin.js"></script>
+{% endblock head_script %}
+
+{% block content %}
+
+<h1>Facebook Settings</h1>
+
+<a id="new-user-link" href="/facebook/admin/get-user-access">Add a new user</a>
+
+<h3>List of User Access Tokens</h3>
+
+<table class="table table-bordered table-striped">
+<tr>
+<th>Username</th>
+<th>Expires On</th>
+<th>Time Left</th>
+<th>Delete Access</th>
+</tr>
+{% for token in tokens %}
+<tr>
+<td>{{ token.username }}</td>
+<td>{{ token.expiration }}</td>
+<td>{{ token.time_left }}</td>
+<td><a href="/facebook/admin/delete-user-access/{{ token.username }}">Delete</a></td>
+</tr>
+{% endfor %}
+</table>
+
+{% endblock content %}
