@@ -10,17 +10,23 @@ Facebook Settings
 
 {% block content %}
 
+{% from "_formhelpers.html" import render_field %}
+
+{% set user_opt_count = 0 %}
+{% set page_opt_count = 0 %}
 <h1>Facebook Settings</h1>
 
 <a id="new-user-link" href="/facebook/admin/get-user-access">Add a new user</a>
 
 <h3>List of User Access Tokens</h3>
 
+<form method="post" action="/facebook/admin/handle-options/json">
 <table class="table table-bordered table-striped">
 <tr>
 <th>Username</th>
 <th>Expires On</th>
 <th>Time Left</th>
+<th>Use Photo Albums</th>
 <th>Delete Access</th>
 </tr>
 {% for token in user_tokens %}
@@ -28,8 +34,12 @@ Facebook Settings
 <td><a name="{{ token.username }}"></a>{{ token.username }}</td>
 <td>{{ token.expiration }}</td>
 <td>{{ token.time_left }}</td>
+<td>{{ token_options.user_options[user_opt_count].use_albums }}</td>
 <td><a href="/facebook/admin/delete-user-access/{{ token.username }}">Delete</a></td>
 </tr>
+{{ token_options.user_options[user_opt_count].token_key }}
+{{ token_options.user_options[user_opt_count].csrf_token }}
+{% set user_opt_count = user_opt_count + 1 %}
 {% endfor %}
 </table>
 
@@ -41,6 +51,7 @@ Facebook Settings
 <th>Username</th>
 <th>Category</th>
 <th>Permissions</th>
+<th>Use Photo Albums</th>
 </tr>
 {% for token in page_tokens %}
 <tr>
@@ -54,9 +65,15 @@ Facebook Settings
   {% endfor %}
   </ul>
 </td>
+<td>{{ token_options.page_options[page_opt_count].use_albums }}</td>
 </tr>
+{{ token_options.page_options[page_opt_count].token_key }}
+{{ token_options.page_options[page_opt_count].csrf_token }}
+{% set page_opt_count = page_opt_count + 1 %}
 {% endfor %}
 </table>
+{{ token_options.csrf_token }}
+</form>
 
 <h3> Application Access Tokens </h3>
 

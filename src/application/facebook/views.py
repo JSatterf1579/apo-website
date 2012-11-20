@@ -21,11 +21,14 @@ from application import app
 
 from flask import render_template, flash, url_for, redirect, request, make_response, jsonify
 
+from flaskext import wtf
+
 import json, urlparse, urllib
 
 import datetime as dt
 
 import models
+import forms
 
 from application.accounts.accounts import require_roles
 
@@ -59,12 +62,66 @@ def fb_admin_main():
     query = models.AppAccessTokenModel.all()
 
     app_tokens = query.fetch(query.count())
-        
+
+    opt_form = forms.MultiAccessTokenOptionsForm(None)
+
+    for i in range(len(user_tokens)):
+        opt_form.user_options.append_entry(wtf.FormField(forms.AccessTokenOptionsForm(None)))
+        opt_form.user_options[i].use_albums.data = user_tokens[i].use_albums
+        opt_form.user_options[i].token_key.data = user_tokens[i].key()
+
+    for i in range(len(page_tokens)):
+        opt_form.page_options.append_entry(wtf.FormField(forms.AccessTokenOptionsForm(None)))
+        opt_form.page_options[i].use_albums.data = page_tokens[i].use_albums
+        opt_form.page_options[i].token_key.data = page_tokens[i].key()
+    
     return render_template('facebook/admin.html',
+                           token_options=opt_form,
                            user_tokens=user_tokens,
                            page_tokens=page_tokens,
                            app_tokens=app_tokens)
 
+@app.route('/facebook/admin/handle-options/json', methods=['POST'])
+@require_roles(names=['webmaster'])
+def fb_admin_handle_options():
+    """
+    Handles the token options form
+    """
+
+    opt_form = forms.MultiAccessTokenOptionsForm(request.form)
+
+    query = models.UserAccessTokenModel.all()
+
+    results = query.fetch(query.count())
+
+    user_tokens = {}
+    for token in results:
+        user_tokens[unicode(token.key())] = token
+
+    query = models.PageAccessTokenModel.all()
+
+    results = query.fetch(query.count())
+
+    page_tokens = {}
+    for token in results:
+        page_tokens[unicode(token.key())] = token
+    
+    if opt_form.validate():
+
+        for user_option in opt_form.user_options:
+            currToken = user_tokens[user_option.token_key.data]
+            currToken.use_albums = user_option.use_albums.data
+            currToken.put()
+
+        for page_option in opt_form.page_options:
+            currToken = page_tokens[page_option.token_key.data]
+            currToken.use_albums = page_option.use_albums.data
+            currToken.put()
+
+        return jsonify({'result':'success'})
+    else:
+        return jsonify({'result':'error'})
+    
 @app.route('/facebook/admin/delete-user-access/<username>')
 @require_roles(names=['webmaster'])
 @nocache

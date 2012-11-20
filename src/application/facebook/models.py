@@ -14,10 +14,10 @@ class AccessTokenModel(PolyModel):
     access_token = db.StringProperty(required=True)
     expiration = db.DateTimeProperty(required=True)
 
-
 class UserAccessTokenModel(AccessTokenModel):
     username = db.StringProperty(required=True)
     user_id = db.StringProperty(required=True)
+    use_albums = db.BooleanProperty(default=True)
 
 class PageAccessTokenModel(AccessTokenModel):
     name = db.StringProperty(required=True)
@@ -25,6 +25,7 @@ class PageAccessTokenModel(AccessTokenModel):
     page_id = db.StringProperty(required=True)
     perms = db.StringListProperty(required=True)
     category = db.StringProperty(required=True)
+    use_albums = db.BooleanProperty(default=True)
 
 class AppAccessTokenModel(AccessTokenModel):
     name = db.StringProperty(required=True)
