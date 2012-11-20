@@ -206,12 +206,16 @@ def view_user(cwruid):
     numbers = query.fetch(query.count())
     
 
+    family  = None
+    if user.family is not None:
+        family = user.family.name.title()
+    
     return render_template('members/view.html',
                            show_edit_link=show_edit_link,
                            user=user,
                            minitial=minitial,
                            avatar=avatar,
-                           family=user.family.name.title(),
+                           family=family,
                            big=user.big,
                            emails=emails,
                            numbers=numbers,
