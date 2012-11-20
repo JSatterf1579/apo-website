@@ -35,8 +35,11 @@ from google.appengine.ext import db
 from secret_keys import FACEBOOK_APP_ID, FACEBOOK_APP_SECRET
 from application.generate_keys import generate_randomkey
 
+from application.decorators import nocache
+
 @app.route('/facebook/admin')
 @require_roles(names=['webmaster'])
+@nocache
 def fb_admin_main():
     """
     UI for managing facebook related settings
@@ -64,6 +67,7 @@ def fb_admin_main():
 
 @app.route('/facebook/admin/delete-user-access/<username>')
 @require_roles(names=['webmaster'])
+@nocache
 def fb_admin_del_user_access(username):
     """
     Removes all tokens for a given user from the datastore
@@ -94,6 +98,7 @@ def fb_admin_del_user_access(username):
 
 @app.route('/facebook/admin/get-user-access')
 @require_roles(names=['webmaster'])
+@nocache
 def fb_admin_get_user_access():
     """
     Main admin view for Facebook settings
@@ -107,7 +112,7 @@ def fb_admin_get_user_access():
         login_params['client_id'] = FACEBOOK_APP_ID
         login_params['redirect_uri'] = request.base_url
         login_params['state'] = generate_randomkey(32)
-        login_params['scope'] = 'manage_pages,user_groups'
+        login_params['scope'] = 'manage_pages,user_groups,publish_actions,publish_stream,user_videos,user_photos,photo_upload,read_stream'
 
         resp = make_response(redirect(login_url + '?' + urllib.urlencode(login_params)))
         resp.set_cookie('state', login_params['state'])
@@ -153,13 +158,7 @@ def fb_admin_get_user_access():
 
             username = response_data['username']
 
-            # delete all existing tokens for this user
-            query = models.AccessTokenModel.all()
-            query.filter('username =', username)
-
-            tokens = query.fetch(query.count())
-            for token in tokens:
-                token.delete()
+            fb_admin_del_user_access(username)
             
             token = models.UserAccessTokenModel(username=username,
                                             access_token=access_token,
@@ -174,6 +173,7 @@ def fb_admin_get_user_access():
 
 @app.route('/facebook/admin/get-assoc-tokens')
 @require_roles(names=['webmaster'])
+@nocache
 def fb_admin_get_assoc_tokens():
     """
     Returns the list of pages associated with each of the tokens
@@ -217,3 +217,68 @@ def fb_admin_get_assoc_tokens():
         flash('Successfully retrieved access %s along with associated pages and apps permissions' %
               token.username, 'success')
     return redirect(url_for('fb_admin_main'))
+
+@app.route('/facebook/test/post/page/text', methods=['GET','POST'])
+@require_roles(names=['webmaster'])
+@nocache
+def fb_admin_post_page_text():
+    """
+    Tests posting to the pages the website has
+    access tokens for
+    """
+
+    query = models.PageAccessTokenModel.all()
+    page_token = query.fetch(1)[0]
+
+    if request.method == "POST":
+        feed_url = 'https://graph.facebook.com/%s/feed' % page_token.page_id
+
+        params = {}
+        params['access_token'] = page_token.access_token
+        params['message'] = request.form['message']
+
+        response = urlfetch.fetch(feed_url,
+                                  method=urlfetch.POST,
+                                  payload=urllib.urlencode(params))
+
+        if response.status_code == 200:
+            response_data = json.loads(response.content)
+            flash('Successfully posted to post id: %s' % response_data['id'],
+                  'success')
+        else:
+            response_data = json.loads(response.content)
+            flash('Error %i: %s' % (response_data['error']['code'],
+                                    response_data['error']['message']),
+                  'error')
+
+    return render_template('facebook/test_post.html',
+                           page=page_token,
+                           url=request.path)
+
+@app.route('/facebook/test/view/photos', methods=['GET'])
+@require_roles(names=['webmaster'])
+@nocache
+def fb_test_view_photos():
+    """
+    Tests viewing photos for a user in the database
+    """
+
+    query = models.PageAccessTokenModel.all()
+    page_token = query.fetch(1)[0]
+
+    params = {}
+    params['access_token'] = page_token.access_token
+
+
+    base_url = "https://graph.facebook.com/%s/albums" % page_token.page_id
+
+    albums_url = base_url + '?' + urllib.urlencode(params)
+    
+    
+    response = urlfetch.fetch(albums_url)
+
+    response_data = json.loads(response.content)
+    
+    return response.content
+
+
