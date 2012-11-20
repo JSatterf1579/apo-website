@@ -158,11 +158,13 @@ def fb_admin_get_user_access():
 
             username = response_data['username']
 
+
             fb_admin_del_user_access(username)
             
             token = models.UserAccessTokenModel(username=username,
-                                            access_token=access_token,
-                                            expiration=expiration_date)
+                                                access_token=access_token,
+                                                expiration=expiration_date,
+                                                user_id=response_data['id'])
 
             token.put()
 

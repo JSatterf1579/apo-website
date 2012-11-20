@@ -17,6 +17,7 @@ class AccessTokenModel(PolyModel):
 
 class UserAccessTokenModel(AccessTokenModel):
     username = db.StringProperty(required=True)
+    user_id = db.StringProperty(required=True)
 
 class PageAccessTokenModel(AccessTokenModel):
     name = db.StringProperty(required=True)
