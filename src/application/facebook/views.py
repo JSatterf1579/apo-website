@@ -281,6 +281,6 @@ def fb_test_view_photos():
 
     response_data = json.loads(response.content)
     
-    return response.content
+    return response_data
 
 
