@@ -29,6 +29,7 @@ import datetime as dt
 
 import models
 import forms
+import facebook
 
 from application.accounts.accounts import require_roles
 
@@ -321,23 +322,33 @@ def fb_test_view_photos():
     """
     Tests viewing photos for a user in the database
     """
+    import pdb
+    tokens = []
+    
+    query = models.UserAccessTokenModel.all()
+    query.filter('use_albums =', True)
+
+    user_tokens = query.fetch(query.count())
 
     query = models.PageAccessTokenModel.all()
-    page_token = query.fetch(1)[0]
+    query.filter('use_albums =', True)
 
-    params = {}
-    params['access_token'] = page_token.access_token
+    page_tokens = query.fetch(query.count())
 
+    albums = []
+    for token in user_tokens:
+        album_list = facebook.AlbumList(token.access_token)
+        album_dict = album_list.get_all_albums_by_name()
+        for key in album_dict:
+            albums.append(album_dict[key])
+        
+    for token in page_tokens:
+        album_list = facebook.AlbumList(token)
+        album_dict = album_list.get_all_albums_by_name()
+        for key in album_dict:
+            albums.append(album_dict[key])
 
-    base_url = "https://graph.facebook.com/%s/albums" % page_token.page_id
-
-    albums_url = base_url + '?' + urllib.urlencode(params)
-    
-    
-    response = urlfetch.fetch(albums_url)
-
-    response_data = json.loads(response.content)
-    
-    return response_data
+    return render_template('facebook/view_albums.html',
+                           albums=albums)
 
 
