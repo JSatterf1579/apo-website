@@ -11,7 +11,13 @@ It utilizes the methods found in the accounts package.
 import urllib, hashlib, urlparse
 
 from models import FamilyModel
-from application.accounts.models import RoleModel
+from application.accounts.models import RoleModel, UserRoleModel
+
+import urlparse, urllib
+
+from flaskext.flask_login import current_user
+
+from flask import render_template, url_for, redirect, flash, request
 
 def get_avatar_url(email, host, size=100, default='/static/img/avatar.png'):
     """
@@ -116,3 +122,44 @@ The APO Website
                    to='%s %s <%s@case.edu>' % (fname, lname, cwruid),
                    subject='Your new account has been created',
                    body=body)
+
+def check_permissions(cwruid):
+    """
+    Returns a permissions tuple.
+
+    The first element in the tuple is whether the current
+    account is the account being accessed.
+
+    The second element in the tuple is whether the current
+    user is a webmaster
+    """
+
+    # see if the user is the current user
+    same_user = False
+    if current_user.cwruid == cwruid:
+        same_user = True
+
+    # see if the user is an admin
+    admin_user = False
+
+    query = UserRoleModel.all()
+    query.filter('user =', current_user.key())
+    uroles = query.fetch(query.count())
+    for urole in uroles:
+        if urole.role.name == 'webmaster':
+            admin_user = True
+            break
+
+    return (same_user, admin_user)
+
+def permission_denied(cwruid):
+    """
+    If the user does not have the permissions required by the page
+    then the user is redirected to the login page
+    with a message stating that they do not have the permissions
+    """
+    import urllib, urlparse
+
+    flash("You don't have permssion to access this page", 'error')
+    params = '?%s=%s' % ('next', urllib.quote_plus(url_for('display_edit_user_account', cwruid=cwruid)))
+    return redirect(urlparse.urljoin(request.host_url, url_for('login'))+params)

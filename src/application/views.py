@@ -87,42 +87,6 @@ def home():
     """
     return render_template('index.html')
 
-@app.route('/exec/members/delete/<cwruID>')
-@login_required
-def deleteUser(cwruID):
-    """
-    View for deleting the user specified by cwruID
-    """
-
-    nextPage = 'listUsers'
-    if current_user.cwruID == cwruID:
-        logout_user()
-        nextPage = 'home'
-
-    success = accounts.deleteUser(cwruID)
-
-    if(success):
-        flash("Successfully deleted account '%s'" % cwruID)
-    else:
-        flash("Failed to delete account '%s'" % cwruID)
-    return redirect(url_for(nextPage))
-
-@app.route('/members/<cwruID>')
-def viewUser(cwruID):
-    """
-    View for viewing the user's profile
-    """
-
-    try:
-        user = accounts.getUsers(limit=1,cwruID=cwruID)[0]
-    except IndexError:
-        return render_template('404.html'), 404
-
-    avatar = accounts.getAvatar(cwruID, request.host_url, size=300)
-
-    return render_template('viewMember.html', user=user, avatar=avatar)
-
-
 @app.route('/hello/<username>')
 def say_hello(username):
     """Contrived example to demonstrate Flask's url routing capabilities
