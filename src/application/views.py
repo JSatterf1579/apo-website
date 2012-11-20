@@ -87,6 +87,13 @@ def home():
     """
     return render_template('index.html')
 
+@app.route('/calendar')
+def calendar():
+    """
+    View for the calendar
+    """
+    return render_template('calendar/calendar.html')
+
 @app.route('/hello/<username>')
 def say_hello(username):
     """Contrived example to demonstrate Flask's url routing capabilities
