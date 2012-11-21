@@ -1,0 +1,26 @@
+.blog-post {
+    border-color: black;
+    border-radius: 11px;
+    border:2px solid;
+    box-shadow:10px 10px 5px #888888;
+    padding:20px;
+    margin:40px;
+}
+
+hr {
+    margin-bottom: 18px;
+    border-top:1px solid #000000;
+}
+
+.comment {
+    border-top:solid;
+    padding:10px;
+}
+
+.author-comment {
+    background-color: #CCFFCC;
+}
+
+.delete-link {
+    text-align: right;
+}

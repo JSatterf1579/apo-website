@@ -26,156 +26,64 @@ import urllib, urlparse
 # this allows the use of the URL decorators and flask-login
 from application import app
 
+from accounts.accounts import require_roles
+
 @app.before_first_request
 def before_first_request():
-    accounts.createUser(firstName='Devin',
-                        lastName='Schwab',
-                        cwruID='dts34',
-                        password='default',
-                        avatar='digidevin@gmail.com')
-    accounts.createUser(firstName='Jon',
-                        lastName='Chan',
-                        cwruID='jtc77',
-                        password='default')
-
-@app.context_processor
-def loginLink():
-    if current_user.is_authenticated():
-        return dict(loggedIn = True,
-                    loginLink='<a href="/logout">Logout %s</a>' % current_user.cwruID)
-    else:
-        return dict(loginLink='<a href="/login">Login</a>')
-
-@app.route('/')
-def home():
-    """
-    View for the homepage
-
-    :rtype: HTML page
-    """
-    return render_template('index.html')
-
-@app.route('/login', methods=['GET', 'POST'])
-def login():
-    """
-    View for the login page
-    """
-    form = forms.LogInForm(request.form)
-
-    if request.method == 'POST' and form.validate():
-
-        # get the User from the database based on the username
-        cwruID = form.username.data
-        password = form.password.data
-        
-        if accounts.verifyLogin(cwruID, password):
-            user = accounts.getUsers(limit=1,cwruID=cwruID)[0]
-            login_user(user)
-
-            try:
-                nextPage = request.args['next']
-            except KeyError:
-                nextPage = 'home'
-            flash('Success! You are now logged.', 'success')
-            return redirect(urlparse.urljoin(request.host_url, nextPage))
-
-        else:
-            flash("Error: Incorrect username or password", 'error')
-            params = '?'
-            for key in request.args:
-                params = params + '%s=%s' % (urllib.quote_plus(key),urllib.quote_plus(request.args[key]))
-            return redirect(urlparse.urljoin(request.path, params)) # try again
-    else:
-        try:
-            next = urllib.quote_plus(request.args['next'])
-        except KeyError:
-            next = urllib.quote_plus('/')
-        return render_template('login.html', loginForm=forms.LogInForm(), next=next)
-
-@app.route('/exec/members/create', methods=['GET', 'POST'])
-@login_required
-def createUser():
-    """
-    View for creating a user
-    """
-
-    form = forms.CreateUpdateProfileForm(request.form)
-    
-    if request.method == 'POST' and form.validate():
-        if form.password.data == '':
-            password = generate_keys.generate_randomkey(10)
-        else:
-            password = form.password.data
-            
-        newUser = accounts.createUser(form.fname.data,
-                                      form.lname.data,
-                                      form.caseid.data,
-                                      password)
-
-        if(form.avatar.data != ''):
-           newUser.avatar = form.avatar.data
-           newUser.put()
-        
-        if newUser is not None:
-            flash("User '%s' created with password '%s'" % (newUser.cwruID,password))
-            if(not current_user.is_authenticated):
-                login_user(newUser)
-        else:
-            flash("Error: User was not created")
-        return redirect(url_for('createUser'))
-        
-    return render_template('createUser.html', userForm=forms.CreateUpdateProfileForm())
-
-@app.route('/exec/members')
-@login_required
-def listUsers():
-    """
-    View for listing users
-    """
-
-    users = accounts.getUsers()
-    return render_template('listMembers.html', users=users)
-
-@app.route('/exec/members/delete/<cwruID>')
-@login_required
-def deleteUser(cwruID):
-    """
-    View for deleting the user specified by cwruID
-    """
-
-    nextPage = 'listUsers'
-    if current_user.cwruID == cwruID:
-        logout_user()
-        nextPage = 'home'
-
-    success = accounts.deleteUser(cwruID)
-
-    if(success):
-        flash("Successfully deleted account '%s'" % cwruID)
-    else:
-        flash("Failed to delete account '%s'" % cwruID)
-    return redirect(url_for(nextPage))
-
-@app.route('/members/<cwruID>')
-def viewUser(cwruID):
-    """
-    View for viewing the user's profile
-    """
-
+    from accounts.models import UserRoleModel, RoleModel
+    from members.models import FamilyModel
     try:
-        user = accounts.getUsers(limit=1,cwruID=cwruID)[0]
-    except IndexError:
-        return render_template('404.html'), 404
+        boehms = FamilyModel(name='boehms')
+        boehms.put()
+        snm = FamilyModel(name='s & m')
+        snm.put()
+        newpham = FamilyModel(name='new pham')
+        newpham.put()
 
-    avatar = accounts.getAvatar(cwruID, request.host_url, size=300)
+        accounts.accounts.create_user('Devin',
+                                      'Schwab',
+                                      'dts34',
+                                      'default',
+                                      family=boehms.key(),
+                                      avatar='digidevin@gmail.com')
+        accounts.accounts.create_user('Jon',
+                                      'Chan',
+                                      'jtc77',
+                                      'default')
 
-    return render_template('viewMember.html', user=user, avatar=avatar)
+        
+        webmaster_role = RoleModel(name='webmaster', desc='administrator for the website')
+        webmaster_role.put()
+        brother_role = RoleModel(name='brother', desc='general brother in the chapter')
+        brother_role.put()
+        pledge_role = RoleModel(name='pledge', desc='pledge in the chapter')
+        pledge_role.put()
+        neophyte_role = RoleModel(name='neophyte', desc='neophyte in the chapter')
+        neophyte_role.put()
+        
+    
+        default_users = accounts.accounts.find_users()
+        urole1 = UserRoleModel(user=default_users[0].key(), role=webmaster_role.key())
+        urole2 = UserRoleModel(user=default_users[0].key(), role=brother_role.key())
+        urole3 = UserRoleModel(user=default_users[1].key(), role=webmaster_role.key())
+        urole4 = UserRoleModel(user=default_users[1].key(), role=webmaster_role.key())
 
-@app.route('/logout')
-@login_required
-def logout():
-    logout_user()
-    return redirect(url_for('home'))
+        urole1.put()
+        urole2.put()
+        urole3.put()
+        urole4.put()
+    
+    except AttributeError,e:
+        import os
+        if not os.environ.get('SERVER_SOFTWARE','').startswith('Development'):
+            raise e
+
+@app.route('/calendar')
+def calendar():
+    """
+    View for the calendar
+    """
+    return render_template('calendar/calendar.html')
 
 @app.route('/hello/<username>')
 def say_hello(username):

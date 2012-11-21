@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}
+List Users
+{% endblock title %}
+
+{% block content %}
+
+<h1>All Members</h1>
+
+<a href="/members/create">Create new member</a>
+
+<table class="table table-bordered table-striped">
+<tr>
+<th>First Name</th>
+<th>Last Name</th>
+<th>Case ID</th>
+<th>View Profile</th>
+<th>Edit Profile</th>
+<th>Delete Profile</th>
+</tr>
+{% for user in users %}
+<tr>
+<td>{{ user.fname }}</td>
+<td>{{ user.lname }}</td>
+<td>{{ user.cwruid }}</td>
+<td><a href="/members/view/{{ user.cwruid }}">View</a></td>
+<td><a href="/members/edit/{{ user.cwruid }}">Edit</a></td>
+<td><a href="/members/delete/{{ user.cwruid }}">Delete</a></td>
+</tr>
+{% endfor %}
+</table>
+
+
+{% endblock content %}

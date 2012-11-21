@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block title %}
+APO Theta Upsilon
+{% endblock title %}
+
+{% block style_block %}
+<link rel="stylesheet" type="text/css" href="/static/markitup/skins/markitup/style.css" />
+<link rel="stylesheet" type="text/css" href="/static/markitup/sets/default/style.css" />
+<link rel="stylesheet" type="text/css" href="/static/css/blog/main.css" />
+{% endblock style_block %}
+
+{% block head_script %}
+<script type="text/javascript" src="/static/markitup/jquery.markitup.js"></script>
+<script type="text/javascript" src="/static/markitup/sets/default/set.js"></script>
+<script type="text/javascript">
+$(document).ready(function() {
+    $("#new-post-form textarea").markItUp(mySettings);
+});
+</script>
+{% endblock head_script %}
+
+
+
+{% block content %}
+
+{% if new_post %}
+{% from "_formhelpers.html" import render_field %}
+
+<div id="new-post-form" style="display: none;">
+<h2>Create a New Post</h2>
+<form method="post" action="/">
+{{ render_field(new_post.title) }}
+{{ render_field(new_post.text) }}
+{{ new_post.csrf_token }}
+<input type="submit" value="Post">
+</form>
+</div>
+
+<a onClick="$('#new-post-form').css('display', ''); $(this).remove()">Create New Post</a>
+<br/>
+<br/>
+{% endif %}
+
+{% for post in posts %}
+<div class="blog-post">
+<h2>{{ post.title }}</h2><br/>
+<h4>Posted by <a href="/members/view/{{ post.author.cwruid }}">{{ post.author.fname }} {{post.author.lname}}</a> at {{ post.timestamp }}</h4><br/>
+<br/>
+{{ post.text|safe }}
+<br/>
+<hr/>
+<h4><a href="/blog/view/{{ post.url_timestamp}}/{{ post.url_title }}">View/Post Comments</a></h4><br/>
+<br/>
+</div>
+{% endfor %}
+
+{% endblock content %}
+

@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block head_script %}
+<script src="/static/js/members/edit.js"></script>
+
+{% endblock head_script %}
+
+{% block title %}
+Editing {{ user.fname }} {{ user.lname }}'s Profile
+{% endblock title %}
+
+{% block content %}
+
+{% from "_formhelpers.html" import render_field %}
+
+<h1>Editing {{ user.fname }} {{ user.lname }}'s Profile</h1>
+<br/>
+<h3>
+<ul>
+<li>Account Information</li>
+<li><a href="/members/edit/{{ user.cwruid }}/contacts">Contacts</a><br/></li>
+</ul>
+</h3>
+
+    <h3>Account Information</h3>
+    <br/>
+    {% if permissions[0] is sameas True %}
+    <h4><a href="/changepassword">Change Password</a></h4>
+    <br/>
+    {% endif %}
+
+    <form id="main" method="post" action="/members/edit/{{ user.cwruid }}/account/mainform/json">
+      <dl>
+	{{ render_field(main_form.fname) }}
+	{{ render_field(main_form.mname) }}
+	{{ render_field(main_form.lname) }}
+	{{ render_field(main_form.avatar) }}
+	{{ main_form.csrf_token }}
+	{{ main_form.update }}
+      </dl>
+    </form>
+
+    {% if admin_form %}
+    <form id="admin" method="post" action="/members/edit/{{ user.cwruid }}/account/adminform/json">
+      <dl>
+	{{ render_field(admin_form.big) }}
+	{{ render_field(admin_form.family) }}
+	{{ render_field(admin_form.roles) }}
+	{{ admin_form.csrf_token }}
+	{{ admin_form.update }}
+      </dl>
+    </form>
+    {% endif %}
+    
+    <button class="save-button" type="button">Save!</button>
+{% endblock content %}
+  

@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+
+{% block title %}
+{{ user.fname }} {{ user.lname }}'s Profile
+{% endblock title %}
+
+{% block content %}
+
+<img src="{{ avatar }}"/> <br/>
+
+<br/>
+<h1>{{ user.fname }} {{ minitial }} {{ user.lname }}</h1>
+<br/>
+
+{% if show_edit_link is sameas True %}
+  <a href="/members/edit/{{ user.cwruid }}">Edit Profile</a>
+  <br/><br/>
+{% endif %}
+
+<table>
+
+{% if big %}
+<tr>
+<td><h4>Big:</h4></td>
+<td><a href="/members/view/{{ big.cwruid }}">{{ big.fname }} {{ big.lname }}</a></td>
+</tr>
+{% endif %}
+
+{% if family %}
+<tr>
+<td><h4>Family:</h4></td>
+<td><a href="/members/family/{{ family }}">{{ family }}</a></td>
+</tr>
+
+{% endif %}
+
+
+{% if emails %}
+<tr>
+<td><h4>Email</h4></td>
+</tr>
+{% for address in emails %}
+<tr>
+  <td />
+  <td><u>{{ address.name }}</u></td> 
+  <td><a href="mailto:{{ address.email }}">{{ address.email }}</a></td>
+</tr>
+{% endfor %}
+{% endif %}
+
+{% if numbers %}
+<tr>
+<td><h4>Phone</h4></td>
+</tr>
+{% for number in numbers %}
+<tr>
+  <td />
+  <td><u>{{ number.name }}</u></td>
+  <td>{{ number.number }}</td>
+</tr>
+{% endfor %}
+{% endif %}
+
+{% if addresses %}
+<tr>
+<td><h4>Address</h4></td>
+<td/>
+</tr>
+{% for address in addresses %}
+<tr>
+  <td />
+  <td><u>{{ address.name }}</u></td>
+</tr>
+<tr>
+  <td />
+  <td>{{ address.street1 }}</td>
+</tr>
+{% if address.street2 %}
+<tr>
+  <td />
+  <td>{{ address.street2 }}</td>
+</tr>
+{% endif %}
+<tr>
+  <td/>
+  <td>{{ address.city }}, {{ address.state }} {{ address.zip_code }}</td>
+</tr>
+{% endfor %}
+{% endif %}
+
+</table>
+
+{% endblock content %}

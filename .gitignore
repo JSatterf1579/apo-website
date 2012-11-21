@@ -52,3 +52,7 @@ secret_keys.py
 # Emacs temp tiles
 \#*#
 *~
+.\#*
+
+#Coverage files
+htmlcov*

@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block title %}
+APO Theta Upsilon
+{% endblock title %}
+
+{% block style_block %}
+<link rel="stylesheet" type="text/css" href="/static/css/blog/main.css" />
+{% endblock style_block %}
+
+
+{% block content %}
+{% from "_formhelpers.html" import render_field %}
+
+{% if edit_post %}
+
+<a href="/blog/edit/{{ post.url_timestamp }}/{{ post.url_title }}">Edit Post</a><br/>
+<br/>
+<a href="/blog/delete/{{ post.url_timestamp }}/{{ post.url_title }}">Delete Post</a><br/>
+<br/>
+{% endif %}
+
+<div class="blog-post">
+<h2>{{ post.title }}<h2><br/>
+<h4>Posted by <a href="/members/view/{{ post.author.cwruid }}">{{ post.author.fname }} {{post.author.lname}}</a> at {{ post.timestamp }}</h4><br/>
+<br/>
+{{ post.text|safe }}
+<br/>
+<br/>
+</div>
+
+<div class="blog-post">
+<h3>Comments</h3>
+{% for comment in comments %}
+{% if comment.author.cwruid == post.author.cwruid %}
+<div class="comment author-comment">
+{% else %}
+<div class="comment">
+{% endif %}
+<h4>Posted by <a href="/members/view/{{ post.author.cwruid }}">{{ comment.author.fname }} {{ comment.author.lname }}</a> at {{ comment.timestamp }}</h4><br/>
+<br/>
+{{ comment.text }}
+{% if edit_post %}
+{% if comment.delete %}
+<div class="delete-link">
+<a href="/blog/delete/comment/{{ comment.author.cwruid }}/{{ comment.url_timestamp }}">Delete Comment</a>
+</div>
+{% endif %}
+{% endif %}
+</div>
+{% endfor %}
+<br/>
+<br/>
+
+{% if edit_post %}
+<form method="post" action="/blog/view/{{ post.url_timestamp }}/{{ post.url_title }}">
+{{ render_field(new_comment.text) }}
+{{ new_comment.csrf_token }}
+<input type="submit" value="Post">
+</form>
+</div>
+{% endif %}
+{% endblock content %}
+
