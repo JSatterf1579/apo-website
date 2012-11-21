@@ -26,6 +26,8 @@ from application.accounts.models import UserRoleModel, RoleModel
 
 from google.appengine.api import urlfetch
 
+import facebooksdk as fbsdk
+
 @app.route('/photos/albums/list')
 @login_required
 def photos_album_list():
@@ -61,9 +63,27 @@ def photos_show_album(album_id):
     View to display all of an album's
     photos
     """
+    query = UserRoleModel.all()
+    query.filter('user =', current_user.key())
 
-    return "To Do"
+    can_edit = None
+    uroles = query.fetch(query.count())
+    for urole in uroles:
+        if urole.role.name == 'webmaster':
+            can_edit=True
+            break
 
+    query = fb_models.PhotoModel.all()
+    query.filter('approved =', True)
+    query.filter('album_id =', album_id)
+
+    photos = query.fetch(query.count())
+
+    return render_template('photos/show_album.html',
+                           can_edit=can_edit,
+                           album_id=album_id,
+                           photos=photos)
+            
 @app.route('/photos/albums/edit')
 @require_roles(names=['webmaster'])
 def photos_edit_albums():
@@ -141,4 +161,55 @@ def photos_edit_album(album_id):
     View to edit the photos in an album
     """
 
-    return "To Do"
+    query = fb_models.AlbumModel.all()
+    query.filter('me =', album_id)
+
+    try:
+        token = query.fetch(1)[0].token
+    except IndexError:
+        return render_template('404.html'), 404
+
+    album = fb.Album(token=token, album_id=album_id)
+
+    photos = album.get_photos()
+
+    form = forms.MultiDisplayOptForm(None)
+
+    for photo in photos:
+        form.disp_opts.append_entry(wtf.FormField(forms.DisplayOptForm(None)))
+        form.disp_opts[-1].disp_opt.data = photo.approved
+        form.disp_opts[-1].obj_id.data = photo.me
+    
+    return render_template('photos/edit_album.html',
+                           album_id=album_id,
+                           form=form,
+                           photos=photos)
+
+@app.route('/photos/albums/edit/<album_id>/json', methods=['POST'])
+@require_roles(names=['webmaster'])
+def photos_edit_album_json(album_id):
+    """
+    View to handle the approval of photos for display
+    """
+    form = forms.MultiDisplayOptForm()
+    if form.validate():
+
+        query = fb_models.PhotoModel.all()
+
+        results = query.fetch(query.count())
+
+        photos = {}
+        for photo in results:
+            photos[photo.me] = photo
+        
+        for opt_form in form.disp_opts:
+            photo = photos[opt_form.obj_id.data]
+            if photo.approved != opt_form.disp_opt.data:
+                photo.approved = opt_form.disp_opt.data
+                photo.put()
+                
+        return jsonify({'result':'success'})
+    else:
+        return jsonify({'result':'failure', 'errors':form.errors})
+
+    

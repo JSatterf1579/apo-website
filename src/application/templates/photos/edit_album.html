@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block title %}
+Edit Album
+{% endblock title %}
+
+{% block style_block %}
+<link rel="stylesheet" type="text/css" href="/static/css/photos/main.css"/>
+{% endblock style_block %}
+
+
+
+{% block head_script %}
+<script src="/static/js/photos/display_opts.js" type="text/javascript"></script>
+{% endblock head_script %}
+
+{% block content %}
+{% from "_formhelpers.html" import render_field %}
+
+<a href="/photos/albums/edit">Edit other albums</a><br/>
+<a href="/photos/albums/{{ album_id }}">View this album</a><br/>
+<br/>
+
+<form method="post" action="/photos/albums/edit/{{ album_id }}/json">
+<div style="display:inline-block;border:1px solid black;">
+<h1>Approved Photos</h1>
+<div id="images">
+{% for photo in photos %}
+{% if photo.approved is sameas True %}
+<div class="img">
+  <h3>{{ photo.name }}</h3><br/>
+  <a href="{{ photo.original }}"><img src="{{ photo.thumbnail }}"/></a><br/>
+  Approve {{ form.disp_opts[loop.index0].disp_opt }}
+  {{ form.disp_opts[loop.index0].obj_id }}
+  {{ form.disp_opts[loop.index0].csrf_token }}
+</div>
+{% endif %}
+{% endfor %}
+</div>
+</div>
+<div style="display:inline-block;border:1px solid black;">
+<h1>Unapproved Photos</h1>
+<div id="images">
+{% for photo in photos %}
+{% if photo.approved is sameas False %}
+<div class="img">
+  <h4>{{ photo.name }}</h4><br/>
+  <a href="{{ photo.original }}"><img src="{{ photo.thumbnail }}"/></a><br/>
+  Approve {{ form.disp_opts[loop.index0].disp_opt }}
+  {{ form.disp_opts[loop.index0].obj_id }}
+  {{ form.disp_opts[loop.index0].csrf_token }}
+</div>
+{% endif %}
+{% endfor %}
+</div>
+</div>
+{{ form.csrf_token }}
+</form>
+{% endblock content %}

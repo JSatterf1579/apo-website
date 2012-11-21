@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block title %}
+Showing Album
+{% endblock title %}
+
+{% block style_block %}
+<link rel="stylesheet" type="text/css" href="/static/css/photos/main.css"/>
+{% endblock style_block %}
+
+
+
+{% block head_script %}
+
+{% endblock head_script %}
+
+{% block content %}
+{% from "_formhelpers.html" import render_field %}
+
+{% if can_edit %}
+<a href="/photos/albums/edit/{{ album_id }}">Edit this album</a><br/>
+{% endif %}
+<a href="/photos/albums/list">View Albums</a><br/>
+<br/>
+
+
+<div id="images">
+{% for photo in photos %}
+<div class="img">
+  <h3>{{ photo.name }}</h3><br/>
+  <a href="{{ photo.original }}"><img src="{{ photo.thumbnail }}"/></a><br/>
+</div>
+{% endfor %}
+</div>
+
+{% endblock content %}

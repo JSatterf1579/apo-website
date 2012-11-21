@@ -34,6 +34,7 @@ class AppAccessTokenModel(AccessTokenModel):
     app_id = db.StringProperty(required=True)
 
 class AlbumModel(db.Model):
+    token = db.ReferenceProperty(AccessTokenModel, required=True)
     me = db.StringProperty(required=True)
     name = db.StringProperty(required=True)
     desc = db.StringProperty()
@@ -44,6 +45,6 @@ class PhotoModel(db.Model):
     me = db.StringProperty(required=True)
     album_id = db.StringProperty(required=True)
     approved = db.BooleanProperty(required=True, default=False)
-    name = db.StringProperty(required=True)
+    name = db.StringProperty()
     thumbnail = db.StringProperty(required=True)
     original = db.StringProperty(required=True)

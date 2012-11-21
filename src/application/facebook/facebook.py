@@ -135,8 +135,16 @@ class Album(object):
 
         if graph is not None:
             self.graph = graph
+            query = models.AccessTokenModel.all()
+            query.filter('access_token =', graph.access_token)
+
+            try:
+                self.token = query.fetch(1)[0]
+            except IndexError:
+                raise TypeError('The token object provided was not an AccessTokenModel instance')
         else:
             self.graph = fb.GraphAPI(token.access_token)
+            self.token = token
 
         if album_id is None and album_data is None:
             raise TypeError("Either an album id or a album data must be provided")
@@ -152,7 +160,7 @@ class Album(object):
             self.cover_photo = Photo(self.me, graph=self.graph, photo_id=album_data['cover_photo']).thumbnail
         else:
             self.cover_photo = None
-
+            
     def get_model(self):
         query = models.AlbumModel.all()
         query.filter('me =', self.me)
@@ -165,12 +173,44 @@ class Album(object):
                 cover_thumb = self.cover_photo
 
             entity = models.AlbumModel(me=self.me,
+                                       token=self.token,
                                        name=self.name,
                                        desc=self.desc,
                                        cover_photo=cover_thumb)
             entity.put()
             return entity
 
+    def get_photos(self):
+        """
+        Get a list of Photo objects
+        """
+
+        photos_data = self.graph.get_connections(self.me, 'photos')['data']
+        
+        photos = []
+        for photo_data in photos_data:
+            query = models.PhotoModel.all()
+            query.filter('me =', photo_data['id'])
+            try:
+                photos.append(query.fetch(1)[0])
+            except IndexError:
+                name = None
+                if 'name' in photo_data:
+                    name = photo_data['name']
+
+                orig = photo_data['images'][0]['source']
+            
+                entity = models.PhotoModel(me=photo_data['id'],
+                                           album_id=self.me,
+                                           name=name,
+                                           thumbnail=photo_data['picture'],
+                                           original=orig)
+                entity.put()
+
+                photos.append(entity)
+        
+        return photos
+            
 class Photo(object):
     def __init__(self, album_id, graph=None, token=None, photo_id=None, photo_data=None):
         if graph is None and token is None:
