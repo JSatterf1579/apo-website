@@ -23,7 +23,6 @@ import datetime as dt
 
 import urllib, urlparse
 
-@app.route('/', methods=['GET', 'POST'])
 @app.route('/blog', methods=['GET', 'POST'])
 def display_blog():
     """
