@@ -10,6 +10,9 @@ Albums
 
 {% block content %}
 
+<a href="/photos/albums/edit">Edit list of available albums</a><br/>
+<br/>
+
 <div id="images">
 {% for album in albums %}
 <div class="img">
@@ -17,9 +20,9 @@ Albums
   {% if album.desc %}
   {{ album.desc }}<br/>
   {% endif %}
-  <a href="photos/albums/{{ album.me }}"><img src="{{ album.cover_photo.thumbnail }}"/></a><br/>
+  <a href="/photos/albums/{{ album.me }}"><img src="{{ album.cover_photo }}"/></a><br/>
   {% if can_edit %}
-  <a href="photos/albums/edit/{{ album.me }}">Edit</a>
+  <a href="/photos/albums/edit/{{ album.me }}">Edit</a>
   {% endif %}
 </div>
 {% endfor %}

@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block title %}
+Edit Albums
+{% endblock title %}
+
+{% block style_block %}
+<link rel="stylesheet" type="text/css" href="/static/css/photos/main.css"/>
+{% endblock style_block %}
+
+
+{% block head_script %}
+<script src="/static/js/photos/display_opts.js" type="text/javascript"></script>
+{% endblock head_script %}
+
+{% block content %}
+{% from "_formhelpers.html" import render_field %}
+
+<a href="/photos/albums">View Albums</a><br/>
+<br/>
+
+<form method="post" action="/photos/albums/edit/json">
+<div id="images">
+{% for album in albums %}
+<div class="img">
+  <h3>{{ album.name }}</h3><br/>
+  {% if album.desc %}
+  {{ album.desc }}<br/>
+  {% endif %}
+  <a href="/photos/albums/edit/{{ album.me }}"><img src="{{ album.cover_photo }}"/></a><br/>
+  Show Album {{ form.disp_opts[loop.index0].disp_opt }}
+  {{ form.disp_opts[loop.index0].obj_id }}
+  {{ form.disp_opts[loop.index0].csrf_token }}
+</div>
+{% endfor %}
+</div>
+{{ form.csrf_token }}
+</form>
+{% endblock content %}

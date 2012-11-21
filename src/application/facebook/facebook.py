@@ -8,6 +8,9 @@ for the facebook integration module
 """
 
 import facebooksdk as fb
+import models
+
+from flask import flash
 
 class AlbumList(object):
     def __init__(self, token):
@@ -146,13 +149,30 @@ class Album(object):
         self.desc = album_data.get('description', None)
         self.count = album_data.get('count', 0)
         if 'cover_photo' in album_data:
-            self.cover_photo = Photo(graph=self.graph, photo_id=album_data['cover_photo'])
+            self.cover_photo = Photo(self.me, graph=self.graph, photo_id=album_data['cover_photo']).thumbnail
         else:
             self.cover_photo = None
-            
+
+    def get_model(self):
+        query = models.AlbumModel.all()
+        query.filter('me =', self.me)
+
+        try:
+            return  query.fetch(1)[0]
+        except IndexError:
+            cover_thumb = None
+            if self.cover_photo is not None:
+                cover_thumb = self.cover_photo
+
+            entity = models.AlbumModel(me=self.me,
+                                       name=self.name,
+                                       desc=self.desc,
+                                       cover_photo=cover_thumb)
+            entity.put()
+            return entity
 
 class Photo(object):
-    def __init__(self, graph=None, token=None, photo_id=None, photo_data=None):
+    def __init__(self, album_id, graph=None, token=None, photo_id=None, photo_data=None):
         if graph is None and token is None:
             raise TypeError("Either a graph object must be provided or a token must be provided")
 
@@ -170,5 +190,21 @@ class Photo(object):
         self.me = photo_data['id']
         self.name = photo_data.get('name', None)
         self.thumbnail = photo_data['picture']
-        self.original = photo_data['source']
-        
+        self.original = photo_data['images'][0]['source']
+        self.album_id = album_id
+
+    def get_model(self):
+        query = models.PhotoModel.all()
+        query.filter('me =', self.me)
+
+        try:
+            return query.fetch(1)[0]
+        except IndexError:
+            entity = models.PhotoModel(me=self.me,
+                                       album_id=self.album_id,
+                                       name=self.name,
+                                       thumbnail=self.thumbnail,
+                                       original=self.original)
+            entity.put()
+            return entity
+            

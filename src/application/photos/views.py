@@ -43,6 +43,34 @@ def photos_album_list():
             can_edit=True
             break
 
+    query = fb_models.AlbumModel.all()
+    query.filter('display =', True)
+
+    albums = query.fetch(query.count())
+
+    return render_template('photos/list_albums.html',
+                           can_edit=can_edit,
+                           albums=albums)
+    
+
+
+@app.route('/photos/albums/<album_id>')
+@login_required
+def photos_show_album(album_id):
+    """
+    View to display all of an album's
+    photos
+    """
+
+    return "To Do"
+
+@app.route('/photos/albums/edit')
+@require_roles(names=['webmaster'])
+def photos_edit_albums():
+    """
+    View to select which albums are displayed
+    """
+    
     query = fb_models.UserAccessTokenModel.all()
     query.filter('use_albums =', True)
 
@@ -53,20 +81,64 @@ def photos_album_list():
 
     page_tokens = query.fetch(query.count())
 
+    form = forms.MultiDisplayOptForm(None)
+    
     albums = []
     for token in user_tokens:
         album_list = fb.AlbumList(token)
         album_dict = album_list.get_all_albums_by_name()
         for key in album_dict:
-            albums.append(album_dict[key])
-        
+            form.disp_opts.append_entry(wtf.FormField(forms.DisplayOptForm(None)))
+            albums.append(album_dict[key].get_model())
+            form.disp_opts[-1].disp_opt.data = albums[-1].display
+            form.disp_opts[-1].obj_id.data = albums[-1].me
+            
     for token in page_tokens:
         album_list = fb.AlbumList(token)
         album_dict = album_list.get_all_albums_by_name()
         for key in album_dict:
-            albums.append(album_dict[key])
-
-    return render_template('photos/list_albums.html',
-                           can_edit=can_edit,
+            form.disp_opts.append_entry(wtf.FormField(forms.DisplayOptForm(None)))
+            albums.append(album_dict[key].get_model())
+            form.disp_opts[-1].disp_opt.data = albums[-1].display
+            form.disp_opts[-1].obj_id.data = albums[-1].me
+            
+    return render_template('photos/edit_albums.html',
+                           form=form,
                            albums=albums)
 
+@app.route('/photos/albums/edit/json', methods=['POST'])
+@require_roles(names=['webmaster'])
+def photos_edit_albums_json():
+    """
+    Handle json POST requests
+    """
+
+    form = forms.MultiDisplayOptForm()
+    if form.validate():
+
+        query = fb_models.AlbumModel.all()
+
+        results = query.fetch(query.count())
+
+        albums = {}
+        for album in results:
+            albums[album.me] = album
+        
+        for opt_form in form.disp_opts:
+            album = albums[opt_form.obj_id.data]
+            if album.display != opt_form.disp_opt.data:
+                album.display = opt_form.disp_opt.data
+                album.put()
+                
+        return jsonify({'result':'success'})
+    else:
+        return jsonify({'result':'failure', 'errors':form.errors})
+
+@app.route('/photos/albums/edit/<album_id>')
+@require_roles(names=['webmaster'])
+def photos_edit_album(album_id):
+    """
+    View to edit the photos in an album
+    """
+
+    return "To Do"
