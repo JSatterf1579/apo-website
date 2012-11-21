@@ -199,7 +199,7 @@ def photos_edit_album(album_id):
         form.photo_names[-1].data = photo.name
     
     return render_template('photos/edit_album.html',
-                           album=album,
+                           album=album_model,
                            form=form,
                            photos=photos)
 

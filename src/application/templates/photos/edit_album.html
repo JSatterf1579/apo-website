@@ -24,7 +24,7 @@ Edit Album
 
 
 
-<form method="post" action="/photos/albums/edit/{{ album_id }}/json">
+<form method="post" action="/photos/albums/edit/{{ album.me }}/json">
 
 <dl>
 {{ render_field(form.album_name) }}
