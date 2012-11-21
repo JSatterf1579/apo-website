@@ -1,14 +1,33 @@
 {% extends "base.html" %}
 
+{% block style_block %}
+<link rel="stylesheet" type="text/css" href="/static/css/photos/main.css"/>
+{% endblock style_block %}
+
 {% block title %}
 Albums
 {% endblock title %}
 
 {% block content %}
 
+<table>
+{% set count = 0 %}
 {% for album in albums %}
-
-<img src="{{ album.cover_photo.thumbnail }}"/><br/>
+{% if count == 0 %}
+<tr>
+{% endif %}
+{% set count = count + 1 %}
+<td>
+  <h3>{{ album.name }}</h3><br/>
+  <a href="photos/albums/{{ album.me }}"><img src="{{ album.cover_photo.thumbnail }}"/></a><br/>
+  {% if album.desc %}
+  {{ album.desc }}<br/>
+  {% endif %}
+</td>
+{% if count == 3 %}
+</tr>
+{% set count = 0 %}
+{% endif %}
 
 {% endfor %}
 
