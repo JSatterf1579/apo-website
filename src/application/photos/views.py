@@ -186,6 +186,8 @@ def photos_edit_album(album_id):
         form.disp_opts.append_entry(wtf.FormField(forms.DisplayOptForm(None)))
         form.disp_opts[-1].disp_opt.data = photo.approved
         form.disp_opts[-1].obj_id.data = photo.me
+        form.photo_names.append_entry(wtf.TextField(None))
+        form.photo_names[-1].data = photo.name
     
     return render_template('photos/edit_album.html',
                            album_id=album_id,
@@ -224,11 +226,13 @@ def photos_edit_album_json(album_id):
         for photo in results:
             photos[photo.me] = photo
         
-        for opt_form in form.disp_opts:
+        for i, opt_form in enumerate(form.disp_opts):
             photo = photos[opt_form.obj_id.data]
             if photo.approved != opt_form.disp_opt.data:
                 photo.approved = opt_form.disp_opt.data
-                photo.put()
+            photo.name = form.photo_names[i].data
+            photo.put()
+
                 
         return jsonify({'result':'success'})
     else:

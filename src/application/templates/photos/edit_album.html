@@ -26,7 +26,7 @@ Edit Album
 <dl>
 {{ render_field(form.album_name) }}
 {{ render_field(form.album_desc) }}
-<button class="save-button" type="button">Save Album Info</button>
+<button class="save-button" type="button">Save Album and Photo Info</button>
 </d1>
 <br/>
 <br/>
@@ -37,7 +37,7 @@ Edit Album
 {% for photo in photos %}
 {% if photo.approved is sameas True %}
 <div class="img">
-  <h3>{{ photo.name }}</h3><br/>
+  {{ render_field(form.photo_names[loop.index0]) }}<br/>
   <a href="{{ photo.original }}"><img src="{{ photo.thumbnail }}"/></a><br/>
   Approve {{ form.disp_opts[loop.index0].disp_opt }}
   {{ form.disp_opts[loop.index0].obj_id }}
@@ -53,7 +53,7 @@ Edit Album
 {% for photo in photos %}
 {% if photo.approved is sameas False %}
 <div class="img">
-  <h4>{{ photo.name }}</h4><br/>
+  {{ render_field(form.photo_names[loop.index0]) }}<br/>
   <a href="{{ photo.original }}"><img src="{{ photo.thumbnail }}"/></a><br/>
   Approve {{ form.disp_opts[loop.index0].disp_opt }}
   {{ form.disp_opts[loop.index0].obj_id }}
