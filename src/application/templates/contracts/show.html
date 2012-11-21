@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+
+{% block title %}
+{{ contract.name }} Contract
+{% endblock title %}
+
+{% block content %}
+
+<h1>{{ contract.name }} Contract</h1>
+<h4>{{ contract.desc }}</h4><br/>
+{% if can_edit %}
+<a href="/contracts/{{ contract.url_name }}/delete">Delete this contract</a><br/>
+{% endif %}
+<br/>
+<br/>
+<h3>Service Hour Requirements</h3>
+<table class="table table-bordered table-striped">
+<tr>
+<th>Name</th>
+<th>Required Time</th>
+<th>Due Date</th>
+{% if can_edit %}
+<th>Delete</th>
+{% endif %}
+</tr>
+{% for time_req in time_reqs %}
+<tr>
+<td>{{ time_req.name }}</td>
+<td>{{ time_req.str_time }}</td>
+<td>{{ time_req.str_date }}</td>
+{% if can_edit %}
+<td><a href="/contracts/{{ contract.url_name }}/{{ time_req.url_name }}/delete/time-req">Delete</a></td>
+{% endif %}
+</tr>
+{% endfor %}
+</table>
+{% if can_edit %}
+<form method="get" action="/contracts/{{ contract.url_name }}/create/time-req">
+<input type="submit" value="Create a new Time Requirement"/>
+</form>
+{% endif %}
+
+
+<br/>
+<br/>
+<h3>Dues Requirements</h3>
+<table class="table table-bordered table-striped">
+<tr>
+<th>Name</th>
+<th>Required Amount</th>
+<th>Due Date</th>
+{% if can_edit %}
+<th>Delete</th>
+{% endif %}
+</tr>
+{% for dues_req in dues_reqs %}
+<tr>
+<td>{{ dues_req.name }}</td>
+<td>${{ dues_req.amount }}</td>
+<td>{{ dues_req.str_date }}</td>
+{% if can_edit %}
+<td><a href="/contracts/{{ contract.url_name }}/{{ dues_req.url_name }}/delete/dues-req">Delete</a></td>
+{% endif %}
+</tr>
+{% endfor %}
+</table>
+{% if can_edit %}
+<form method="get" action="/contracts/{{ contract.url_name }}/create/dues-req">
+<input type="submit" value="Create a new Dues Requirement"/>
+</form>
+{% endif %}
+
+{% if can_sign %}
+<form method="get" action="/contracts/{{ contract.url_name }}/sign">
+<input type="submit" value="Sign this contract"/>
+</form>
+{% endif %}
+
+{% endblock content %}

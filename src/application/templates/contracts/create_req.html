@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block head_script %}
+<script type="text/javascript">
+$(document).ready(function() {
+    $('#due_date').datepicker({ dateFormat: 'yy-mm-dd'});
+});
+</script>
+{% endblock head_script %}
+
+{% block title %}
+Create {{ type }} Requirement for {{ contract.name }}
+{% endblock title %}
+
+{% block content %}
+{% from "_formhelpers.html" import render_field %}
+
+<h1>Create {{ type }} Requirement for {{ contract.name }}</h1>
+
+<form method="post" action="/contracts/{{ contract.url_name }}/create/{{ url_type }}">
+<dl>
+{{ render_field(form.name) }}
+{{ render_field(form.due_date) }}
+{% if time %}
+{{ render_field(form.hours) }}
+{% else %}
+{{ render_field(form.amount) }}
+{% endif %}
+</dl>
+{{ form.csrf_token }}
+<input type="submit" value="Create new {{ type }} Requirement"/>
+</form>
+
+{% endblock content %}

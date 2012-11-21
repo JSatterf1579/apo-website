@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %}
+List of Contracts
+{% endblock title %}
+
+{% block content %}
+
+<h1>List of Contract Types</h1>
+
+{% if can_edit %}
+<br/>
+<br/>
+<h4><a href="/contracts/create">Create a New Contract</a></h4>
+<br/>
+<br/>
+{% endif %}
+
+<table class="table table-bordered table-striped">
+<tr>
+<th>Name</th>
+<th>Description</th>
+<th>Details</th>
+{% if can_edit %}
+<th>Delete Link</th>
+{% endif %}
+</tr>
+{% for contract in contracts %}
+<tr>
+<td>{{ contract.name }}</td>
+<td>{{ contract.desc }}</td>
+<td><a href="/contracts/{{ contract.url_name }}">View Details</a></td>
+{% if can_edit %}
+<td><a href="/contracts/{{ contract.url_name }}/delete">Delete</a></td>
+{% endif %}
+</tr>
+{% endfor %}
+</table>
+
+{% endblock content %}

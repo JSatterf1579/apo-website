@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block title %}
+Contract Progress
+{% endblock title %}
+
+{% block content %}
+
+<h1>{{ contract.name }} Contract Progress for {{ user.fname }} {{ user.lname }}</h1>
+
+<h3>Service Hour Requirements</h3>
+<table class="table table-bordered table-striped">
+<tr>
+<th>Name</th>
+<th>Required</th>
+<th>Completed</th>
+<th>Due Date</th>
+<th>Time Left</th>
+<th>Completed?</th>
+</tr>
+{% for time_req_prog in time_req_progs %}
+<tr>
+<td>{{ time_req_prog.req.name }}</td>
+<td>{{ time_req_prog.str_req_time }}</td>
+<td>{{ time_req_prog.str_prog_time }}</td>
+<td>{{ time_req_prog.str_due_date }}</td>
+<td>{{ time_req_prog.str_time_left }}</td>
+{% if time_req_prog.complete is sameas True %}
+<th>Yes</td>
+{% else %}
+<td>No</td>
+{% endif %}
+</tr>
+{% endfor %}
+</table>
+
+<h3>Dues Requirements</h3>
+<table class="table table-bordered table-striped">
+<tr>
+<th>Name</th>
+<th>Required</th>
+<th>Completed</th>
+<th>Due Date</th>
+<th>Time Left</th>
+<th>Completed?</th>
+</tr>
+{% for dues_req_prog in dues_req_progs %}
+<tr>
+<td>{{ dues_req_prog.req.name }}</td>
+<td>{{ dues_req_prog.req.amount }}</td>
+<td>{{ dues_req_prog.amount }}</td>
+<td>{{ dues_req_prog.str_due_date }}</td>
+<td>{{ dues_req_prog.str_time_left }}</td>
+{% if dues_req_prog.complete is sameas True %}
+<td>Yes</td>
+{% else %}
+<td>No</td>
+{% endif %}
+</tr>
+{% endfor %}
+</table>
+
+{% endblock content %}
