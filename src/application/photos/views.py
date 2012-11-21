@@ -171,10 +171,17 @@ def photos_edit_album(album_id):
 
     album = fb.Album(token=token, album_id=album_id)
 
+    album_model = album.get_model()
+    
     photos = album.get_photos()
 
-    form = forms.MultiDisplayOptForm(None)
+    form = forms.EditAlbumForm(None)
 
+    form.album_name.data = album_model.name
+    if album_model.desc is not None:
+        form.album_desc.data = album_model.desc
+
+    
     for photo in photos:
         form.disp_opts.append_entry(wtf.FormField(forms.DisplayOptForm(None)))
         form.disp_opts[-1].disp_opt.data = photo.approved
@@ -191,8 +198,23 @@ def photos_edit_album_json(album_id):
     """
     View to handle the approval of photos for display
     """
-    form = forms.MultiDisplayOptForm()
+    form = forms.EditAlbumForm()
     if form.validate():
+
+        query = fb_models.AlbumModel.all()
+        query.filter('me =', album_id)
+        album = None
+        try:
+            album = query.fetch(1)[0]
+
+            album.name = form.album_name.data
+            if form.album_desc.data != '':
+                album.desc = form.album_desc.data
+            else:
+                album.desc = None
+            album.put()
+        except IndexError:
+            return jsonify({'result':'error'}), 404
 
         query = fb_models.PhotoModel.all()
 

@@ -22,6 +22,15 @@ Edit Album
 <br/>
 
 <form method="post" action="/photos/albums/edit/{{ album_id }}/json">
+
+<dl>
+{{ render_field(form.album_name) }}
+{{ render_field(form.album_desc) }}
+<button class="save-button" type="button">Save Album Info</button>
+</d1>
+<br/>
+<br/>
+
 <div style="display:inline-block;border:1px solid black;">
 <h1>Approved Photos</h1>
 <div id="images">

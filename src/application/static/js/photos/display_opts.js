@@ -6,6 +6,13 @@ $(document).ready(function() {
 		       processData);
 	    });
 	});
+    $('.save-button').click(function() {
+	$('form').each(function() {
+	    $.post(this.action, $(this).serialize(),
+		   processData);
+	});
+    });
+
 });
 
 function processData(data)

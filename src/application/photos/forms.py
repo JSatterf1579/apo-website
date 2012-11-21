@@ -11,3 +11,8 @@ class DisplayOptForm(wtf.Form):
 
 class MultiDisplayOptForm(wtf.Form):
     disp_opts = wtf.FieldList(wtf.FormField(DisplayOptForm))
+
+class EditAlbumForm(wtf.Form):
+    album_name = wtf.TextField('Album Name', [validators.Required()])
+    album_desc = wtf.TextField('Album Description', [validators.Optional()])
+    disp_opts = wtf.FieldList(wtf.FormField(DisplayOptForm))
