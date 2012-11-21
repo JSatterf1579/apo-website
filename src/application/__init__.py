@@ -20,3 +20,4 @@ import members.views
 import facebook.views
 import blog.views
 import setup.views
+import photos.views

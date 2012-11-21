@@ -337,7 +337,7 @@ def fb_test_view_photos():
 
     albums = []
     for token in user_tokens:
-        album_list = facebook.AlbumList(token.access_token)
+        album_list = facebook.AlbumList(token)
         album_dict = album_list.get_all_albums_by_name()
         for key in album_dict:
             albums.append(album_dict[key])
