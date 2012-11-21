@@ -17,8 +17,9 @@ Showing Album
 {% block content %}
 {% from "_formhelpers.html" import render_field %}
 
+<h1>{{ album.name }}</h1>
 {% if can_edit %}
-<a href="/photos/albums/edit/{{ album_id }}">Edit this album</a><br/>
+<a href="/photos/albums/edit/{{ album.me }}">Edit this album</a><br/>
 {% endif %}
 <a href="/photos/albums/list">View Albums</a><br/>
 <br/>

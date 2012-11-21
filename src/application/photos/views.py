@@ -73,6 +73,15 @@ def photos_show_album(album_id):
             can_edit=True
             break
 
+    query = fb_models.AlbumModel.all()
+    query.filter('me =', album_id)
+
+    try:
+        album = query.fetch(1)[0]
+    except IndexError:
+        return render_template('404.html'), 404
+        
+
     query = fb_models.PhotoModel.all()
     query.filter('approved =', True)
     query.filter('album_id =', album_id)
@@ -81,7 +90,7 @@ def photos_show_album(album_id):
 
     return render_template('photos/show_album.html',
                            can_edit=can_edit,
-                           album_id=album_id,
+                           album=album,
                            photos=photos)
             
 @app.route('/photos/albums/edit')
@@ -190,7 +199,7 @@ def photos_edit_album(album_id):
         form.photo_names[-1].data = photo.name
     
     return render_template('photos/edit_album.html',
-                           album_id=album_id,
+                           album=album,
                            form=form,
                            photos=photos)
 

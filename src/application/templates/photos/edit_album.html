@@ -17,9 +17,12 @@ Edit Album
 {% block content %}
 {% from "_formhelpers.html" import render_field %}
 
+<h1>Editing "{{ album.name }}"</h1>
 <a href="/photos/albums/edit">Edit other albums</a><br/>
-<a href="/photos/albums/{{ album_id }}">View this album</a><br/>
+<a href="/photos/albums/{{ album.me }}">View this album</a><br/>
 <br/>
+
+
 
 <form method="post" action="/photos/albums/edit/{{ album_id }}/json">
 
@@ -32,7 +35,7 @@ Edit Album
 <br/>
 
 <div style="display:inline-block;border:1px solid black;">
-<h1>Approved Photos</h1>
+<h2>Approved Photos</h2>
 <div id="images">
 {% for photo in photos %}
 {% if photo.approved is sameas True %}
@@ -48,7 +51,7 @@ Edit Album
 </div>
 </div>
 <div style="display:inline-block;border:1px solid black;">
-<h1>Unapproved Photos</h1>
+<h2>Unapproved Photos</h2>
 <div id="images">
 {% for photo in photos %}
 {% if photo.approved is sameas False %}
