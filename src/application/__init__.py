@@ -18,3 +18,4 @@ import views
 import accounts.views
 import members.views
 import blog.views
+import setup.views

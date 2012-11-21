@@ -28,55 +28,12 @@ from application import app
 
 from accounts.accounts import require_roles
 
-@app.before_first_request
-def before_first_request():
-    from accounts.models import UserRoleModel, RoleModel
-    from members.models import FamilyModel
-    try:
-        boehms = FamilyModel(name='boehms')
-        boehms.put()
-        snm = FamilyModel(name='s & m')
-        snm.put()
-        newpham = FamilyModel(name='new pham')
-        newpham.put()
-
-        accounts.accounts.create_user('Devin',
-                                      'Schwab',
-                                      'dts34',
-                                      'default',
-                                      family=boehms.key(),
-                                      avatar='digidevin@gmail.com')
-        accounts.accounts.create_user('Jon',
-                                      'Chan',
-                                      'jtc77',
-                                      'default')
-
-        
-        webmaster_role = RoleModel(name='webmaster', desc='administrator for the website')
-        webmaster_role.put()
-        brother_role = RoleModel(name='brother', desc='general brother in the chapter')
-        brother_role.put()
-        pledge_role = RoleModel(name='pledge', desc='pledge in the chapter')
-        pledge_role.put()
-        neophyte_role = RoleModel(name='neophyte', desc='neophyte in the chapter')
-        neophyte_role.put()
-        
-    
-        default_users = accounts.accounts.find_users()
-        urole1 = UserRoleModel(user=default_users[0].key(), role=webmaster_role.key())
-        urole2 = UserRoleModel(user=default_users[0].key(), role=brother_role.key())
-        urole3 = UserRoleModel(user=default_users[1].key(), role=webmaster_role.key())
-        urole4 = UserRoleModel(user=default_users[1].key(), role=webmaster_role.key())
-
-        urole1.put()
-        urole2.put()
-        urole3.put()
-        urole4.put()
-    
-    except AttributeError,e:
-        import os
-        if not os.environ.get('SERVER_SOFTWARE','').startswith('Development'):
-            raise e
+@app.route('/')
+def home():
+    """
+    Homepage
+    """
+    return redirect(url_for('display_blog'))
 
 @app.route('/calendar')
 def calendar():
