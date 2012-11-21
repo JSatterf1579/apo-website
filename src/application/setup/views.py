@@ -37,7 +37,7 @@ def setup():
 
         if query.count() == 0:
                 # the app hasn't been setup yet
-                db.delete(db.Model.all())
+                db.delete(db.Query())
                 
                 boehms = FamilyModel(name='boehms')
                 boehms.put()
