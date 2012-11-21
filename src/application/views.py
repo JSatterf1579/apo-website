@@ -78,15 +78,6 @@ def before_first_request():
         if not os.environ.get('SERVER_SOFTWARE','').startswith('Development'):
             raise e
 
-@app.route('/')
-def home():
-    """
-    View for the homepage
-
-    :rtype: HTML page
-    """
-    return render_template('index.html')
-
 @app.route('/calendar')
 def calendar():
     """

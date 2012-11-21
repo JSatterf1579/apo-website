@@ -17,3 +17,4 @@ login_manager.login_view = "login" # set this to the view name
 import views
 import accounts.views
 import members.views
+import blog.views
