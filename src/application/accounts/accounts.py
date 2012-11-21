@@ -291,7 +291,10 @@ def find_users(limit=None, **kwargs):
 
 @login_manager.user_loader
 def load_user(cwruid):
-    return find_users(limit=1,cwruid=('=',cwruid))[0]
+    try:
+        return find_users(limit=1,cwruid=('=',cwruid))[0]
+    except IndexError:
+        return None
 
 def require_roles(*fn, **options):
     """This function takes in a tuple or list
