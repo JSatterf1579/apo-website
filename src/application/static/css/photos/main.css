@@ -1,3 +1,29 @@
-td:hover {
-    background-color: #DDDDDD;
+#images {
+    width:65%;
 }
+div.img
+  {
+  padding:20px;
+  margin:2px;
+  height:auto;
+  width:auto;
+  float:right;
+  text-align:center;
+}
+div.img:hover {
+    background-color: #dddddd;
+    border:1px solid #000000;
+}
+div.img img
+  {
+  display:inline;
+  margin:3px;
+  border:1px solid #ffffff;
+  }
+div.desc
+  {
+  text-align:center;
+  font-weight:normal;
+  width:120px;
+  margin:2px;
+  }

@@ -10,25 +10,19 @@ Albums
 
 {% block content %}
 
-<table>
-{% set count = 0 %}
+<div id="images">
 {% for album in albums %}
-{% if count == 0 %}
-<tr>
-{% endif %}
-{% set count = count + 1 %}
-<td>
+<div class="img">
   <h3>{{ album.name }}</h3><br/>
-  <a href="photos/albums/{{ album.me }}"><img src="{{ album.cover_photo.thumbnail }}"/></a><br/>
   {% if album.desc %}
   {{ album.desc }}<br/>
   {% endif %}
-</td>
-{% if count == 3 %}
-</tr>
-{% set count = 0 %}
-{% endif %}
-
+  <a href="photos/albums/{{ album.me }}"><img src="{{ album.cover_photo.thumbnail }}"/></a><br/>
+  {% if can_edit %}
+  <a href="photos/albums/edit/{{ album.me }}">Edit</a>
+  {% endif %}
+</div>
 {% endfor %}
+</div>
 
 {% endblock content %}

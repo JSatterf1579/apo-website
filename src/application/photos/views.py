@@ -22,14 +22,26 @@ from application.facebook import facebook as fb
 from application.facebook import models as fb_models
 
 from application.accounts.accounts import require_roles
+from application.accounts.models import UserRoleModel, RoleModel
 
 from google.appengine.api import urlfetch
 
 @app.route('/photos/albums/list')
+@login_required
 def photos_album_list():
     """
     View for displaying a list of all albums
     """
+
+    query = UserRoleModel.all()
+    query.filter('user =', current_user.key())
+
+    can_edit = None
+    uroles = query.fetch(query.count())
+    for urole in uroles:
+        if urole.role.name == 'webmaster':
+            can_edit=True
+            break
 
     query = fb_models.UserAccessTokenModel.all()
     query.filter('use_albums =', True)
@@ -55,5 +67,6 @@ def photos_album_list():
             albums.append(album_dict[key])
 
     return render_template('photos/list_albums.html',
+                           can_edit=can_edit,
                            albums=albums)
 
