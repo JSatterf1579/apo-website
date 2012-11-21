@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block title %}
+Albums
+{% endblock title %}
+
+{% block content %}
+
+{% for album in albums %}
+
+<img src="{{ album.cover_photo.thumbnail }}"/><br/>
+
+{% endfor %}
+
+{% endblock content %}

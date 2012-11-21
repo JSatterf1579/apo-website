@@ -7,7 +7,8 @@ Decorators for URL handlers
 
 from functools import wraps
 from google.appengine.api import users
-from flask import redirect, request
+from flask import redirect, request, make_response
+from functools import update_wrapper
 
 
 def login_required(func):
@@ -29,3 +30,9 @@ def admin_required(func):
         return func(*args, **kwargs)
     return decorated_view
 
+def nocache(f):
+    def new_func(*args, **kwargs):
+        resp = make_response(f(*args, **kwargs))
+        resp.cache_control.no_cache = True
+        return resp
+    return update_wrapper(new_func, f)
