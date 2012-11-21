@@ -118,7 +118,7 @@ The APO Website
     body %= (fname, cwruid, password)
 
 
-    mail.send_mail(sender='APO Theta Upsilon Website <webmaster@apo.case.edu>',
+    mail.send_mail(sender='APO Theta Upsilon Website <digidevin@gmail.com>',
                    to='%s %s <%s@case.edu>' % (fname, lname, cwruid),
                    subject='Your new account has been created',
                    body=body)

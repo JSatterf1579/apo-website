@@ -101,7 +101,7 @@ The APO Website
 """
             body %= (user.fname, new_password)
             
-            mail.send_mail(sender="APO Website <website@apo.case.edu>",
+            mail.send_mail(sender="APO Website <digidevin@gmail.com>",
                            to="%s %s <%s@case.edu>" % (user.fname, user.lname, user.cwruid),
                            subject='Your new password',
                            body=body)
