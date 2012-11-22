@@ -6,6 +6,8 @@ This module contains the views for the service package
 .. moduleauthor:: Devin Schwab <dts34@case.edu>
 """
 
+from google.appengine.ext import db, ndb
+
 from application import app
 
 from flask import flash, render_template, redirect, url_for, jsonify, request
@@ -14,6 +16,7 @@ from flaskext.flask_login import current_user, login_required
 import forms, models
 from service import prepare_service_event, get_service_event, is_signed_up
 from service import get_signups, create_inside_service_report_form, get_service_report
+from service import create_service_report_review_form
 
 import datetime as dt
 
@@ -314,3 +317,45 @@ def service_inside_report(event_name, event_time):
     return render_template('service/submit_inside_report.html',
                            form=form,
                            event=event)
+
+@app.route('/service/report/<event_name>/<event_time>', methods=['GET', 'POST'])
+@login_required
+def service_report_status(event_name, event_time):
+    """
+    This view displays and processes hour report statuses
+    """
+
+    event = get_service_event(event_name, event_time)
+    if event is None:
+        return render_template('404.html'), 404
+
+    event = prepare_service_event(event)
+
+    can_edit = members.can_edit(['webmaster'])
+
+    if request.method == 'POST' and can_edit is not None:
+        form = forms.ServiceReportReviewForm()
+        if form.validate():
+            for hour_review in form.hour_reviews:
+                
+                query = models.ServiceHourModel.all()
+                reports = query.fetch(query.count())
+
+                for report in reports:
+                    if str(report.key()) == hour_review.hour_report_id.data:
+                        report.status = hour_review.status.data
+                        report.put()
+                        break
+            return render_template('service/show_report.html',
+                                   can_edit=can_edit,
+                                   event=event,
+                                   event_review=form)
+        else:
+            flash(form.errors)
+    else:
+        form = create_service_report_review_form(event=event)
+
+    return render_template('service/show_report.html',
+                           can_edit=can_edit,
+                           event=event,
+                           event_review=form)

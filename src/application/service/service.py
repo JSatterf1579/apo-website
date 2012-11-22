@@ -9,6 +9,8 @@ This module contains the helper functions for the service package
 from flaskext.flask_login import current_user
 from flaskext import wtf
 
+from flask import flash
+
 import models, forms
 
 import urllib
@@ -101,6 +103,48 @@ def create_inside_service_report_form(event):
 
     return form
 
+def create_service_report_review_form(event):
+    """
+    This method will create a service report reivew form
+    using the data in the datastore.
+
+    By default it creates the form for every hour report
+    in the database. But if an event is specified then
+    the form will only be for hour reports for that event
+    """
+
+    event_review = forms.ServiceReportReviewForm(None)
+
+    event_review.event_id.data = event.key()
+
+    query = models.InsideServiceReportModel.all()
+    query.filter('event =', event.key())
+
+    try:
+        report = query.fetch(1)[0]
+    except IndexError:
+        return event_review
+
+
+    for hour_report in report.servicehourmodel_set:
+        event_review.hour_reviews.append_entry(wtf.FormField(forms.HourReviewForm(None)))
+            
+        hour_review = event_review.hour_reviews[-1]
+
+        hour_review.status.data = hour_report.status
+        hour_review.hour_report_id.data = hour_report.key()
+        hour_review.user_name.data = hour_report.user.fname + " " + hour_report.user.lname
+        if hour_report.hours is None:
+            hour_review.hours.data = 0
+        else:
+            hour_review.hours.data = hour_report.hours
+        if hour_report.minutes is None:
+            hour_review.minutes.data = 0
+        else:
+            hour_review.minutes.data = hour_report.minutes
+            
+    return event_review
+        
 def get_service_report(event):
     """
     If a service report for this event exists then it
@@ -115,3 +159,12 @@ def get_service_report(event):
         return query.fetch(1)[0]
     except IndexError:
         return None
+
+def update_contract_time_progress(hour_report):
+    """
+    Given the information in an hour report
+    updated the time requirement progress
+    for the associated user
+    """
+
+    pass

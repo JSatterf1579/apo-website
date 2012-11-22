@@ -33,3 +33,18 @@ class OutsideServiceReportForm(ServiceReportForm):
     location = wtf.TextField('Location', [validators.Required()])
     desc = wtf.TextField('Description', [validators.Required()])
     date = wtf.DateTimeField('Date and Time', [validators.Required()])
+
+class HourReviewForm(wtf.Form):
+    status = wtf.RadioField('Status', [validators.Required()],
+                            choices=[('approved', 'Approved'),
+                                     ('rejected', 'Rejected'),
+                                     ('pending', 'Pending')])
+    hour_report_id = wtf.HiddenField('Hour Report ID', [validators.Required()])
+    user_name = wtf.HiddenField('Name', [validators.Optional()])
+    hours = wtf.HiddenField('Hours', [validators.Optional()])
+    minutes = wtf.HiddenField('Minutes', [validators.Optional()])
+
+class ServiceReportReviewForm(wtf.Form):
+    hour_reviews = wtf.FieldList(wtf.FormField(HourReviewForm))
+    event_id = wtf.HiddenField('Event ID', [validators.Required()])
+

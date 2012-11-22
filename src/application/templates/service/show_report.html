@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block title %}
+Service Report for {{ event.name }}
+{% endblock title %}
+
+{% block content %}
+
+<form method="post" action="/service/report/{{ event.url_name }}/{{ event.url_time }}">
+{{ event_review.csrf_token }}
+
+{{event_review.event_id }}
+
+<h1> Service Report for {{ event.name }}</h1>
+
+<table class="table table-bordered table-striped" >
+<tr>
+<th>Brother Name</th>
+<th>Hours</th>
+<th>Minutes</th>
+<th>Status</th>
+</tr>
+{% for hour_review in event_review.hour_reviews %}
+
+{{ hour_review.csrf_token }}
+{{ hour_review.hour_report_id }}
+{{ hour_review.user_name }}
+{{ hour_review.hours }}
+{{ hour_review.minutes }}
+
+<tr>
+<td>{{ hour_review.user_name.data }}</td>
+<td>{{ hour_review.hours.data }}</td>
+<td>{{ hour_review.minutes.data }}</td>
+<td>
+{% if can_edit %}
+  {{ hour_review.status }}
+{% else %}
+  {{ hour_review.status.data }}
+{% endif %}
+</td>
+</tr>
+
+{% endfor %}
+
+</table>
+
+{% if can_edit %}
+<input type="submit" value"Save Changes">
+{% endif %}
+</form>
+
+
+
+{% endblock content %}

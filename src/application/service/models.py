@@ -117,7 +117,9 @@ class ServiceHourModel(db.Model):
     # Required Attributes
     user = db.ReferenceProperty(UserModel, required=True)
     report = db.ReferenceProperty(ServiceReportModel, required=True)
-
+    status = db.StringProperty(choices=['approved','rejected','pending'],
+                               default='pending')
+    
     # Optional Attributes
     hours = db.IntegerProperty()
     minutes = db.IntegerProperty(default=0)
