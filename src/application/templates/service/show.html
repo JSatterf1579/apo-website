@@ -28,9 +28,19 @@ Create a Service Event
 <br/>
 <br/>
 
+{% if future %}
+
+<h3>Brothers Signed Up</h3>
 {% if event.maxBro %}
 <h3>{{ num_signed_up }} out of {{ event.maxBro }}
 {% endif %}
+<br/>
+
+<ul>
+{% for signup in signups %}
+<li><a href="/members/view/{{ signup.user.cwruid }}">{{signup.user.fname }} {{signup.user.lname}}</a></li>
+{% endfor %}
+</ul>
 
 {% if signed_up %}
   <form method="get" action="/service/{{ event.url_name }}/{{ event.url_time }}/unsignup">
@@ -44,5 +54,12 @@ Create a Service Event
     <input type="submit" value="Sign up"/>
   </form>
   {% endif %}
+{% endif %}
+{% else %}
+{% if signed_up %}
+<h3><a href="/service/{{ event.url_name }}/{{ event.url_time }}/service-report">Submit a service report for this event</a></h3>
+{% else %}
+<h4>Sorry this event is already past. You can no longer sign up</h4>
+{% endif %}
 {% endif %}
 {% endblock content %}

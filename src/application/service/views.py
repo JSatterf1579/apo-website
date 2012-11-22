@@ -117,10 +117,59 @@ def service_show_event(event_name, event_time):
     if event.maxBro is not None and len(signups) >= event.maxBro:
         full = True
 
+    future = None
+    if event.start_time > dt.datetime.now():
+        future = True
+
     return render_template('service/show.html',
                            can_edit=members.can_edit(['webmaster']),
                            event=event,
                            signed_up=signed_up,
+                           future=future,
                            full=full,
+                           signups=signups,
                            num_signed_up=len(signups))
-    
+
+@app.route('/service/<event_name>/<event_time>/signup')
+def service_event_signup(event_name, event_time):
+    """
+    This view will sign a user up for an event
+    """
+
+    event = get_service_event(event_name, event_time)
+    event = prepare_service_event(event)
+
+    signups = get_signups(event)
+
+    if event.maxBro is not None and len(signups) < event.maxBro:
+        signup = models.ServiceSignUpModel(user=current_user.key(),
+                                           event=event.key())
+        signup.put()
+
+        flash('Successfully signup up for event', 'success')
+    else:
+        flash('Error signing up for event. Event is already full', 'error')
+    return redirect(url_for('service_show_event',
+                            event_name=event.url_name,
+                            event_time=event.url_time))
+
+@app.route('/service/<event_name>/<event_time>/unsignup')
+def service_event_unsignup(event_name, event_time):
+    """
+    This view will unsign a user up for an event
+    """
+
+    event = get_service_event(event_name, event_time)
+    event = prepare_service_event(event)
+
+    signup = is_signed_up(event)
+
+    if signup is not None:
+        signup.delete()
+
+        flash('Successfully removed from event', 'success')
+    else:
+        flash('Error removing you from event. Please try again', 'error')
+    return redirect(url_for('service_show_event',
+                            event_name=event.url_name,
+                            event_time=event.url_time))
