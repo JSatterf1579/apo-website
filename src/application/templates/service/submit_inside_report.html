@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}
+Submit Inside Service Report for {{ event.name }}
+{% endblock title %}
+
+{% block content %}
+
+{% from "_formhelpers.html" import render_field %}
+
+<h1>Submit Inside Service Report for {{ event.name }}</h1>
+
+<form method="post" action="/service/{{ event.url_name }}/{{ event.url_time }}/service-report">
+{% for hour_report in form.hour_reports %}
+<dl>
+<h3>{{ hour_report.fname.data }} {{ hour_report.lname.data }}</h3><br/>
+{{ hour_report.cwruid }}
+{{ render_field(hour_report.hours) }}
+{{ render_field(hour_report.minutes) }}
+{{ hour_report.csrf_token }}
+</dl>
+{% endfor %}
+{{ form.csrf_token }}
+<input type="submit" value="Submit this service report">
+</form>
+
+{% endblock content %}

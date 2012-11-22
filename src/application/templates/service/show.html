@@ -36,11 +36,12 @@ Create a Service Event
 {% endif %}
 <br/>
 
+<h3>
 <ul>
 {% for signup in signups %}
 <li><a href="/members/view/{{ signup.user.cwruid }}">{{signup.user.fname }} {{signup.user.lname}}</a></li>
 {% endfor %}
-</ul>
+</ul></h3>
 
 {% if signed_up %}
   <form method="get" action="/service/{{ event.url_name }}/{{ event.url_time }}/unsignup">
@@ -56,10 +57,27 @@ Create a Service Event
   {% endif %}
 {% endif %}
 {% else %}
+<h3>Brothers Signed Up</h3>
+{% if event.maxBro %}
+<h3>{{ num_signed_up }} out of {{ event.maxBro }}</h3>
+{% endif %}
+<br/>
+<h3>
+<ul>
+{% for signup in signups %}
+<li><a href="/members/view/{{ signup.user.cwruid }}">{{signup.user.fname }} {{signup.user.lname}}</a></li>
+{% endfor %}
+</ul></h3>
+<br/>
+<br/>
 {% if signed_up %}
-<h3><a href="/service/{{ event.url_name }}/{{ event.url_time }}/service-report">Submit a service report for this event</a></h3>
+{% if service_report %}
+<h3><a href="/service/report/{{event.url_name }}/{{ event.url_time }}">A service Report has already been submitted.</a></h3>
 {% else %}
-<h4>Sorry this event is already past. You can no longer sign up</h4>
+<h3><a href="/service/{{ event.url_name }}/{{ event.url_time }}/service-report">Submit a service report for this event</a></h3>
+{% endif %}
+{% else %}
+<h3>Sorry this event is already past. You can no longer sign up</h3>
 {% endif %}
 {% endif %}
 {% endblock content %}

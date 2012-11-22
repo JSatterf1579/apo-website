@@ -7,8 +7,9 @@ This module contains the helper functions for the service package
 """
 
 from flaskext.flask_login import current_user
+from flaskext import wtf
 
-import models
+import models, forms
 
 import urllib
 import datetime as dt
@@ -78,3 +79,39 @@ def get_signups(event):
         signups.append(signup)
 
     return signups
+
+def create_inside_service_report_form(event):
+    """
+    This method takes in an event
+    and creates a new inside service report form
+    with enough fields for every brother that was on the
+    sign up list
+    """
+
+    form = forms.ServiceReportForm(None)
+
+    signups = get_signups(event)
+    for signup in signups:
+        form.hour_reports.append_entry(wtf.FormField(forms.HourReportForm(None)))
+        form.hour_reports[-1].fname.data = signup.user.fname
+        form.hour_reports[-1].lname.data = signup.user.lname
+        form.hour_reports[-1].cwruid.data = signup.user.cwruid
+        form.hour_reports[-1].hours.data = 0
+        form.hour_reports[-1].minutes.data = 0
+
+    return form
+
+def get_service_report(event):
+    """
+    If a service report for this event exists then it
+    is returned. Otherwise None is returned
+    """
+
+    query = models.InsideServiceReportModel.all()
+
+    query.filter('event =', event.key())
+
+    try:
+        return query.fetch(1)[0]
+    except IndexError:
+        return None

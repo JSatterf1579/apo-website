@@ -117,10 +117,10 @@ class ServiceHourModel(db.Model):
     # Required Attributes
     user = db.ReferenceProperty(UserModel, required=True)
     report = db.ReferenceProperty(ServiceReportModel, required=True)
-    minutes = db.IntegerProperty(required=True)
 
     # Optional Attributes
-    dMinutes = db.IntegerProperty()
+    hours = db.IntegerProperty()
+    minutes = db.IntegerProperty(default=0)
 
 # Taken from the Member Contract section of the design document
 class ChapterEventModel(EventModel):

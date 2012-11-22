@@ -12,12 +12,13 @@ from flask import flash, render_template, redirect, url_for, jsonify, request
 from flaskext.flask_login import current_user, login_required
 
 import forms, models
-from service import prepare_service_event, get_service_event, is_signed_up, get_signups
+from service import prepare_service_event, get_service_event, is_signed_up
+from service import get_signups, create_inside_service_report_form, get_service_report
 
 import datetime as dt
 
 from application.members import members
-from application.accounts.accounts import require_roles
+from application.accounts.accounts import require_roles, find_users
 
 import urllib
 
@@ -121,6 +122,8 @@ def service_show_event(event_name, event_time):
     if event.start_time > dt.datetime.now():
         future = True
 
+    service_report = get_service_report(event)
+
     return render_template('service/show.html',
                            can_edit=members.can_edit(['webmaster']),
                            event=event,
@@ -128,6 +131,7 @@ def service_show_event(event_name, event_time):
                            future=future,
                            full=full,
                            signups=signups,
+                           service_report=service_report,
                            num_signed_up=len(signups))
 
 @app.route('/service/<event_name>/<event_time>/signup')
@@ -234,6 +238,9 @@ def service_edit_event(event_name, event_time):
 
             event.put()
 
+            # time has changed so have to reprepare
+            event = prepare_service_event(event)
+
             return redirect(url_for('service_show_event',
                                     event_name=event.url_name,
                                     event_time=event.url_time))
@@ -251,4 +258,59 @@ def service_edit_event(event_name, event_time):
                            event=event,
                            form=form)
 
+@app.route('/service/<event_name>/<event_time>/service-report', methods=['GET', 'POST'])
+@login_required
+def service_inside_report(event_name, event_time):
+    """
+    This view displays and processes
+    inside service reports for the event
+    specified by the url
+    """
+
+    event = get_service_event(event_name, event_time)
+    if event is None:
+        return render_template('404.html'), 404
+        
+    event = prepare_service_event(event)
     
+    if request.method == 'POST':
+        form = forms.ServiceReportForm()
+        if form.validate():
+            new_report = models.InsideServiceReportModel(event=event)
+            new_report.put()
+
+            # now create the associated hour reports
+            for hour_report in form.hour_reports:
+                try:
+                    user = find_users(cwruid=('=', hour_report.cwruid.data))[0]
+                except IndexError:
+                    continue # this user doesn't exist so skip it
+
+                hours = None
+                if hour_report.hours.data > 0: # filter bad hours data
+                    hours = hour_report.hours.data
+
+                minutes = None
+                if hour_report.minutes.data > 0: # filter bad minutes data
+                    minutes = hour_report.minutes.data
+
+                if hours is None and minutes is None:
+                    continue # bad data so skip
+
+                new_hour = models.ServiceHourModel(user=user.key(),
+                                                   report=new_report.key(),
+                                                   hours=hours,
+                                                   minutes=minutes)
+                new_hour.put()
+
+                return redirect(url_for('service_show_event',
+                                        event_name=event.url_name,
+                                        event_time=event.url_time))
+        else:
+            flash(form.errors,'error')
+    else:
+        form = create_inside_service_report_form(event)
+
+    return render_template('service/submit_inside_report.html',
+                           form=form,
+                           event=event)
