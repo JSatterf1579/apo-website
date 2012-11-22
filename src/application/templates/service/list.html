@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% block title %}
+Service Events
+{% endblock title %}
+
+{% block content %}
+
+<h1>Future Events</h1>
+{% if can_edit is sameas True %}
+<h4><a href="/service/create">Create a new Service Event</a><br/>
+<br/>
+{% endif %}
+
+<table class="table table-bordered table-striped">
+<tr>
+<th>Name</th>
+<th>Description</th>
+<th>Start Time</th>
+<th>End Time</th>
+<th>Location</th>
+<th>Maximum Number of Brothers</th>
+<th>View Details</th>
+{% if can_edit is sameas True %}
+<th>Edit</th>
+<th>Delete</th>
+{% endif %}
+</tr>
+{% for future_event in future_events %}
+<tr>
+<td>{{ future_event.name }}</td>
+<td>{{ future_event.description }}</td>
+<td>{{ future_event.str_start_time }}</td>
+<td>{{ future_event.str_end_time }}</td>
+<td>{{ future_event.location }}</td>
+<td>{{ future_event.maxBro }}</td>
+<td><a href="/service/{{ future_event.url_name }}/{{ future_event.url_time }}">View</a></td>
+{% if can_edit is sameas True %}
+<td><a href="/service/{{ future_event.url_name}}/{{ future_event.url_time }}/edit">Edit</a></td>
+<td><a href="/service/{{ future_event.url_name }}/{{ future_event.url_time }}/delete">Delete</a></td>
+</tr>
+{% endif %}
+{% endfor %}
+</table>
+
+<h1>Past Events</h1>
+
+<table class="table table-bordered table-striped">
+<tr>
+<th>Name</th>
+<th>Description</th>
+<th>Start Time</th>
+<th>End Time</th>
+<th>Location</th>
+<th>Maximum Number of Brothers</th>
+<th>View Details</th>
+{% if can_edit is sameas True %}
+<th>Edit</th>
+<th>Delete</th>
+{% endif %}
+</tr>
+{% for past_event in past_events %}
+<tr>
+<td>{{ past_event.name }}</td>
+<td>{{ past_event.description }}</td>
+<td>{{ past_event.str_start_time }}</td>
+<td>{{ past_event.str_end_time }}</td>
+<td>{{ past_event.location }}</td>
+<td>{{ past_event.maxBro }}</td>
+<td><a href="/service/{{ past_event.url_name }}/{{ past_event.url_time }}">View</a></td>
+{% if can_edit is sameas True %}
+<td><a href="/service/{{ past_event.url_name}}/{{ past_event.url_time }}/edit">Edit</a></td>
+<td><a href="/service/{{ past_event.url_name }}/{{ past_event.url_time }}/delete">Delete</a></td>
+</tr>
+{% endif %}
+{% endfor %}
+</table>
+
+
+{% endblock content %}

@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}
+Create a Service Event
+{% endblock title %}
+
+{% block content %}
+
+{% from "_formhelpers.html" import render_field %}
+
+<h1>Create a Service Event</h1>
+
+<form method="post" action="/service/create">
+<dl>
+  {{ render_field(form.name) }}
+  {{ render_field(form.desc) }}
+  {{ render_field(form.start_time) }}
+  {{ render_field(form.end_time) }}
+  {{ render_field(form.location) }}
+  {{ render_field(form.addinfo) }}
+  {{ render_field(form.max_bros) }}
+  {{ form.csrf_token }}
+</dl>
+<input type="submit" value="Create new Service Event"/>
+</form>
+
+{% endblock content %}
