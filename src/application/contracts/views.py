@@ -123,7 +123,7 @@ def contracts_progress():
         signed_contract = query.fetch(1)[0]
     except IndexError:
         flash('You have not yet signed a contract', 'error')
-        return redirect(url_for('contracts_list'))
+        return redirect(url_for('contracts_list_contracts'))
 
     query = models.TimeReqProgressModel.all()
     query.filter('user =', current_user.key())
