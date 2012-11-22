@@ -166,7 +166,7 @@ def contracts_sign(contract_name):
 
     if query.count() != 0:
         flash('You cannot sign more than one contract', 'error')
-        return redirect(url_for('contracts_list'))
+        return redirect(url_for('contracts_list_contracts'))
 
     query = models.ContractModel.all()
     query.filter('name =', urllib.unquote_plus(contract_name))
@@ -248,7 +248,7 @@ def contracts_create_req(contract_name, url_type):
             new_req = models.TimeReqModel(contract_=contract,
                                           dueDate=form.due_date.data,
                                           name=form.name.data,
-                                          time=dt.time(form.hours.data))
+                                          time=float(form.hours.data))
             new_req.put()
 
             # create progress models for the new requirement

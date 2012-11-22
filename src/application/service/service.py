@@ -6,12 +6,16 @@ This module contains the helper functions for the service package
 .. moduleauthor:: Devin Schwab <dts34@case.edu>
 """
 
+from google.appengine.ext import db
+
 from flaskext.flask_login import current_user
 from flaskext import wtf
 
 from flask import flash
 
 import models, forms
+
+import application.contracts.models as c_models
 
 import urllib
 import datetime as dt
@@ -160,11 +164,45 @@ def get_service_report(event):
     except IndexError:
         return None
 
-def update_contract_time_progress(hour_report):
+def update_contract_time_progress(hour_report, old_status, new_status):
     """
-    Given the information in an hour report
-    updated the time requirement progress
-    for the associated user
+    Given the information in an hour report and the
+    new status
+    update the time requirement progress
+    for the associated user accordingly
     """
 
-    pass
+    user = hour_report.user
+
+    # how much to change the contract requirements by
+    hours = hour_report.hours
+    if hours == None:
+        hours = 0
+
+    minutes = hour_report.minutes
+    if minutes == None:
+        minutes = 0
+    else:
+        hours += minutes/60.0
+        
+
+    # find all of the relevant contract progresses
+    req_progs = []
+
+    for signed in user.signedcontractmodel_set:
+        contract = signed.contract_
+        for req in contract.reqmodel_set:
+            if isinstance(req, c_models.TimeReqModel):
+                for req_prog in req.timereqprogressmodel_set:
+                    req_progs.append(req_prog)    
+
+    for req_prog in req_progs:
+        if (old_status == 'pending' or old_status == 'rejected') and new_status == 'approved':
+            req_prog.time += hours
+            req_prog.put()
+            
+        elif old_status == 'approved' and (new_status == 'rejected' or new_status == 'pending'):
+            req_prog.time -= hours
+            req_prog.put()
+
+                        

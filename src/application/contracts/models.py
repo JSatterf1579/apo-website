@@ -29,7 +29,7 @@ class ReqModel(PolyModel):
     dueDate = db.DateProperty(required=True)
 
 class TimeReqModel(ReqModel):
-    time = db.TimeProperty(required=True)
+    time = db.FloatProperty(required=True)
 
 class DuesReqModel(ReqModel):
     amount = db.FloatProperty(required=True)
@@ -51,7 +51,7 @@ class ReqProgressModel(PolyModel):
     user = db.ReferenceProperty(UserModel, required=True)
 
 class TimeReqProgressModel(ReqProgressModel):
-    time = db.TimeProperty(required=True, default=dt.time())
+    time = db.FloatProperty(required=True, default=0.0)
     req = db.ReferenceProperty(TimeReqModel, required=True)
     
 class DuesReqProgressModel(ReqProgressModel):
