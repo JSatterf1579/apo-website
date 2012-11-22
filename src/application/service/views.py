@@ -12,6 +12,7 @@ from flask import flash, render_template, redirect, url_for, jsonify, request
 from flaskext.flask_login import current_user, login_required
 
 import forms, models
+from service import prepare_service_event, get_service_event, is_signed_up, get_signups
 
 import datetime as dt
 
@@ -41,10 +42,8 @@ def service_list():
 
     future_events = query.fetch(query.count())
     for event in future_events:
-        event.url_name = urllib.quote_plus(event.name)
-        event.url_time = urllib.quote_plus(str(event.start_time))
-        event.str_start_time = str(event.start_time)
-        event.str_end_time = str(event.end_time)
+        event = prepare_service_event(event)
+        
 
     query = models.ServiceEventModel.all()
     query.filter('start_time <=', now)
@@ -52,10 +51,7 @@ def service_list():
 
     past_events = query.fetch(query.count())
     for event in past_events:
-        event.url_name = urllib.quote_plus(event.name)
-        event.url_time = urllib.quote_plus(str(event.start_time))
-        event.str_start_time = str(event.start_time)
-        event.str_end_time = str(event.end_time)
+        event = prepare_service_event(event)
 
     
     return render_template('service/list.html',
@@ -106,4 +102,25 @@ def service_show_event(event_name, event_time):
     and allows a user to sign up if there are spots avaiable
     """
 
-    return "TO DO"
+    event = get_service_event(event_name, event_time)
+
+    if event is None:
+        return render_template('404.html'), 404
+    
+    event = prepare_service_event(event)
+    
+    signed_up = is_signed_up(event)
+
+    signups = get_signups(event)
+
+    full = None
+    if event.maxBro is not None and len(signups) >= event.maxBro:
+        full = True
+
+    return render_template('service/show.html',
+                           can_edit=members.can_edit(['webmaster']),
+                           event=event,
+                           signed_up=signed_up,
+                           full=full,
+                           num_signed_up=len(signups))
+    

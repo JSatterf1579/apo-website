@@ -22,3 +22,4 @@ import blog.views
 import setup.views
 import photos.views
 import contracts.views
+import service.views

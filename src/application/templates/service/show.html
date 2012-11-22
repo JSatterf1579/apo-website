@@ -13,8 +13,8 @@ Create a Service Event
 <h3>{{ event.desc }}</h3><br/>
 {% endif %}
 <h4>Additional Info: {{ event.addInfo }}</h4><br/>
-<h4>Start: {{ event.str_start }}</h4><br/>
-<h4>End: {{ event.str_end }}</h4><br/>
+<h4>Start: {{ event.str_start_time }}</h4><br/>
+<h4>End: {{ event.str_end_time }}</h4><br/>
 <h4>Location: {{ event.location }}</h4><br/>
 {% if can_edit is sameas True %}
 <h4><a href="/service/{{ event.url_name}}/{{ event.url_time }}/edit">Edit this event</a></h4>
@@ -22,18 +22,27 @@ Create a Service Event
 <br/>
 {% endif %}
 
+<br/>
+<br/>
+<h3><a href="/service">See other events</a></h3>
+<br/>
+<br/>
+
 {% if event.maxBro %}
-<h3>{{ num_signed_up }} out of {{ event.maxBro %}
+<h3>{{ num_signed_up }} out of {{ event.maxBro }}
 {% endif %}
 
 {% if signed_up %}
-<form method="get" action="/service/{{ event.url_name }}/{{ event.url_time }}/signup">
-<input type="submit" value="Signup!"/>
-</form>
-{% elif not full %}
-<form method="get" action="/service/{{ event.url_name }}/{{ event.url_time }}/unsignup">
-<input type="submit" value="Remove yourself from attendees"/>
-</form>
+  <form method="get" action="/service/{{ event.url_name }}/{{ event.url_time }}/unsignup">
+    <input type="submit" value="Remove yourself from the attendees"/>
+  </form>
 {% else %}
-Sorry this event is already filled up
+  {% if full %}
+  Sorry this event is already filled up
+  {% else %}
+  <form method="get" action="/service/{{ event.url_name }}/{{ event.url_time }}/signup">
+    <input type="submit" value="Sign up"/>
+  </form>
+  {% endif %}
 {% endif %}
+{% endblock content %}

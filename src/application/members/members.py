@@ -163,3 +163,16 @@ def permission_denied(cwruid):
     flash("You don't have permssion to access this page", 'error')
     params = '?%s=%s' % ('next', urllib.quote_plus(url_for('display_edit_user_account', cwruid=cwruid)))
     return redirect(urlparse.urljoin(request.host_url, url_for('login'))+params)
+
+def can_edit(names):
+    # see if the user is an admin
+    admin_user = False
+
+    query = UserRoleModel.all()
+    query.filter('user =', current_user.key())
+    uroles = query.fetch(query.count())
+    for urole in uroles:
+        if urole.role.name in names:
+            admin_user = True
+
+    return admin_user

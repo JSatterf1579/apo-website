@@ -20,3 +20,14 @@ indexes:
   - name: post
   - name: timestamp
     direction: desc
+
+- kind: EventModel
+  properties:
+  - name: class
+  - name: start_time
+
+- kind: EventModel
+  properties:
+  - name: class
+  - name: start_time
+    direction: desc

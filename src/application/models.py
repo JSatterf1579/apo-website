@@ -38,33 +38,11 @@ class EventModel(polymodel.PolyModel):
     """
     # Required Attributes
     name = db.StringProperty(required=True)
-    date = db.DateProperty(required=True)
-    startTime = db.TimeProperty(required=True)
-    endTime = db.TimeProperty(required=True)
+    start_time = db.DateTimeProperty(required=True)
+    end_time = db.DateTimeProperty(required=True)
+    location = db.PostalAddressProperty(required=True)
 
     # Optional Attributes
     description = db.StringProperty()
 
-class LocationModel(db.Model):
-    """This models a general location. For use with an event
-
-    .. method:: Location(name, event[, address])
-
-       Creates a new Location entity
-
-       :param name: Name of Location
-       :type name: unicode
-    
-       :param event: A reference to an existing Event entity
-       :type event: application.models.Event
-    
-       :param address: Address of event
-       :type address: google.appengine.ext.db.PostalAddress
-    """
-    # Required Attributes
-    name = db.StringProperty(required=True)
-    event = db.ReferenceProperty(EventModel, required=True)
-
-    # Optional Attributes
-    address = db.PostalAddressProperty()
 
