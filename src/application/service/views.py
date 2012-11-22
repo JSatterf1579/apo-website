@@ -131,17 +131,20 @@ def service_show_event(event_name, event_time):
                            num_signed_up=len(signups))
 
 @app.route('/service/<event_name>/<event_time>/signup')
+@login_required
 def service_event_signup(event_name, event_time):
     """
     This view will sign a user up for an event
     """
 
     event = get_service_event(event_name, event_time)
+    if event is None:
+        return render_template('404.html'), 404
     event = prepare_service_event(event)
 
     signups = get_signups(event)
 
-    if event.maxBro is not None and len(signups) < event.maxBro:
+    if (event.maxBro is not None and len(signups) < event.maxBro) or event.maxBro is None:
         signup = models.ServiceSignUpModel(user=current_user.key(),
                                            event=event.key())
         signup.put()
@@ -154,12 +157,15 @@ def service_event_signup(event_name, event_time):
                             event_time=event.url_time))
 
 @app.route('/service/<event_name>/<event_time>/unsignup')
+@login_required
 def service_event_unsignup(event_name, event_time):
     """
     This view will unsign a user up for an event
     """
 
     event = get_service_event(event_name, event_time)
+    if event is None:
+        return render_template('404.html'), 404
     event = prepare_service_event(event)
 
     signup = is_signed_up(event)
@@ -173,3 +179,25 @@ def service_event_unsignup(event_name, event_time):
     return redirect(url_for('service_show_event',
                             event_name=event.url_name,
                             event_time=event.url_time))
+
+@app.route('/service/<event_name>/<event_time>/delete')
+@require_roles(names=['webmaster'])
+def service_delete_event(event_name, event_time):
+    """
+    This view deletes the specified
+    service event and all related
+    signups
+    """
+
+    event = get_service_event(event_name, event_time)
+
+    if event is None:
+        return render_template('404.html'), 404
+
+    signups = get_signups(event)
+
+    for signup in signups:
+        signup.delete()
+
+    event.delete()
+    return redirect(url_for('service_list'))
