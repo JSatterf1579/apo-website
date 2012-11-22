@@ -8,7 +8,9 @@ List Users
 
 <h1>All Members</h1>
 
+{% if can_edit %}
 <a href="/members/create">Create new member</a>
+{% endif %}
 
 <table class="table table-bordered table-striped">
 <tr>
@@ -16,8 +18,10 @@ List Users
 <th>Last Name</th>
 <th>Case ID</th>
 <th>View Profile</th>
+{% if can_edit %}
 <th>Edit Profile</th>
 <th>Delete Profile</th>
+{% endif %}
 </tr>
 {% for user in users %}
 <tr>
@@ -25,8 +29,10 @@ List Users
 <td>{{ user.lname }}</td>
 <td>{{ user.cwruid }}</td>
 <td><a href="/members/view/{{ user.cwruid }}">View</a></td>
+{% if can_edit %}
 <td><a href="/members/edit/{{ user.cwruid }}">Edit</a></td>
 <td><a href="/members/delete/{{ user.cwruid }}">Delete</a></td>
+{% endif %}
 </tr>
 {% endfor %}
 </table>

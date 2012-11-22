@@ -28,7 +28,6 @@ from google.appengine.api import mail
 
 
 @app.route('/members/create', methods=['GET', 'POST'])
-@login_required
 @require_roles(names=['webmaster', 'membership'])
 def create_user():
     """
@@ -135,8 +134,20 @@ def list_users():
     then the user will also see edit links for the user
     """
 
+    can_edit = None
+
+    query = UserRoleModel.all()
+    query.filter('user =', current_user.key())
+
+    uroles = query.fetch(query.count())
+    for urole in uroles:
+        if urole.role.name == 'webmaster':
+            can_edit = True
+            break
+    
     users = find_users()
     return render_template('members/list.html',
+                           can_edit=can_edit,
                            users=users)
 
 @app.route('/members/delete/<cwruid>', methods=['GET'])
