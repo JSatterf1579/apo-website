@@ -10,7 +10,11 @@ Create a Service Event
 
 <h1>Create a Service Event</h1>
 
+{% if edit %}
+<form method="post" action="/service/{{ event.url_name }}/{{event.url_time }}/edit">
+{% else %}
 <form method="post" action="/service/create">
+{% endif %}
 <dl>
   {{ render_field(form.name) }}
   {{ render_field(form.desc) }}
@@ -21,7 +25,11 @@ Create a Service Event
   {{ render_field(form.max_bros) }}
   {{ form.csrf_token }}
 </dl>
+{% if edit %}
+<input type="submit" value="Update Service Event"/>
+{% else %}
 <input type="submit" value="Create new Service Event"/>
+{% endif %}
 </form>
 
 {% endblock content %}

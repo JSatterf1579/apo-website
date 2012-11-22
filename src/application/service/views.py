@@ -201,3 +201,54 @@ def service_delete_event(event_name, event_time):
 
     event.delete()
     return redirect(url_for('service_list'))
+
+@app.route('/service/<event_name>/<event_time>/edit', methods=['GET','POST'])
+@require_roles(names=['webmaster'])
+def service_edit_event(event_name, event_time):
+    """
+    This view allows a service event to be edited
+    """
+
+    event = get_service_event(event_name, event_time)
+    if event is None:
+        return render_template('404.html'), 404
+
+    event = prepare_service_event(event)
+    
+    form = forms.CreateServiceEventForm()
+    if request.method == 'POST':
+        if form.validate():
+            event.name = event.name
+            if form.desc.data != '':
+                event.description = form.desc.data
+            else:
+                event.description = None
+            event.start_time = form.start_time.data
+            event.end_time = form.end_time.data
+            event.location = form.location.data
+            if form.addinfo.data != '':
+                event.addInfo = form.addinfo.data
+            else:
+                event.addInfo = None
+            event.maxBro = form.max_bros.data
+
+            event.put()
+
+            return redirect(url_for('service_show_event',
+                                    event_name=event.url_name,
+                                    event_time=event.url_time))
+    else:
+        form.name.data = event.name
+        form.desc.data = event.description
+        form.start_time.data = event.start_time
+        form.end_time.data = event.end_time
+        form.location.data = event.location
+        form.addinfo.data = event.addInfo
+        form.max_bros.data = event.maxBro
+
+    return render_template('service/create.html',
+                           edit=True,
+                           event=event,
+                           form=form)
+
+    
