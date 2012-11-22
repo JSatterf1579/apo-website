@@ -6,7 +6,13 @@ List Users
 
 {% block content %}
 
+{% if family %}
+<h1>{{ family.name.title() }}</h1>
+<a href="/members/list">All members</a><br/>
+<br/>
+{% else %}
 <h1>All Members</h1>
+{% endif %}
 
 {% if can_edit %}
 <a href="/members/create">Create new member</a>

@@ -26,6 +26,7 @@ from flask import render_template, flash, url_for, redirect, request, jsonify
 
 from google.appengine.api import mail
 
+import urllib
 
 @app.route('/members/create', methods=['GET', 'POST'])
 @require_roles(names=['webmaster', 'membership'])
@@ -686,3 +687,37 @@ def display_edit_user_profile(cwruid):
         return jsonify({'result':'failure', 'msg':'Permission denied'})
     
     return "Not yet implemented!"
+
+@app.route('/members/family/<family_name>')
+@login_required
+def list_users_by_family(family_name):
+    """
+    This view displays a list of users for the family
+    specified in family_name
+    """
+
+
+    
+    can_edit = None
+    query = UserRoleModel.all()
+    query.filter('user =', current_user.key())
+    uroles = query.fetch(query.count())
+    for urole in uroles:
+        if urole.role.name == 'webmaster':
+            can_edit = True
+            break
+
+    query = models.FamilyModel.all()
+    query.filter('name =', urllib.unquote_plus(family_name).lower())
+    try:
+        family = query.fetch(1)[0]
+    except IndexError:
+        return "no such family"
+        return render_template('404.html'), 404
+
+    users = find_users(family=('=', family.key()))
+
+    return render_template('members/list.html',
+                           can_edit=can_edit,
+                           family=family,
+                           users=users)
