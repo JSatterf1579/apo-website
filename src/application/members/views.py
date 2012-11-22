@@ -721,3 +721,10 @@ def list_users_by_family(family_name):
                            can_edit=can_edit,
                            family=family,
                            users=users)
+
+@app.context_processor
+def profileLink():
+    if current_user.is_authenticated():
+        return dict(profileLink='<a href="/members/view/%s" >My Profile</a>' % current_user.cwruid)
+    else:
+        return dict(profileLink='')
