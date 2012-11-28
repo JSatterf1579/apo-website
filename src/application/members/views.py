@@ -345,21 +345,31 @@ def handle_edit_account_admin_json(cwruid):
         try:
             user = find_users(1, cwruid=('=', cwruid))[0]
         except IndexError:
-            return jsonify({'result':'failure', 'name':'main', 'errors': {}})
+            return jsonify({'result':'failure: no such user', 'name':'admin', 'errors': {}})
 
-        try:
-            big = find_users(1, cwruid=('=', cwruid))[0]
-        except IndexError:
-            return jsonify({'result':'failure', 'name':'main', 'errors': {}})
-        user.big = big.key()
+        if admin_form.big.data != '':
+            try:
+                big = find_users(1, cwruid=('=', admin_form.big.data))[0]
+                user.big = big.key()
+            except IndexError:
+                user.big = None
+                return jsonify({'result':'failure: no such big', 'name':'admin', 'errors': {}})
+        else:
+            user.big = None
 
-        query = models.FamilyModel.all()
-        query.filter('name =', admin_form.family.data)
-        try:
-            family = query.fetch(query.count())[0]
-        except IndexError:
-            return jsonify({'result':'failure', 'name':'main', 'errors': {}})
-        user.family = family.key()
+
+        if admin_form.family.data != 'none':
+            query = models.FamilyModel.all()
+            query.filter('name =', admin_form.family.data)
+            try:
+                family = query.fetch(query.count())[0]
+                user.family = family.key()
+            except IndexError:
+                user.family = None
+                return jsonify({'result':'failure: no such family', 'name':'admin', 'errors': {}})
+        else:
+            user.family = None
+
 
         query = UserRoleModel.all()
         query.filter('user =', user.key())
@@ -379,7 +389,7 @@ def handle_edit_account_admin_json(cwruid):
                 try:
                     new_role = role_query.fetch(query.count())[0]
                 except IndexError:
-                    return jsonify({'result':'failure', 'name':'main', 'errors': {}})
+                    return jsonify({'result':'failure: no such role', 'name':'admin', 'errors': {}})
                 new_urole = UserRoleModel(user=user.key(),
                                           role=new_role.key())
                 new_urole.put()
