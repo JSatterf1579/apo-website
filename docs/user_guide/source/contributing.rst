@@ -71,7 +71,18 @@ command to start the local server on port 8080 is
 
 ``python dev_appserver.py src/ -p 8080 -c``
 
-Once you have run this command you can use your web browser and go to localhost:8080
+Once you have run this command you can use your web browser and go to
+localhost:8080
+
+Unit Tests
+----------
+
+Unit tests are located in the src/tests directory. If nosetests is
+installed running nosetests from the main directory will run all tests
+and generate coverage. Otherwise each test can be run individually
+with the command
+
+``python /path/to/test/test.py``
 
 Optional Tools
 --------------
@@ -79,3 +90,13 @@ Optional Tools
 If you are testing any integration with outside services such as
 Facebook you will also need to use a tool called
 localtunnel. localtunnel can be found at http://progrium.com/localtunnel/
+
+Coding Standards
+----------------
+
+When submitting code contributions please adhere to the python PEP-8
+style guide located at http://www.python.org/dev/peps/pep-0008/
+
+It is also recommend to use a tool such as Pylint to verify that your
+code follows the style guide. Pylint can be found at http://www.logilab.org/857
+
