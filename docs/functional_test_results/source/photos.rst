@@ -4,20 +4,20 @@ Photo Gallery Functional Test Results
 +---------------+---------------+---------------+
 |ID             |Result         |Status         |
 +---------------+---------------+---------------+
-|1              |Using          |PASS           |
+|50             |Using          |PASS           |
 |               |Facebook's     |               |
 |               |uploader the   |               |
 |               |user can create|               |
 |               |a new album    |               |
 +---------------+---------------+---------------+
-|2              |Using          |PASS           |
+|51             |Using          |PASS           |
 |               |Facebook's     |               |
 |               |viewer the     |               |
 |               |photo can be   |               |
 |               |moved to a new |               |
 |               |album.         |               |
 +---------------+---------------+---------------+
-|3              |Editing an     |PASS           |
+|52             |Editing an     |PASS           |
 |               |album allows   |               |
 |               |setting of     |               |
 |               |photo          |               |
@@ -27,7 +27,7 @@ Photo Gallery Functional Test Results
 |               |in the album   |               |
 |               |view.          |               |
 +---------------+---------------+---------------+
-|4              |By default     |PASS           |
+|53             |By default     |PASS           |
 |               |photos are not |               |
 |               |displayed. Unc\|               |
 |               |hecking        |               |
@@ -37,7 +37,7 @@ Photo Gallery Functional Test Results
 |               |currently      |               |
 |               |accepted.      |               |
 +---------------+---------------+---------------+
-|5              |Clicking the   |PASS           |
+|54             |Clicking the   |PASS           |
 |               |acceptance     |               |
 |               |checkbox next  |               |
 |               |to an          |               |
@@ -47,14 +47,14 @@ Photo Gallery Functional Test Results
 |               |photo in the   |               |
 |               |public gallery |               |
 +---------------+---------------+---------------+
-|6              |Members can    |PASS           |
+|55             |Members can    |PASS           |
 |               |view any       |               |
 |               |accepted album |               |
 |               |and any        |               |
 |               |accepted photos|               |
 |               |in each album  |               |
 +---------------+---------------+---------------+
-|7              |Using          |PASS           |
+|56             |Using          |PASS           |
 |               |Facebook's     |               |
 |               |uploader the   |               |
 |               |user can input |               |

@@ -4,7 +4,7 @@ Service Events Functional Test
 +---------------+----------------+---------------+
 |ID             |Results         |Status         |
 +---------------+----------------+---------------+
-|1              |No link is      |PASS           |
+|7              |No link is      |PASS           |
 |               |displayed for   |               |
 |               |the create      |               |
 |               |event and       |               |
@@ -15,7 +15,7 @@ Service Events Functional Test
 |               |user to the     |               |
 |               |login page      |               |
 +---------------+----------------+---------------+
-|2              |All the         |PASS           |
+|8              |All the         |PASS           |
 |               |information is  |               |
 |               |accepted and    |               |
 |               |the new event   |               |
@@ -23,7 +23,7 @@ Service Events Functional Test
 |               |the list of     |               |
 |               |service events  |               |
 +---------------+----------------+---------------+
-|3              |No edit link is |PASS           |
+|9              |No edit link is |PASS           |
 |               |displayed and   |               |
 |               |manually        |               |
 |               |navigating to   |               |
@@ -33,7 +33,7 @@ Service Events Functional Test
 |               |user to the     |               |
 |               |login page      |               |
 +---------------+----------------+---------------+
-|4              |The edit link   |PASS           |
+|10             |The edit link   |PASS           |
 |               |is              |               |
 |               |displayed. When |               |
 |               |clicked the     |               |
@@ -43,7 +43,7 @@ Service Events Functional Test
 |               |information is  |               |
 |               |updated         |               |
 +---------------+----------------+---------------+
-|5              |The user is     |PASS           |
+|11             |The user is     |PASS           |
 |               |directed to the |               |
 |               |login page with |               |
 |               |a message       |               |
@@ -52,7 +52,7 @@ Service Events Functional Test
 |               |permission to   |               |
 |               |view the page   |               |
 +---------------+----------------+---------------+
-|6              |The user is     |PASS           |
+|12             |The user is     |PASS           |
 |               |able to see a   |               |
 |               |list of all     |               |
 |               |existing        |               |
@@ -61,17 +61,17 @@ Service Events Functional Test
 |               |future events   |               |
 |               |and past events |               |
 +---------------+----------------+---------------+
-|7              |No field is     |FAIL           |
+|13             |No field is     |FAIL           |
 |               |displayed on a  |               |
 |               |service events  |               |
 |               |page            |               |
 +---------------+----------------+---------------+
-|8              |The user is     |PASS           |
+|14             |The user is     |PASS           |
 |               |added to the    |               |
 |               |list of users   |               |
 |               |going.          |               |
 +---------------+----------------+---------------+
-|9              |Upon clicking   |PASS           |
+|15             |Upon clicking   |PASS           |
 |               |on the submit   |               |
 |               |service report  |               |
 |               |link forms for  |               |
@@ -94,7 +94,7 @@ Service Events Functional Test
 |               |past the start  |               |
 |               |date-time       |               |
 +---------------+----------------+---------------+
-|10             |The status for  |PASS           |
+|16             |The status for  |PASS           |
 |               |the submitted   |               |
 |               |hours appears,  |               |
 |               |but there is no |               |
@@ -102,11 +102,11 @@ Service Events Functional Test
 |               |the             |               |
 |               |information.    |               |
 +---------------+----------------+---------------+
-|11             |The status for  |PASS           |
+|17             |The status for  |PASS           |
 |               |the submitted   |               |
 |               |hours appears   |               |
 +---------------+----------------+---------------+
-|12             |Each submitted  |PASS           |
+|18             |Each submitted  |PASS           |
 |               |hour has an     |               |
 |               |option to set   |               |
 |               |the             |               |
@@ -119,7 +119,7 @@ Service Events Functional Test
 |               |everything is   |               |
 |               |saved.          |               |
 +---------------+----------------+---------------+
-|13             |The service     |PASS           |
+|19             |The service     |PASS           |
 |               |event status is |               |
 |               |updated upon    |               |
 |               |saving and      |               |

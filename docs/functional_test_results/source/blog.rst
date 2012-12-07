@@ -4,11 +4,11 @@ Blog Functional Test Results
 +---------------+---------------+---------------+
 |ID             |Results        |Status         |
 +---------------+---------------+---------------+
-|1              |No create post |PASS           |
+|41             |No create post |PASS           |
 |               |link is        |               |
 |               |displayed      |               |
 +---------------+---------------+---------------+
-|2              |Create link is |PASS           |
+|42             |Create link is |PASS           |
 |               |displayed. Cli\|               |
 |               |cking          |               |
 |               |it an entering |               |
@@ -19,7 +19,7 @@ Blog Functional Test Results
 |               |the top of the |               |
 |               |list of posts. |               |
 +---------------+---------------+---------------+
-|3              |No edit link is|PASS           |
+|43             |No edit link is|PASS           |
 |               |displayed. Man\|               |
 |               |ually          |               |
 |               |navigating to  |               |
@@ -29,7 +29,7 @@ Blog Functional Test Results
 |               |user to the    |               |
 |               |login page.    |               |
 +---------------+---------------+---------------+
-|4              |Clicking the   |PASS           |
+|44             |Clicking the   |PASS           |
 |               |edit button on |               |
 |               |a blog post    |               |
 |               |opens the blog |               |
@@ -39,7 +39,7 @@ Blog Functional Test Results
 |               |updates the    |               |
 |               |posting.       |               |
 +---------------+---------------+---------------+
-|5              |No delete link |PASS           |
+|45             |No delete link |PASS           |
 |               |is displayed   |               |
 |               |and manually   |               |
 |               |navigating to  |               |
@@ -48,21 +48,21 @@ Blog Functional Test Results
 |               |redirect to the|               |
 |               |login page     |               |
 +---------------+---------------+---------------+
-|6              |Clicking the   |PASS           |
+|46             |Clicking the   |PASS           |
 |               |delete button  |               |
 |               |removes the    |               |
 |               |comment from   |               |
 |               |the post       |               |
 +---------------+---------------+---------------+
-|7              |Blog posts     |PASS           |
+|47             |Blog posts     |PASS           |
 |               |display on the |               |
 |               |homepage       |               |
 +---------------+---------------+---------------+
-|8              |No new comment |PASS           |
+|48             |No new comment |PASS           |
 |               |link is        |               |
 |               |displayed      |               |
 +---------------+---------------+---------------+
-|9              |The new comment|PASS           |
+|49             |The new comment|PASS           |
 |               |box is         |               |
 |               |displayed and  |               |
 |               |clicking the   |               |

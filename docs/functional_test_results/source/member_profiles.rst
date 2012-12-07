@@ -4,22 +4,22 @@ Member Profile Functional Test Results
 +---------------+-------------------+---------------+
 |ID             |Result             |Status         |
 +---------------+-------------------+---------------+
-|1              |No link to         |PASS           |
+|32             |No link to         |PASS           |
 |               |create roles is    |               |
 |               |displayed          |               |
 +---------------+-------------------+---------------+
-|2              |No link to         |FAIL           |
+|33             |No link to         |FAIL           |
 |               |create roles is    |               |
 |               |displayed          |               |
 +---------------+-------------------+---------------+
-|3              |No link to page    |FAIL           |
+|34             |No link to page    |FAIL           |
 |               |permissions        |               |
 |               |displayed. However,|               |
 |               |pages are          |               |
 |               |restricted based on|               |
 |               |existing roles     |               |
 +---------------+-------------------+---------------+
-|4              |User with webmaster|PASS           |
+|35             |User with webmaster|PASS           |
 |               |role can access    |               |
 |               |administrative     |               |
 |               |features, but user |               |
@@ -28,14 +28,14 @@ Member Profile Functional Test Results
 |               |administrative     |               |
 |               |features           |               |
 +---------------+-------------------+---------------+
-|5              |New user is        |PASS           |
+|36             |New user is        |PASS           |
 |               |successfully       |               |
 |               |created an the     |               |
 |               |password is emailed|               |
 |               |to the Case ID     |               |
 |               |email address      |               |
 +---------------+-------------------+---------------+
-|6              |Clicking delete    |PASS           |
+|37             |Clicking delete    |PASS           |
 |               |next to a user's   |               |
 |               |name removes them  |               |
 |               |from the list of   |               |
@@ -45,7 +45,7 @@ Member Profile Functional Test Results
 |               |to the user's      |               |
 |               |profile fail       |               |
 +---------------+-------------------+---------------+
-|7              |Editing the user   |PASS           |
+|38             |Editing the user   |PASS           |
 |               |and selecting a new|               |
 |               |role successfully  |               |
 |               |adds that role to  |               |
@@ -54,7 +54,7 @@ Member Profile Functional Test Results
 |               |loads the new roles|               |
 |               |appears.           |               |
 +---------------+-------------------+---------------+
-|8              |An edit link       |PASS           |
+|39             |An edit link       |PASS           |
 |               |appears on that    |               |
 |               |user's profile. The|               |
 |               |new information    |               |
@@ -63,7 +63,7 @@ Member Profile Functional Test Results
 |               |displayed on that  |               |
 |               |users page         |               |
 +---------------+-------------------+---------------+
-|9              |Clicking on the    |PASS           |
+|40             |Clicking on the    |PASS           |
 |               |view link next to a|               |
 |               |members name in the|               |
 |               |members list shows |               |

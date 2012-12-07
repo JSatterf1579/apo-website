@@ -4,7 +4,7 @@ Contract Test Results
 +---------------+---------------+---------------+
 |ID             |Result         |Status         |
 +---------------+---------------+---------------+
-|1              |The create a   |PASS           |
+|20             |The create a   |PASS           |
 |               |contract link  |               |
 |               |is not         |               |
 |               |displayed and  |               |
@@ -17,7 +17,7 @@ Contract Test Results
 |               |login page with|               |
 |               |an error       |               |
 +---------------+---------------+---------------+
-|2              |Clicking the   |PASS           |
+|21             |Clicking the   |PASS           |
 |               |create a       |               |
 |               |contract link  |               |
 |               |directs the    |               |
@@ -31,16 +31,16 @@ Contract Test Results
 |               |main contract  |               |
 |               |list           |               |
 +---------------+---------------+---------------+
-|3              |The user is    |PASS           |
+|22             |The user is    |PASS           |
 |               |redirected to  |               |
 |               |the login page |               |
 +---------------+---------------+---------------+
-|4              |The user is    |PASS           |
+|23             |The user is    |PASS           |
 |               |able to view a |               |
 |               |list of        |               |
 |               |contracts      |               |
 +---------------+---------------+---------------+
-|5              |The edit       |PASS           |
+|24             |The edit       |PASS           |
 |               |contract link  |               |
 |               |is not         |               |
 |               |displayed and  |               |
@@ -50,14 +50,14 @@ Contract Test Results
 |               |the user to the|               |
 |               |login page     |               |
 +---------------+---------------+---------------+
-|6              |The user can   |PASS           |
+|25             |The user can   |PASS           |
 |               |delete and     |               |
 |               |recreate the   |               |
 |               |new fields thus|               |
 |               |modifying the  |               |
 |               |contract       |               |
 +---------------+---------------+---------------+
-|7              |If the user has|PASS           |
+|26             |If the user has|PASS           |
 |               |not signed a   |               |
 |               |contract       |               |
 |               |clicking on the|               |
@@ -72,7 +72,7 @@ Contract Test Results
 |               |the contract   |               |
 |               |progress page  |               |
 +---------------+---------------+---------------+
-|8              |After signing a|PASS           |
+|27             |After signing a|PASS           |
 |               |contract       |               |
 |               |navigating to  |               |
 |               |the contract   |               |
@@ -85,14 +85,14 @@ Contract Test Results
 |               |requirement for|               |
 |               |that contract  |               |
 +---------------+---------------+---------------+
-|9              |There is no    |PASS           |
+|28             |There is no    |PASS           |
 |               |link displayed |               |
 |               |to non-exec    |               |
 |               |members        |               |
 +---------------+---------------+---------------+
-|10             |No link appears|FAIL           |
+|29             |No link appears|FAIL           |
 +---------------+---------------+---------------+
-|11             |No option to   |FAIL           |
+|30             |No option to   |FAIL           |
 |               |manually pass a|               |
 |               |contract       |               |
 |               |appears        |               |
