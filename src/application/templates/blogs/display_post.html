@@ -52,7 +52,7 @@ APO Theta Upsilon
 <br/>
 <br/>
 
-{% if edit_post %}
+{% if current_user.is_authenticated() %}
 <form method="post" action="/blog/view/{{ post.url_timestamp }}/{{ post.url_title }}">
 {{ render_field(new_comment.text) }}
 {{ new_comment.csrf_token }}

@@ -141,6 +141,7 @@ def view_blog_post(timestamp, title):
         
     return render_template('blogs/display_post.html',
                            edit_post=edit_post,
+                           current_user=current_user,
                            post=post,
                            comments=comments,
                            new_comment=forms.NewComment(None))
