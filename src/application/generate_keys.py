@@ -30,6 +30,10 @@ file_template = Template('''# CSRF- and Session keys
 
 CSRF_SECRET_KEY = '$csrf_key'
 SESSION_KEY = '$session_key'
+
+# Facebook Keys
+FACEBOOK_APP_ID = '$facebook_app_id'
+FACEBOOK_APP_SECRET = '$facebook_app_secret'                         
 ''')
 
 
@@ -57,7 +61,8 @@ def write_file(contents):
 def generate_keyfile(csrf_key, session_key):
     """Generate random keys for CSRF- and session key"""
     output = file_template.safe_substitute(dict(
-        csrf_key=csrf_key, session_key=session_key
+        csrf_key=csrf_key, session_key=session_key,
+        facebook_app_id='FILL ME IN', facebook_app_secret='FILL ME IN'
     ))
     if os.path.exists(file_name):
         if options.force is None:
